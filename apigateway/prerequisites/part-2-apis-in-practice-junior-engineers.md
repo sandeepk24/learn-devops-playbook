@@ -1,4 +1,4 @@
-# APIs for Humans: Part 2 — APIs in Practice: Your First Real Calls
+# Part 2 — APIs in Practice: Your First Real Calls
 
 *Part 2 of 5 in the API Mastery Roadmap prerequisites series. Part 1 covered the concepts; this one gets you actually using APIs — reading documentation, making real requests with curl and Python, and handling authentication tokens safely. Target audience: junior engineers in their first role, bootcamp graduates, and anyone who understands the theory but hasn't wired it up in code yet.*
 

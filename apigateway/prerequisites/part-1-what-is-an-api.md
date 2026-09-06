@@ -1,4 +1,4 @@
-# APIs for Humans: Part 1 — What an API Actually Is (And Why You're Already Using Them)
+# Part 1 — What an API Actually Is (And Why You're Already Using Them)
 
 *Part 1 of 5 in the API Mastery Roadmap prerequisites series. Written for DevOps engineers, platform engineers, and SREs who interact with APIs every single day without always having the full mental model of what's happening. No analogies. No fluff. Just the real picture, built from things you already recognize.*
 

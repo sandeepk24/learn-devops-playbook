@@ -1,4 +1,4 @@
-# APIs for Humans: Part 3 — Designing APIs That Don't Embarrass You
+# Part 3 — Designing APIs That Don't Embarrass You
 
 *Part 3 of 5 in the API Mastery Roadmap prerequisites series. This one is for engineers who have consumed APIs and are now building them — backend engineers, full-stack developers, or anyone who's been handed a ticket that says "build an API endpoint for X." Parts 1 and 2 covered consuming APIs; this one covers producing them. Part 4 moves into the DevOps side.*
 

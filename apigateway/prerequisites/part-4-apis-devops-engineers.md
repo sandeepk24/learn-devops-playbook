@@ -1,4 +1,4 @@
-# APIs for Humans: Part 4 — APIs in the DevOps World
+# Part 4 — APIs in the DevOps World
 
 *Part 4 of 5 in the API Mastery Roadmap prerequisites series. This one is for DevOps and platform engineers — the people who don't build the APIs themselves but are responsible for making sure they run, scale, stay secure, and don't take down the business at 3 AM. Parts 1–3 covered consuming and designing APIs; this one covers operating them. Part 5 closes with advanced architecture patterns.*
 

@@ -1,4 +1,4 @@
-# APIs for Humans: Part 5 — Advanced API Architecture: When APIs Become Infrastructure
+# Part 5 — Advanced API Architecture: When APIs Become Infrastructure
 
 *Part 5 of 5 in the API Mastery Roadmap prerequisites series. This final part is for senior engineers, architects, and staff-level folks who've been building and running APIs for a few years and are ready to think about them at a different scale. We cover event-driven APIs, real-time patterns, composition and federation, backward compatibility strategy, API gateways as a platform, and what it actually means to treat an API as a product.*
 
