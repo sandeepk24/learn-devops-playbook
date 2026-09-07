@@ -122,4 +122,4 @@ The next time something fails in a way that doesn't match the error message, it'
 
 ---
 
-*Found this useful? More production-focused DevOps writing like this lives at [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — practical breakdowns, not tutorials.*
+*Found this useful? More production-focused DevOps writing like this lives at [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — practical breakdowns, not tutorials.*
