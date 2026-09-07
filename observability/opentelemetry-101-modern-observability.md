@@ -503,4 +503,4 @@ The Collector DaemonSet receives from all pods on a node and batches the export 
 
 ---
 
-*Found this useful? Star [sandeepk24/devops-field-notes](https://github.com/sandeepk24/devops-field-notes) on GitHub — more production-grade DevOps reference articles there.*
+*Found this useful? Star [sandeepk24/learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) on GitHub — more production-grade DevOps reference articles there.*

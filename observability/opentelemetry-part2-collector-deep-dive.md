@@ -615,4 +615,4 @@ Check the Collector is receiving by hitting `zpages` at `http://localhost:55679/
 
 ---
 
-*Found this useful? Star [sandeepk24/devops-field-notes](https://github.com/sandeepk24/devops-field-notes) on GitHub.*
+*Found this useful? Star [sandeepk24/learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) on GitHub.*
