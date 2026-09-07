@@ -1,6 +1,6 @@
 # SQLite for DevOps — Part 2: Security, Vulnerabilities, and Production-Readiness
 
-> **DevOps Field Notes** — production-grade references for engineers who'd rather fix it than Google it.
+> **Learn DevOps Playbook** — production-grade references for engineers who'd rather fix it than Google it.
 
 **Series:** SQLite for DevOps (Part 2 of 2)
 **Prerequisite:** Part 1 (architecture, install, concurrency).

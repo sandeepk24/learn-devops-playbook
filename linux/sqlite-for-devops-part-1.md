@@ -1,6 +1,6 @@
 # SQLite for DevOps — Part 1: What It Is, Why It's Different, and How to Install It
 
-> **DevOps Field Notes** — production-grade references for engineers who'd rather fix it than Google it.
+> **Learn DevOps Playbook** — production-grade references for engineers who'd rather fix it than Google it.
 
 **Series:** SQLite for DevOps (Part 1 of 2)
 **Part 2 covers:** Security posture, threat model, CVEs, and production decision framework.
