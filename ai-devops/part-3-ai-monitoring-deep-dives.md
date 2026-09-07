@@ -545,4 +545,4 @@ The whole series in three sentences:
 
 ---
 
-*Found this useful? This is part of the **DevOps Field Notes** series — production-grade references for DevOps engineers. Star the repo and follow along: [github.com/sandeepk24/devops-field-notes](https://github.com/sandeepk24/devops-field-notes)* ⭐
+*Found this useful? This is part of the **Learn DevOps Playbook** series — production-grade references for DevOps engineers. Star the repo and follow along: [github.com/sandeepk24/learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook)* ⭐
