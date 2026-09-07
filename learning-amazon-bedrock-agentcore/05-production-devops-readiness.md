@@ -146,4 +146,4 @@ That last one matters more than it sounds. A correct architecture with no runboo
 
 ---
 
-*Part of the [AgentCore for DevOps Engineers](README.md) series — [devops-field-notes](https://github.com/sandeepk24/devops-field-notes).*
+*Part of the [AgentCore for DevOps Engineers](README.md) series — [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook).*

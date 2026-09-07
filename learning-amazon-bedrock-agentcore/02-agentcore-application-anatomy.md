@@ -96,4 +96,4 @@ Part 3 is where you stop reading config and start running the agent — the loca
 
 ---
 
-*Part of the [AgentCore for DevOps Engineers](README.md) series — [devops-field-notes](https://github.com/sandeepk24/devops-field-notes).*
+*Part of the [AgentCore for DevOps Engineers](README.md) series — [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook).*

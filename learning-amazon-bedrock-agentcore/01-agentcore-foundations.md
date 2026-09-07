@@ -76,4 +76,4 @@ Part 2 opens the project AgentCore scaffolds for you and goes file by file — w
 
 ---
 
-*Part of the [AgentCore for DevOps Engineers](README.md) series — [devops-field-notes](https://github.com/sandeepk24/devops-field-notes).*
+*Part of the [AgentCore for DevOps Engineers](README.md) series — [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook).*

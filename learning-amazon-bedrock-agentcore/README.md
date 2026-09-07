@@ -35,4 +35,4 @@ Each part has a lab section. Do them in a sandbox account, in order — Part 4's
 
 ---
 
-*Part of [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — production-grade reference material for DevOps and cloud engineers.*
+*Part of [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — production-grade reference material for DevOps and cloud engineers.*

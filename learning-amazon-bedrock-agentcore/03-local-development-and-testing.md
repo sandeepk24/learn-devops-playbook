@@ -121,4 +121,4 @@ Part 4 is the build-and-deploy decision: CodeZip versus Container, what `agentco
 
 ---
 
-*Part of the [AgentCore for DevOps Engineers](README.md) series — [devops-field-notes](https://github.com/sandeepk24/devops-field-notes).*
+*Part of the [AgentCore for DevOps Engineers](README.md) series — [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook).*
