@@ -172,5 +172,5 @@ That's not a small role. That's the role.
 
 ---
 
-*If this series helps you, star the repo and follow along: [github.com/sandeepk24/devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — new deep dives every week.*
+*If this series helps you, star the repo and follow along: [github.com/sandeepk24/learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — new deep dives every week.*
 

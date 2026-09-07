@@ -136,4 +136,4 @@ Remote MCP isn't a new discipline — it's your existing discipline pointed at a
 
 ---
 
-*Following along? Star the repo: [github.com/sandeepk24/devops-field-notes](https://github.com/sandeepk24/devops-field-notes)*
+*Following along? Star the repo: [github.com/sandeepk24/learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook)*

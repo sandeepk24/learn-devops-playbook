@@ -240,4 +240,4 @@ Your first server is deliberately boring: read-only, five tools, one transport. 
 
 ---
 
-*Following along? Star the repo: [github.com/sandeepk24/devops-field-notes](https://github.com/sandeepk24/devops-field-notes)*
+*Following along? Star the repo: [github.com/sandeepk24/learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook)*

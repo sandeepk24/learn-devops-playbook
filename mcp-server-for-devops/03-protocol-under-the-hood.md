@@ -177,4 +177,4 @@ MCP is not a framework, a model feature, or an agent runtime. It's a small, insp
 
 ---
 
-*Following along? Star the repo: [github.com/sandeepk24/devops-field-notes](https://github.com/sandeepk24/devops-field-notes)*
+*Following along? Star the repo: [github.com/sandeepk24/learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook)*
