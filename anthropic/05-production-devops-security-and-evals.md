@@ -1169,5 +1169,5 @@ The transparent version generates logs you can read. When it makes a wrong call,
 
 ---
 
-*Part of the [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) series.*  
+*Part of the [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) series.*  
 *Found an error or want to contribute? PRs welcome.*

@@ -798,5 +798,5 @@ This is a complete, real pipeline integration. The structured JSON output, the `
 
 ---
 
-*Part of the [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) series.*  
+*Part of the [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) series.*  
 *Found an error or want to contribute? PRs welcome.*

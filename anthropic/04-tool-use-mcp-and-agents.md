@@ -1176,5 +1176,5 @@ def handle_tool_error(tool_name: str, error: Exception, tool_use_id: str) -> dic
 
 ---
 
-*Part of the [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) series.*  
+*Part of the [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) series.*  
 *Found an error or want to contribute? PRs welcome.*
