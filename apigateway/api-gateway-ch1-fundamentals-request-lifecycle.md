@@ -145,4 +145,4 @@ That deployment/stage distinction trips up a surprising number of people the fir
 
 Part 2 goes deep on endpoint types — edge-optimized, regional, and private — and on how to design a resource hierarchy well, including proxy resources, path parameters, and the `ANY` method. Part 3 after that covers all six integration types in real depth, including when a mapping template is the right tool and when it's just friction.
 
-More DevOps and cloud infrastructure write-ups like this live at [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — issues and PRs from fellow practitioners are always welcome.
+More DevOps and cloud infrastructure write-ups like this live at [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — issues and PRs from fellow practitioners are always welcome.

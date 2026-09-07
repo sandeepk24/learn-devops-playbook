@@ -107,4 +107,4 @@ Most endpoints, for most teams, land on Lambda proxy. That's not a failure of im
 
 That's the core-concepts foundation — the request lifecycle, endpoint types and resource design, and integration types. Part 4 turns hands-on: creating resources, methods, and integrations with boto3, writing request validation models, working with mapping templates in practice, and understanding exactly when a deployment is required versus when it isn't.
 
-More DevOps and cloud infrastructure write-ups like this live at [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — issues and PRs from fellow practitioners are always welcome.
+More DevOps and cloud infrastructure write-ups like this live at [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — issues and PRs from fellow practitioners are always welcome.

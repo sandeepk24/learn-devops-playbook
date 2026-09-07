@@ -187,4 +187,4 @@ Worth enabling for any API returning JSON payloads over a few KB — it's close 
 
 Part 7, the final chapter, covers observability and troubleshooting — the CloudWatch metrics that actually matter, structured access logging, X-Ray tracing, the specific failure signatures (502 vs 504 vs 429, CORS, cold starts) you'll see in production, and cost optimization.
 
-More DevOps and cloud infrastructure write-ups like this live at [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — issues and PRs from fellow practitioners are always welcome.
+More DevOps and cloud infrastructure write-ups like this live at [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — issues and PRs from fellow practitioners are always welcome.

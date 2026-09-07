@@ -102,4 +102,4 @@ A few settings live at the method level that are easy to skip past in the consol
 
 Part 3 goes deep on the six integration types — Lambda proxy, Lambda custom, HTTP proxy, HTTP custom, AWS service, and Mock — including when a mapping template earns its complexity and when a proxy integration's simplicity is the better trade.
 
-More DevOps and cloud infrastructure write-ups like this live at [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — issues and PRs from fellow practitioners are always welcome.
+More DevOps and cloud infrastructure write-ups like this live at [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — issues and PRs from fellow practitioners are always welcome.

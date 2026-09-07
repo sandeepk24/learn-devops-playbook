@@ -130,4 +130,4 @@ The pattern that holds up in practice: define the API in Terraform or CDK, never
 
 Seven chapters in, the throughline is the same one from Part 1: every piece of API Gateway — resources, integrations, authorizers, throttles, caching, logging — is a variation on the same request lifecycle. Once that lifecycle is second nature, the AWS console stops feeling like a maze of unrelated settings and starts looking like exactly what it is: a small number of decision points, repeated.
 
-If this series was useful, more DevOps and cloud infrastructure write-ups like this live at [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — issues and PRs from fellow practitioners are always welcome.
+If this series was useful, more DevOps and cloud infrastructure write-ups like this live at [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — issues and PRs from fellow practitioners are always welcome.

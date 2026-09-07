@@ -210,4 +210,4 @@ If you're using a Lambda proxy integration, the CORS headers have to come from y
 
 Part 6 covers traffic management — throttling at the account, stage, and usage-plan level, response caching, canary deployments, and custom domain names with base path mapping.
 
-More DevOps and cloud infrastructure write-ups like this live at [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — issues and PRs from fellow practitioners are always welcome.
+More DevOps and cloud infrastructure write-ups like this live at [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — issues and PRs from fellow practitioners are always welcome.

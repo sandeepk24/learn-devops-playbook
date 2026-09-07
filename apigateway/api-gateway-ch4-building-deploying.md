@@ -228,4 +228,4 @@ Then your integration URI references `${stageVariables.lambdaAlias}` instead of 
 
 Part 5 covers security and access control in depth — IAM auth, Cognito user pools, Lambda authorizers, resource policies, private APIs, API keys, and mutual TLS. The `authorizationType="NONE"` left in this chapter's examples gets fixed there.
 
-More DevOps and cloud infrastructure write-ups like this live at [devops-field-notes](https://github.com/sandeepk24/devops-field-notes) — issues and PRs from fellow practitioners are always welcome.
+More DevOps and cloud infrastructure write-ups like this live at [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) — issues and PRs from fellow practitioners are always welcome.
