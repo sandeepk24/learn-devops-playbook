@@ -1,9 +1,9 @@
-# DevOps Field Notes
+# Learn DevOps Playbook
 
-> Long-form field notes from the parts of DevOps that bite you in production — AWS, ECS/EKS, Kubernetes, Docker internals, networking, CI/CD, SRE, observability, Linux, API Gateway, MCP, and a growing AI/LLMOps stack. The reference I wish someone had handed me before I started writing runbooks from memory.
+> A hands-on library for DevOps, Cloud, and AI engineers: real production scenarios for AWS, Kubernetes, Docker, and LLMOps — built for people who want to understand, not memorize.
 
-[![Stars](https://img.shields.io/github/stars/sandeepk24/devops-field-notes?style=flat-square)](https://github.com/sandeepk24/devops-field-notes/stargazers)
-[![Last Commit](https://img.shields.io/github/last-commit/sandeepk24/devops-field-notes?style=flat-square)](https://github.com/sandeepk24/devops-field-notes/commits/main)
+[![Stars](https://img.shields.io/github/stars/sandeepk24/learn-devops-playbook?style=flat-square)](https://github.com/sandeepk24/learn-devops-playbook/stargazers)
+[![Last Commit](https://img.shields.io/github/last-commit/sandeepk24/learn-devops-playbook?style=flat-square)](https://github.com/sandeepk24/learn-devops-playbook/commits/main)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](./LICENSE)
 ![AWS](https://img.shields.io/badge/AWS-orange?style=flat-square&logo=amazon-aws&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-326ce5?style=flat-square&logo=kubernetes&logoColor=white)
