@@ -2,7 +2,7 @@
 
 > _"You checked the logs. The app looks fine. The pod still crashes. This is Part 2 territory."_
 
-**Author:** Sandeep K | `sandeepk24/devops-field-notes`
+**Author:** Sandeep K | `sandeepk24/learn-devops-playbook`
 **Series:** CrashLoopBackOff on EKS · Part 2 of 2
 **Tags:** `#Kubernetes` `#EKS` `#AWS` `#IRSA` `#Production` `#Intermediate`
 
@@ -717,9 +717,9 @@ aws iam simulate-principal-policy \
 
 ---
 
-> 💡 **Found this useful?** Star the repo at [`sandeepk24/devops-field-notes`](https://github.com/sandeepk24/devops-field-notes) and share it with your team.
+> 💡 **Found this useful?** Star the repo at [`sandeepk24/learn-devops-playbook`](https://github.com/sandeepk24/learn-devops-playbook) and share it with your team.
 > Have a root cause I missed or a fix that worked for you? Open a PR — this guide grows with the community.
 
 ---
 
-*Part of the **DevOps Field Notes** series — production-grade references for engineers who'd rather fix it than Google it.*
+*Part of the **Learn DevOps Playbook** series — production-grade references for engineers who'd rather fix it than Google it.*

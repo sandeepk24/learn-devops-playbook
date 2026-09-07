@@ -2,7 +2,7 @@
 
 > _"Your pod keeps dying and you don't know why. Welcome to the club."_
 
-**Author:** Sandeep K | `sandeepk24/devops-field-notes`
+**Author:** Sandeep K | `sandeepk24/learn-devops-playbook`
 **Series:** CrashLoopBackOff on EKS · Part 1 of 2
 **Tags:** `#Kubernetes` `#EKS` `#DevOps` `#Debugging` `#Beginner`
 
@@ -569,6 +569,6 @@ kubectl top nodes
 
 ---
 
-> 💡 **Found this useful?** Star the repo at [`sandeepk24/devops-field-notes`](https://github.com/sandeepk24/devops-field-notes) and share it with your team.
+> 💡 **Found this useful?** Star the repo at [`sandeepk24/learn-devops-playbook`](https://github.com/sandeepk24/learn-devops-playbook) and share it with your team.
 
-*Part of the **DevOps Field Notes** series — production-grade references for engineers who'd rather fix it than Google it.*
+*Part of the **Learn DevOps Playbook** series — production-grade references for engineers who'd rather fix it than Google it.*
