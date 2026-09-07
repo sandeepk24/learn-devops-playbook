@@ -1,6 +1,6 @@
 # 🚀 AWS ECS — Part 4: Resource Exhaustion (OOM & CPU) on Fargate
 
-> **DevOps Field Notes** · ECS Series (Part 4 of 5)
+> **Learn DevOps Playbook** · ECS Series (Part 4 of 5)
 >
 > What *actually* happens when a Fargate task runs out of memory or pins the CPU — at the container, kernel, and ECS-service layers. Concept first, then a hands-on repro you can run to watch an OOM kill unfold.
 >
@@ -446,6 +446,6 @@ You now know exactly what exhaustion *does* — the kill vs throttle asymmetry, 
 
 ---
 
-> 💬 **Contributions welcome!** Open a PR on `devops-field-notes`.
+> 💬 **Contributions welcome!** Open a PR on `learn-devops-playbook`.
 >
 > ⬅️ **[Part 3 — Deep Dives](ecs-part-3-deep-dives.md)** · **[Part 5 — Recovery & Self-Healing](ecs-part-5-recovery.md)** ➡️

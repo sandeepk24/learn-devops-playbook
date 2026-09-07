@@ -1,6 +1,6 @@
 # 🚀 AWS ECS — Part 2: Operations, Scaling & Troubleshooting
 
-> **DevOps Field Notes** · ECS Series (Part 2 of 3)
+> **Learn DevOps Playbook** · ECS Series (Part 2 of 3)
 >
 > Part 2 is the day-to-day operations playbook: managing **services**, reading **logs**, **scaling**, **deployments & rollbacks**, **ECS Exec**, and a battle-tested **troubleshooting** section.
 >
@@ -846,4 +846,4 @@ ecs-stopped my-service         # Debug crash reasons
 
 ---
 
-> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR on `devops-field-notes`.
+> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR on `learn-devops-playbook`.

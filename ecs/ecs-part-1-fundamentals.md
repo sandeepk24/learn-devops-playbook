@@ -1,6 +1,6 @@
 # 🚀 AWS ECS — Part 1: Fundamentals, Task Definitions & Building Your First App
 
-> **DevOps Field Notes** · ECS Series (Part 1 of 3)
+> **Learn DevOps Playbook** · ECS Series (Part 1 of 3)
 >
 > Part 1 covers the mental model, a deep dive on **Task Definitions** and **Tasks**, and a complete **Fargate walkthrough** to deploy a working app from zero.
 >
@@ -796,4 +796,4 @@ You now have a working Fargate app and a solid grip on task definitions and task
 
 ---
 
-> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR on `devops-field-notes` and add it.
+> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR on `learn-devops-playbook` and add it.

@@ -1,6 +1,6 @@
 # 🚀 AWS ECS — Part 3: ALB Connectivity, Networking & Deep Dives
 
-> **DevOps Field Notes** · ECS Series (Part 3 of 3)
+> **Learn DevOps Playbook** · ECS Series (Part 3 of 3)
 >
 > Part 3 is the deep-dive finale: exactly **how an ALB connects to target groups** (and every term in that chain), **networking internals** for `awsvpc`/Fargate, **EC2 container instances**, the full **IAM reference**, and the **kubectl→ECS cheat sheet**.
 >
@@ -571,6 +571,6 @@ aws ecs wait services-stable --cluster $CLUSTER --services $SERVICE
 
 ---
 
-> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR on `devops-field-notes` and add it.
+> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR on `learn-devops-playbook` and add it.
 >
 > ⬅️ **Back to [Part 1 — Fundamentals](ecs-part-1-fundamentals.md)** · **[Part 2 — Operations](ecs-part-2-operations.md)**
