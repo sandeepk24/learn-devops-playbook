@@ -121,4 +121,4 @@ Look closely at that "protected" in the last column, though, because it's doing 
 
 ---
 
-*Continue to [Part 2: Security & Rollback](./gitlab-ci-pipeline-part2-security-rollback.md). Part of the [DevOps Field Notes](https://github.com/sandeepk24/devops-field-notes) series.*
+*Continue to [Part 2: Security & Rollback](./gitlab-ci-pipeline-part2-security-rollback.md). Part of the [Learn DevOps Playbook](https://github.com/sandeepk24/learn-devops-playbook) series.*

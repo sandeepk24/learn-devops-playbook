@@ -67,4 +67,4 @@ The engineers who inherit this file later won't need you to explain it. That's t
 
 ---
 
-*Back to [Part 1: Structure & Rules](./gitlab-ci-pipeline-part1-structure.md). Part of the [DevOps Field Notes](https://github.com/sandeepk24/devops-field-notes) series.*
+*Back to [Part 1: Structure & Rules](./gitlab-ci-pipeline-part1-structure.md). Part of the [Learn DevOps Playbook](https://github.com/sandeepk24/learn-devops-playbook) series.*
