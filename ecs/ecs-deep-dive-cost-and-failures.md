@@ -117,7 +117,7 @@ Hours Used = $30.37 / $0.04937 = 615 hours/month
 
 **Critical Finding**: You need to run your tasks at least **84% of the time** for on-demand EC2 to be cheaper than Fargate.
 
-### The Reserved Instance Game-Changer
+### How Reserved Instances Change the Math
 
 Now let's see how RIs affect this calculation.
 

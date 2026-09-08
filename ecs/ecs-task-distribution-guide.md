@@ -6,16 +6,16 @@
 
 ## Introduction
 
-If you've ever wondered "Where exactly does my container run when I deploy to ECS?" or "How does AWS decide which EC2 instance gets my task?", you're in the right place. As someone who's deployed countless containers to ECS, I can tell you that understanding the orchestration layer is crucial for debugging issues, optimizing costs, and designing resilient architectures.
+If you've ever wondered "Where exactly does my container run when I deploy to ECS?" or "How does AWS decide which EC2 instance gets my task?", you're in the right place. As someone who's deployed countless containers to ECS, I can tell you that understanding the orchestration layer matters a lot for debugging issues, optimizing costs, and designing resilient architectures.
 
-Let's dive deep into how ECS distributes your workloads and manages resources.
+Let's get into how ECS distributes your workloads and manages resources.
 
 ---
 
 ## Table of Contents
 
 1. [ECS Architecture: The Big Picture](#ecs-architecture-the-big-picture)
-2. [The Task Placement Journey](#the-task-placement-journey)
+2. [How ECS Places a Task](#how-ecs-places-a-task)
 3. [EC2 Launch Type: Manual Resource Management](#ec2-launch-type-manual-resource-management)
 4. [Fargate Launch Type: Serverless Container Magic](#fargate-launch-type-serverless-container-magic)
 5. [Resource Allocation Deep Dive](#resource-allocation-deep-dive)
@@ -41,7 +41,7 @@ Before we get into the weeds, let's understand the key components:
 
 ---
 
-## The Task Placement Journey
+## How ECS Places a Task
 
 When you click "Deploy" or run `aws ecs update-service`, here's what happens behind the scenes:
 

@@ -54,7 +54,7 @@ This matters more than most people realize, because it shapes your security mode
 
 **`awsvpc` mode** (required for Fargate, recommended for EC2):
 
-Every task gets its own elastic network interface (ENI) and private IP. That unlocks per-task security groups — the finest-grained security you can get — and eliminates port conflicts entirely. The cost is that you consume more IP addresses and run into per-instance ENI limits on EC2. The latency overhead is negligible.
+Every task gets its own elastic network interface (ENI) and private IP. That gives you per-task security groups — the finest-grained security you can get — and eliminates port conflicts entirely. The cost is that you consume more IP addresses and run into per-instance ENI limits on EC2. The latency overhead is negligible.
 
 **Bridge mode** (EC2 only):
 
@@ -284,7 +284,7 @@ I've watched a forgotten log group quietly grow into a four-figure monthly line 
 
 ### 3.3 Health Checks — The Most Important Config
 
-If you take one thing from this article, take this: **a good health check is the single highest-leverage reliability control you have.** It's how ECS knows whether to send traffic to a task or kill it.
+If you take one thing from this article, take this: **a good health check is the single most effective reliability control you have.** It's how ECS knows whether to send traffic to a task or kill it.
 
 **ALB health check:**
 

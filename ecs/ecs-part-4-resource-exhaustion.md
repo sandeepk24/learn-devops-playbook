@@ -180,7 +180,7 @@ This table is the article in miniature — worth committing to memory:
 | How it usually kills a task | Directly | Indirectly, via health-check timeouts |
 | Graceful shutdown? | No | Yes (app never stops) |
 
-> 🤔 **Worth thinking through:** given SIGKILL can't be caught, is there *anything* your app can do to shut down cleanly on OOM? (Hint: the leverage isn't at kill time — it's earlier, at the `memoryReservation`/`memory` gap and at what you do when memory *approaches* the limit. We revisit graceful drain in Part 5.)
+> 🤔 **Worth thinking through:** given SIGKILL can't be caught, is there *anything* your app can do to shut down cleanly on OOM? (Hint: there's nothing you can do at kill time — the real control is earlier, at the `memoryReservation`/`memory` gap and at what you do when memory *approaches* the limit. We revisit graceful drain in Part 5.)
 
 ---
 
@@ -393,7 +393,7 @@ for i in $(seq 1 10); do
 done
 ```
 
-You'll see response times climb as the CPU stays pinned — the mechanism by which CPU starvation *becomes* a health-check failure. Crucially, `describe-tasks` still shows `lastStatus: RUNNING` — the task never died, it just got slow. Contrast this directly with the OOM repro, where the task went `STOPPED` with exit 137.
+You'll see response times climb as the CPU stays pinned — the mechanism by which CPU starvation *becomes* a health-check failure. The whole time, `describe-tasks` still shows `lastStatus: RUNNING` — the task never died, it just got slow. Contrast this directly with the OOM repro, where the task went `STOPPED` with exit 137.
 
 ---
 
@@ -407,7 +407,7 @@ aws ecs update-cluster-settings \
   --settings name=containerInsights,value=enabled
 ```
 
-This unlocks the `ECS/ContainerInsights` namespace with per-task `MemoryUtilized`, `CpuUtilized`, and (with enhanced observability) throttling signals — far more actionable than the service-average `AWS/ECS` metrics.
+This gives you the `ECS/ContainerInsights` namespace with per-task `MemoryUtilized`, `CpuUtilized`, and (with enhanced observability) throttling signals — far more actionable than the service-average `AWS/ECS` metrics.
 
 ### Alarm on memory *before* the OOM wall
 
