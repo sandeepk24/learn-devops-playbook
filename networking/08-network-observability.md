@@ -314,7 +314,7 @@ If a service doesn't propagate this header, the trace breaks at that service —
 
 ### 5. eBPF — Kernel-Level Network Visibility Without Agents
 
-eBPF (Extended Berkeley Packet Filter) is a technology that lets you run programs in the Linux kernel — safely, without kernel modules, without rebooting. For networking, this is transformative.
+eBPF (Extended Berkeley Packet Filter) is a technology that lets you run programs in the Linux kernel — safely, without kernel modules, without rebooting. For networking, that's a big deal.
 
 **What eBPF enables that traditional tools don't:**
 

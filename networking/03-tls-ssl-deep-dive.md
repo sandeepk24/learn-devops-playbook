@@ -72,7 +72,7 @@ Now let's get into those details.
 
 ### 1. Encryption Types — Symmetric vs. Asymmetric
 
-There are two kinds of encryption at play in TLS, and understanding why *both* are needed is the first mental unlock.
+There are two kinds of encryption at play in TLS, and understanding why *both* are needed is the first thing to get straight.
 
 **Asymmetric encryption (Public/Private Key)**
 
@@ -1366,7 +1366,7 @@ The principle I hold: TLS cert management must be fully automated. Any manually 
 
 7. **ACM DNS validation CNAMEs must never be deleted.** Treat them like infrastructure. When ACM auto-renewal runs 60 days before expiry, it needs that record to exist. If someone deletes it during "cleanup," the next renewal silently fails.
 
-8. **`SSL_ERROR_RX_RECORD_TOO_LONG` doesn't mean TLS is broken — it usually means you're talking HTTP to an HTTPS port.** Before diving into cert debugging, verify the server is actually listening on TLS on that port.
+8. **`SSL_ERROR_RX_RECORD_TOO_LONG` doesn't mean TLS is broken — it usually means you're talking HTTP to an HTTPS port.** Before you start debugging the cert, verify the server is actually listening on TLS on that port.
 
 ---
 

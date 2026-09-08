@@ -376,7 +376,7 @@ spec:
 
 One external load balancer, two hostnames, multiple path-based routes to different services. This is why Ingress exists — instead of one NLB per service, you have one ALB for the whole cluster.
 
-**The crucial thing engineers miss: an Ingress resource does nothing without an Ingress controller.**
+**The thing most engineers miss: an Ingress resource does nothing without an Ingress controller.**
 
 The Ingress spec is just a Kubernetes object. Someone has to watch those objects and actually configure a load balancer or proxy based on them. That's the Ingress controller.
 

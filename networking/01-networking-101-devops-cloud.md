@@ -35,7 +35,7 @@ Networking is not optional knowledge for cloud engineers. Every single thing you
 - **TLS certificate expiry** takes down HTTPS endpoints. Networking.
 - **Latency and timeout incidents** almost always start with a network-layer hypothesis.
 
-If you cannot read a packet's journey from a browser to a pod and back, you cannot reliably operate production systems. This article exists to close that gap.
+If you cannot trace a packet's path from a browser to a pod and back, you cannot reliably operate production systems. This article exists to close that gap.
 
 ---
 

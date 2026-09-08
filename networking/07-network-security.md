@@ -90,7 +90,7 @@ You've seen security groups in every previous part of this series. Here's the de
 
 **Security groups are stateful allow-lists attached to ENIs.**
 
-Let's unpack each word:
+Let's break down each word:
 - **Stateful:** If you allow inbound TCP on port 443, the response traffic is automatically allowed outbound — you don't write a separate outbound rule. The connection tracking table handles this.
 - **Allow-list:** You can only write allow rules. There is no deny rule in a security group. If traffic doesn't match an allow rule, it's dropped silently.
 - **Attached to ENIs:** Security groups attach to network interfaces, not to instances directly. An EC2 instance with two NICs can have different security groups per NIC. EKS pods with Security Groups for Pods have their own NIC and their own security group.
