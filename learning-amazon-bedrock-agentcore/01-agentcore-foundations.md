@@ -62,7 +62,7 @@ AgentCore isn't one thing — it's a family of modular services you opt into. Yo
 - **Runtime** — the actual hosting layer. Serverless, session-isolated, purpose-built for agent workloads. This is the part that replaces your ECS service.
 - **Gateway** — turns existing APIs, Lambda functions, or services into agent-callable tools without you writing a bespoke tool-calling layer for each one.
 - **Memory** — short-term (conversation-scoped) and long-term (cross-session) memory, provisioned declaratively (`--memory none | shortTerm | longAndShortTerm`). Long-term memory takes a few minutes to provision after deploy — don't panic if `agentcore status` shows it as pending immediately after a fresh deploy.
-- **Identity** — inbound auth (who can invoke your agent) and outbound auth (what your agent can call on a user's behalf), including OAuth flows. This is where the IAM-adjacent thinking from ECS task roles gets more nuanced, because now you're reasoning about the agent's identity *and* the end user's delegated identity.
+- **Identity** — inbound auth (who can invoke your agent) and outbound auth (what your agent can call on a user's behalf), including OAuth flows. This is where the IAM-adjacent thinking from ECS task roles gets trickier, because now you're reasoning about the agent's identity *and* the end user's delegated identity.
 
 You'll meet Runtime and Identity in every deployment. Gateway and Memory are opt-in — add them later with `agentcore add memory` / `agentcore add credential` rather than front-loading complexity into your first project.
 

@@ -117,7 +117,7 @@ This is the artifact your on-call rotation actually needs. Adapt it, but don't s
 3. `agentcore traces list` — find the specific failing invocation, inspect the trace for where in the tool-call chain it broke
 4. Check CloudWatch for the execution role's downstream call failures (Bedrock throttling, tool endpoint failures) before assuming it's agent code
 
-**Agent is slow (elevated latency, not errors):**
+**Agent is slow (high latency, not errors):**
 1. Check whether this correlates with a cold-start pattern (traffic resuming after a quiet period) versus sustained load — the fix is different for each
 2. Check tool-call span durations in traces — a slow downstream tool will look like agent latency if you're not decomposing the trace
 3. If on Container build type, confirm this isn't an image-pull-related cold start before chasing agent logic

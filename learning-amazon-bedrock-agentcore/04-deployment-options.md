@@ -69,7 +69,7 @@ Shows resource-level CloudFormation events as they happen. This is where you'll 
 agentcore status
 ```
 
-Gives you a live dashboard of deployed resources — treat it the way you'd treat `aws ecs describe-services`, as your first stop before diving into logs. It's also where you confirm provisioning status for anything async, like long-term Memory, which can take a few minutes to come up even after the deploy command itself returns.
+Gives you a live dashboard of deployed resources — treat it the way you'd treat `aws ecs describe-services`, as your first stop before you check the logs. It's also where you confirm provisioning status for anything async, like long-term Memory, which can take a few minutes to come up even after the deploy command itself returns.
 
 Where things physically live, for when you need to go spelunking in the console instead of the CLI:
 

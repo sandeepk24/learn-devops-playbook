@@ -2,7 +2,7 @@
 
 ## Why this part exists as its own document
 
-In the ECS world, "local testing" usually means either running the container locally with `docker run` and hoping your local env vars are close enough to task-def env vars, or just deploying to a dev cluster and iterating there because local parity was never quite worth the setup cost. AgentCore's local dev story is meaningfully better than that, and if you skip straight to `agentcore deploy` because deploying-to-see-what-happens is a habit ECS trained into you, you're paying for AWS API calls and CloudFormation cycles to catch bugs a local run would have caught in seconds. Break that habit here — it's the highest-leverage change in workflow this whole series asks of you.
+In the ECS world, "local testing" usually means either running the container locally with `docker run` and hoping your local env vars are close enough to task-def env vars, or just deploying to a dev cluster and iterating there because local parity was never quite worth the setup cost. AgentCore's local dev story is meaningfully better than that, and if you skip straight to `agentcore deploy` because deploying-to-see-what-happens is a habit ECS trained into you, you're paying for AWS API calls and CloudFormation cycles to catch bugs a local run would have caught in seconds. Break that habit here — it's the change in workflow that pays off the most out of everything this series asks of you.
 
 ## Starting the local server
 
@@ -17,7 +17,7 @@ This single command does more than a `docker run` would:
 - Automatically creates a Python virtual environment and installs dependencies from `pyproject.toml`
 - Starts a local server that mimics the AgentCore Runtime environment on `http://localhost:8080` by default
 
-That middle bullet is the one to notice: it's not just running your code, it's running your code inside a harness that approximates what production will do to it. That's closer to what `docker-compose` with a matched base image gives you than to a bare `python main.py`.
+That middle bullet is the one to notice: it's not just running your code, it's running your code inside a setup that approximates what production will do to it. That's closer to what `docker-compose` with a matched base image gives you than to a bare `python main.py`.
 
 Options worth knowing immediately:
 
