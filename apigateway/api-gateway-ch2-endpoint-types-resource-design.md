@@ -42,7 +42,7 @@ A resource tree is easy to sketch badly and annoying to fix once clients depend 
 
 ### Nouns, not verbs, in the path
 
-`/orders` and `/orders/{orderId}` with `GET`, `POST`, `PUT`, `DELETE` methods on them is the REST convention for a reason — the HTTP verb carries the action, so the path doesn't need to. `/getOrder` and `/createOrder` as separate resources works, but it fights the grain of everything else in the AWS ecosystem (IAM policies, API documentation tooling, client SDK generators) that assumes verb-in-method, noun-in-path.
+`/orders` and `/orders/{orderId}` with `GET`, `POST`, `PUT`, `DELETE` methods on them is the REST convention for a reason — the HTTP verb carries the action, so the path doesn't need to. `/getOrder` and `/createOrder` as separate resources works, but it fights the grain of everything else in AWS — IAM policies, API documentation tooling, client SDK generators — that assumes verb-in-method, noun-in-path.
 
 ### Path parameters vs. query strings
 

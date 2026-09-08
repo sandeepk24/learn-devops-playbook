@@ -102,7 +102,7 @@ The flags to memorize:
 - `-H "Header: Value"` — Add a request header
 - `-d 'body'` — Send a request body
 - `-o filename` — Save output to a file
-- `-v` — Verbose mode (shows headers on both sides — invaluable for debugging)
+- `-v` — Verbose mode (shows headers on both sides — handy for debugging)
 
 **Pro tip**: When a curl request isn't working and you don't know why, add `-v`. It shows you exactly what was sent and received, including headers you might be missing.
 

@@ -512,7 +512,7 @@ APIs have been the dominant architectural primitive of the last fifteen years. T
 
 Understanding APIs deeply — not just how to call them, but how to design them, operate them, evolve them, and think about them as products — is one of the most transferable skills in software engineering. The specific technology changes; the principles stay.
 
-The main series (AWS API Gateway for DevOps Engineers) picks up where this prerequisite track leaves off, going deep on one specific, widely-used implementation of these ideas. But the thinking from these five articles should apply whether you're working with AWS API Gateway, Kong, a custom nginx configuration, or whatever API gateway paradigm exists five years from now.
+The main series (AWS API Gateway for DevOps Engineers) picks up where this prerequisite track leaves off, going deep on one specific, widely-used implementation of these ideas. But the thinking from these five articles should apply whether you're working with AWS API Gateway, Kong, a custom nginx configuration, or whatever API gateway approach exists five years from now.
 
 ---
 
