@@ -1,7 +1,7 @@
 # 🚀 Python FastAPI — The Complete DevOps Engineer's Guide
 ### From Zero to Production-Grade APIs in the AI DevOps World
 
-> **Who this is for:**  DevOps engineers picking up Python for the first time, and advanced DevOps engineers looking to build robust, production-ready APIs for infrastructure automation, AI pipelines, internal tooling, and microservices.
+> **Who this is for:**  DevOps engineers picking up Python for the first time, and advanced DevOps engineers looking to build solid, production-ready APIs for infrastructure automation, AI pipelines, internal tooling, and microservices.
 
 ---
 
@@ -2043,7 +2043,7 @@ app.include_router(router)
 
 ## Final Words
 
-The journey from junior to senior DevOps engineer in the AI era runs straight through Python and FastAPI. Here's the progression:
+Going from junior to senior DevOps engineer in the AI era runs straight through Python and FastAPI. Here's the progression:
 
 **Junior Level** → Build CRUD endpoints, understand Pydantic models, run with Docker, write basic tests.
 
@@ -2055,5 +2055,5 @@ FastAPI is not just a web framework — it's the glue between your infrastructur
 
 ---
 
-*Built with ❤️ for DevOps Engineers navigating the AI-native infrastructure world.*
+*Built with ❤️ for DevOps Engineers working through the AI-native infrastructure world.*
 *FastAPI version referenced: 0.115.x | Python 3.12+ | Pydantic v2*
