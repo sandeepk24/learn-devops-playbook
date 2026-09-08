@@ -42,7 +42,7 @@ Two earlier projects were splitting the community:
 - **OpenTracing** — focused on distributed tracing
 - **OpenCensus** — focused on metrics and tracing
 
-In 2019, they merged into OpenTelemetry under the CNCF. As of 2026, nearly **half of all organizations** are using it, with another quarter actively planning adoption. In March 2026, OTel officially deprecated OpenTracing compatibility — the migration is complete, the ecosystem has moved on.
+In 2019, they merged into OpenTelemetry under the CNCF. As of 2026, nearly **half of all organizations** are using it, with another quarter actively planning adoption. In March 2026, OTel officially deprecated OpenTracing compatibility — the migration is complete, everyone's moved on.
 
 ---
 
@@ -50,7 +50,7 @@ In 2019, they merged into OpenTelemetry under the CNCF. As of 2026, nearly **hal
 
 OTel handles three classic observability signals plus a new one added in 2026.
 
-### 1. Traces — The Request Journey
+### 1. Traces — The Path a Request Takes
 
 A trace follows a single request as it travels through your distributed system. Every hop — API gateway, order service, payment service, database — is a **span**. Spans are nested, share a `trace_id`, and record timing, status, and context.
 
@@ -235,7 +235,7 @@ For EKS workloads: run the Collector as a **DaemonSet** (one per node) or a **si
 
 ## Semantic Conventions — The Underrated Part
 
-Semantic conventions are agreed-upon attribute names across the entire OTel ecosystem.
+Semantic conventions are agreed-upon attribute names that every OTel integration follows.
 
 **Without them:**
 ```
