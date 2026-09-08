@@ -14,7 +14,7 @@
 
 stdio's security model is beautifully simple: the server runs *as you*, with *your* kubeconfig, and only a process on your machine can talk to it. The moment a second engineer — or a fleet of agents — needs the same server, you need a network transport.
 
-A note on naming, because the ecosystem's history causes confusion: early MCP used **HTTP+SSE** as its remote transport (one endpoint for requests, a separate Server-Sent Events stream for responses). The spec has since converged on **Streamable HTTP** — a single endpoint that handles plain request/response and can upgrade to streaming when needed. You'll still see SSE in older servers and tutorials; new builds should target Streamable HTTP. The SDK makes this nearly invisible, which brings us to the best part:
+A note on naming, because MCP's history here causes confusion: early MCP used **HTTP+SSE** as its remote transport (one endpoint for requests, a separate Server-Sent Events stream for responses). The spec has since converged on **Streamable HTTP** — a single endpoint that handles plain request/response and can upgrade to streaming when needed. You'll still see SSE in older servers and tutorials; new builds should target Streamable HTTP. The SDK makes this nearly invisible, which brings us to the best part:
 
 ## The Same Server, One Line Different
 

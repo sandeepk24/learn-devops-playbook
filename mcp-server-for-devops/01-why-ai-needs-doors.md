@@ -62,7 +62,7 @@ Abstractions get slippery, so let's run a single real request through each level
 
 **LLM + RAG.** Now it retrieves your `checkout-service` runbook and your last three postmortems. It notices a past incident with an identical signature caused by a connection-pool exhaustion after a traffic spike, and it surfaces that: *"This matches INC-4471 from March — check the DB connection pool first."* Now it's a textbook **plus your team's hard-won memory.** Still can't confirm it, though.
 
-**LLM + RAG + MCP.** Now it acts on that lead. It calls a tool to query current connection-pool utilization (98% — bingo), pulls the last deploy timestamp (14 minutes ago), reads the diff (someone lowered `maxPoolSize`), and drafts the fix. Crucially, when it proposes *"roll back deploy `a3f9c` on `checkout-service`,"* it stops and asks for your approval before pulling the trigger. Reasoning + memory + live truth + gated action. That's the full stack, and that's what you're going to learn to build.
+**LLM + RAG + MCP.** Now it acts on that lead. It calls a tool to query current connection-pool utilization (98% — bingo), pulls the last deploy timestamp (14 minutes ago), reads the diff (someone lowered `maxPoolSize`), and drafts the fix. But when it proposes *"roll back deploy `a3f9c` on `checkout-service`,"* it stops and asks for your approval before pulling the trigger. Reasoning + memory + live truth + gated action. That's the full stack, and that's what you're going to learn to build.
 
 Notice that MCP didn't replace anything. It *completed* the picture. The reasoning came from the LLM, the pattern-match came from RAG, and only the last mile — touching the live world — came from MCP.
 
