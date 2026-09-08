@@ -52,7 +52,7 @@ In production, the gap between the two models becomes visible in incident respon
 ## 3. Tools and Technologies
 
 **Internal Developer Platform layer:**
-- **Backstage** (Spotify) — service catalog, software templates (scaffolding), TechDocs, plugin ecosystem. Most widely adopted IDP framework.
+- **Backstage** (Spotify) — service catalog, software templates (scaffolding), TechDocs, a large plugin library. Most widely adopted IDP framework.
 - **Port** — commercial Backstage alternative with a richer data model and less operational overhead.
 - **Cortex** — scorecard and service catalog focused on engineering maturity.
 

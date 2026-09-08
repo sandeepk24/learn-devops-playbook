@@ -17,13 +17,13 @@ A **branch strategy** is simply an agreement your team makes about *how* you use
 - Who can merge what, and when
 - How you handle hotfixes, releases, and parallel work
 
-Getting this right is one of the highest-leverage decisions a DevOps team can make. Get it wrong and you'll spend more time managing Git conflicts than shipping value.
+Getting this right is one of the decisions that matters most for a DevOps team. Get it wrong and you'll spend more time managing Git conflicts than shipping value.
 
 ---
 
 ## The Big Picture: Trunk vs. Branch-Heavy Models
 
-Before diving into specific strategies, understand the fundamental tension:
+Before getting into specific strategies, understand the fundamental tension:
 
 **Trunk-Based Development** → everyone commits to one main branch, integrations happen constantly, conflicts surface early and stay small.
 
@@ -403,7 +403,7 @@ Your CI/CD can then trigger different pipelines based on the prefix. `hotfix/*` 
 
 ### Commit Message Discipline
 
-Meaningless commit messages are technical debt. On any strategy, a clear commit history is invaluable when debugging.
+Meaningless commit messages are technical debt. On any strategy, a clear commit history saves you real time when debugging.
 
 ```bash
 # Bad

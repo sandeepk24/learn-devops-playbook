@@ -697,7 +697,7 @@ The most important habit to build: **never let a day end with uncommitted work s
 
 ### For Mid-Level Engineers
 
-Your leverage in TBD is in the abstractions. When a feature is complex:
+Your edge in TBD is in the abstractions. When a feature is complex:
 
 - Design the interface first, merge it (empty/stub implementations are fine)
 - Implement incrementally, merging each piece
