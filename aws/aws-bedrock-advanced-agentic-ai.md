@@ -76,7 +76,7 @@ There are two ways to call a model on Bedrock: `InvokeModel` and `Converse`. The
 
 `InvokeModel` accepts a model-specific JSON payload. Every model family has a different schema. Switching from Claude to Nova means rewriting your request format. It is the raw interface — maximum flexibility, zero portability.
 
-`Converse` is a unified interface that works across all models that support messages. Same Python code, any model. This is what you should use for any application that needs to be model-agnostic — which in practice means almost everything, because the model landscape is changing fast enough that locking to a specific model's API is a liability.
+`Converse` is a unified interface that works across all models that support messages. Same Python code, any model. This is what you should use for any application that needs to be model-agnostic — which in practice means almost everything, because which models are best keeps changing fast enough that locking to a specific model's API is a liability.
 
 ```python
 import boto3

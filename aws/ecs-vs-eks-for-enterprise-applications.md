@@ -10,7 +10,7 @@ I've deployed production workloads on both ECS and EKS. I've been paged at 3 AM 
 
 **Amazon ECS (Elastic Container Service)** is AWS's own container orchestrator. Think of it as AWS saying, "We built something simpler than Kubernetes — just hand us your containers and we'll run them." There's no control plane to manage, no YAML rabbit holes, and it plugs into every AWS service like it was born there — because it was.
 
-**Amazon EKS (Elastic Kubernetes Service)** is AWS's managed Kubernetes offering. It's real, upstream Kubernetes — the same open-source system the rest of the industry standardized on — but AWS handles the control plane for you. You still get the full K8s ecosystem: Helm charts, operators, custom controllers, the works.
+**Amazon EKS (Elastic Kubernetes Service)** is AWS's managed Kubernetes offering. It's real, upstream Kubernetes — the same open-source system the rest of the industry standardized on — but AWS handles the control plane for you. You still get everything that comes with K8s: Helm charts, operators, custom controllers, the works.
 
 Both can run on EC2 instances or on Fargate (serverless). Both are battle-tested at massive scale. The difference isn't about capability — it's about *trade-offs*.
 
@@ -87,8 +87,8 @@ Pick ECS when:
 Pick EKS when:
 
 - **Multi-cloud or hybrid is real, not hypothetical.** You actually have workloads on GCP or Azure, or you're running on-prem with EKS Anywhere. Key word: *actually*.
-- **Your team already knows Kubernetes.** If you've got experienced K8s engineers, EKS lets them be productive immediately without learning a new paradigm.
-- **You need the K8s ecosystem.** Service meshes (Istio, Linkerd), GitOps (ArgoCD, Flux), advanced scheduling, custom operators — this stuff only exists in K8s-land.
+- **Your team already knows Kubernetes.** If you've got experienced K8s engineers, EKS lets them be productive immediately without learning a new way of doing things.
+- **You need what comes with K8s.** Service meshes (Istio, Linkerd), GitOps (ArgoCD, Flux), advanced scheduling, custom operators — this stuff only exists in K8s-land.
 - **You're running complex microservices architectures** with hundreds of services that need sophisticated traffic management, canary deployments, and service discovery.
 - **Your industry demands portability.** Regulated industries (finance, healthcare, government) sometimes require the ability to move workloads between providers.
 
@@ -111,7 +111,7 @@ Here's what major enterprises run in production — and *why* their choice made 
 | **Snap (Snapchat)** | EKS | Chose EKS for the K8s ecosystem and scaling needs |
 | **Fidelity** | EKS | Financial services portability and compliance requirements drove K8s adoption |
 
-**The pattern?** Companies that need portability, have large engineering orgs, or run complex microservice architectures tend toward Kubernetes (EKS or self-managed). Companies that are AWS-native and value simplicity lean toward ECS. Many large enterprises run both — ECS for simpler internal workloads, EKS for anything that might need to move or needs the K8s ecosystem.
+**The pattern?** Companies that need portability, have large engineering orgs, or run complex microservice architectures tend toward Kubernetes (EKS or self-managed). Companies that are AWS-native and value simplicity lean toward ECS. Many large enterprises run both — ECS for simpler internal workloads, EKS for anything that might need to move or needs what comes with K8s.
 
 ---
 

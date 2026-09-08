@@ -1,7 +1,7 @@
 # CPU Architecture, Evolution & GPU Comparison: A DevOps Engineer's Deep Dive
 
 > **Audience:** DevOps / Platform Engineers working with application infrastructure, ML workloads, and cloud compute  
-> **Goal:** Understand CPU internals, its journey over decades, how your Python/Java app *actually* uses it, and why GPUs exist as a fundamentally different compute paradigm.
+> **Goal:** Understand CPU internals, how they've evolved over decades, how your Python/Java app *actually* uses it, and why GPUs are built around a fundamentally different way of computing.
 
 CPU vs GPU for DevOps Engineers — covers CPU pipeline internals, Python GIL + asyncio, Java JIT, full request lifecycle, Kubernetes throttling, GPU CUDA architecture, and when to use which. With real benchmarks, perf commands, and AWS instance selection guidance.
 ---
@@ -112,7 +112,7 @@ If 20% of your code is serial:
 ### 2020s — Chiplets, Efficiency Cores, and the AI Era
 
 - **AMD Ryzen (Zen architecture):** **Chiplet design** — multiple smaller dies connected via high-speed interconnects (Infinity Fabric). Dramatically improves yields and allows mixing components.
-- **Apple M1/M2/M3:** Unified memory architecture — CPU and GPU share the same physical DRAM with massive bandwidth (up to 800 GB/s on M2 Ultra). Game-changer for ML inference on-device.
+- **Apple M1/M2/M3:** Unified memory architecture — CPU and GPU share the same physical DRAM with massive bandwidth (up to 800 GB/s on M2 Ultra). Big deal for ML inference on-device.
 - **Intel Alder Lake (2021):** **Hybrid cores** — Performance-cores (P-cores) for latency-sensitive tasks + Efficiency-cores (E-cores) for background work. The OS scheduler (Thread Director) routes work appropriately.
 - **AMD EPYC Genoa (2022):** 96 cores, 192 threads, 384 MB L3 cache. Designed for cloud-scale workloads.
 - **Key 2020s trend:** CPUs are now deeply heterogeneous — multiple core types, integrated AI accelerators (e.g., Apple Neural Engine, Intel AMX), and tight integration with memory.

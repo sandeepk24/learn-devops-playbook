@@ -67,7 +67,7 @@ You do not train these from scratch. Training GPT-4 cost an estimated $100 milli
 
 ### The model families you will actually use
 
-**Claude (Anthropic)** — The strongest reasoning models on Bedrock. Claude Sonnet is the workhorse: excellent at complex analysis, coding, writing, and following nuanced instructions. Claude Haiku is the fast, cheap option for high-volume simpler tasks. Most production AI products on AWS use Claude.
+**Claude (Anthropic)** — The strongest reasoning models on Bedrock. Claude Sonnet is the workhorse: excellent at complex analysis, coding, writing, and following detailed instructions. Claude Haiku is the fast, cheap option for high-volume simpler tasks. Most production AI products on AWS use Claude.
 
 **Amazon Nova** — AWS's own model family, optimised for cost and AWS service integration. Nova Lite is extremely cheap for simple tasks. Nova Pro handles more complex reasoning. Good default choice when you want tight AWS cost control.
 

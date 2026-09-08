@@ -65,7 +65,7 @@ Cognito gives you:
 - **Scalability:** Handles millions of users automatically
 - **Security:** Built-in protection against common attacks
 - **Compliance:** Meets SOC, PCI-DSS, ISO standards
-- **Integration:** Works seamlessly with other AWS services
+- **Integration:** Works well with other AWS services
 - **Flexibility:** Customize with Lambda triggers
 
 ---

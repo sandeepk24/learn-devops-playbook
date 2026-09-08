@@ -96,7 +96,7 @@ When you create a Knowledge Base, you're really assembling five components:
 
 **`RetrieveAndGenerate`** — "give me the answer." Bedrock retrieves the chunks, builds the prompt, calls a model of your choosing, and returns a generated answer with citations back to the source documents. Fastest path to a working Q&A feature; less control over the prompt.
 
-There's a third integration worth knowing: **Bedrock Agents** (and the newer AgentCore ecosystem) can attach a Knowledge Base as a tool, so an agent decides *on its own* when to consult your documents mid-task. Same KB, different consumer.
+There's a third integration worth knowing: **Bedrock Agents** (and the newer AgentCore tools) can attach a Knowledge Base as a tool, so an agent decides *on its own* when to consult your documents mid-task. Same KB, different consumer.
 
 ## 6. Retrieval quality knobs you'll actually touch
 

@@ -88,7 +88,7 @@ This is the **ephemeral container problem**. Containers are designed to be dispo
 
 **EBS = Elastic Block Store**
 
-The word "block" is the technical term. Let's unpack it:
+The word "block" is the technical term. Let's break it down:
 
 ```
 BLOCK STORAGE

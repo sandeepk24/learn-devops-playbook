@@ -4,7 +4,7 @@
 
 ---
 
-## 1. The one-sentence definition, unpacked
+## 1. The one-sentence definition, explained
 
 An embedding model takes a piece of text (or an image, or audio) and outputs a fixed-length list of numbers — a **vector** — that represents its *meaning*. That's it. Everything else in this document is elaboration on that sentence.
 
