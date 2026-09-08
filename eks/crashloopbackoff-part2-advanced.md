@@ -26,7 +26,7 @@
 
 ## 1. Quick Recap from Part 1
 
-Before diving into the advanced causes, here's a fast summary of what Part 1 covered and the diagnostic commands you always start with:
+Before we get into the advanced causes, here's a fast summary of what Part 1 covered and the diagnostic commands you always start with:
 
 ```bash
 # Always run these first — in this order
