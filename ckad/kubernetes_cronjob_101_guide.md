@@ -109,7 +109,7 @@ The `schedule` field is the heart of a CronJob, and it uses standard cron syntax
 * * * * *
 ```
 
-### The special characters that unlock everything:
+### The special characters that make everything else possible:
 
 | Symbol | Meaning | Example | Reads as |
 |--------|---------|---------|----------|
