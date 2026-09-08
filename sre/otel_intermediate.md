@@ -9,9 +9,9 @@ If you've read the 101 guide, you know what OpenTelemetry is and what problems i
 
 This article assumes you're a DevOps architect or platform engineer who needs to make decisions about observability infrastructure. We're going to talk about real architecture, real trade-offs, and real configurations.
 
-## The AWS OpenTelemetry Landscape in 2026
+## Where AWS Stands on OpenTelemetry in 2026
 
-AWS has invested heavily in OpenTelemetry, and the ecosystem has matured significantly. Here's what you need to know.
+AWS has invested heavily in OpenTelemetry, and the tooling around it has matured a lot. Here's what you need to know.
 
 ### AWS Distro for OpenTelemetry (ADOT)
 
@@ -449,7 +449,7 @@ With OTel data flowing into your backend, organize your dashboards in layers:
 1. **Use ADOT for AWS-heavy environments**, but plan for the community Collector if multi-cloud is in your future.
 2. **Two-tier Collector architecture** (agent + gateway) is the production standard.
 3. **Tail-based sampling** saves money without sacrificing visibility on errors and slow requests.
-4. **CloudWatch now speaks OTLP natively** — leverage PromQL and the high-cardinality metrics store.
+4. **CloudWatch now speaks OTLP natively** — use PromQL and the high-cardinality metrics store.
 5. **Your application code stays the same** across clouds. The Collector is where cloud-specific logic lives.
 6. **Budget for CloudWatch API costs** when using the CloudWatch receiver — filter aggressively.
 

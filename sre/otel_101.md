@@ -23,7 +23,7 @@ That's exactly what it does. You instrument once, and export to whatever backend
 
 OpenTelemetry didn't appear out of thin air. Two earlier projects — **OpenTracing** (focused on distributed tracing) and **OpenCensus** (focused on metrics and tracing) — were both trying to solve similar problems but splitting the community. In 2019 at KubeCon, they merged into OpenTelemetry under the Cloud Native Computing Foundation (CNCF). It graduated as a CNCF project and today has over 10,000 contributors from more than 1,200 companies. As of early 2026, nearly half of all organizations are using it, with another quarter planning to adopt it.
 
-In March 2026, OpenTelemetry officially deprecated its OpenTracing compatibility requirements — a clear sign that the migration is complete and the ecosystem has moved on.
+In March 2026, OpenTelemetry officially deprecated its OpenTracing compatibility requirements — a clear sign that the migration is complete and everyone's moved on.
 
 ## The Three Pillars (Plus a New One)
 
@@ -31,7 +31,7 @@ When people talk about observability, they usually mean three types of telemetry
 
 ### 1. Traces — Following the Breadcrumbs
 
-A trace tells the story of a single request as it travels through your system. Imagine a customer clicks "Buy Now" on your website. That request might hit your API gateway, then your order service, then your payment service, then your inventory service, then your notification service. A trace captures that entire journey.
+A trace tells the story of a single request as it travels through your system. Imagine a customer clicks "Buy Now" on your website. That request might hit your API gateway, then your order service, then your payment service, then your inventory service, then your notification service. A trace captures all of that, start to finish.
 
 Each stop along the way is called a **span**. A span records when the work started, when it finished, whether it succeeded, and any relevant details (called **attributes**). Spans are nested — the parent span is the whole request, and child spans are each individual operation.
 
@@ -219,7 +219,7 @@ Think of OpenTelemetry as the plumbing. It's the pipes that carry your telemetry
 2. **Four signal types** — traces, metrics, logs, and now profiles — cover the full observability picture.
 3. **The Collector is your friend.** Use it as a central pipeline for processing and routing telemetry.
 4. **Semantic conventions matter.** They're what make cross-service, cross-team observability actually work.
-5. **The ecosystem is massive.** With 10,000+ contributors and adoption nearing 50% of organizations, this isn't a fad — it's the industry standard.
+5. **The community is massive.** With 10,000+ contributors and adoption nearing 50% of organizations, this isn't a fad — it's the industry standard.
 
 ---
 

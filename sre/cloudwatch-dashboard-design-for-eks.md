@@ -6,7 +6,7 @@
 
 ## 1. Why a Dedicated EKS Dashboard Matters
 
-Running Kubernetes on AWS EKS introduces a multi-layered observability challenge. Metrics flow from the AWS control plane, the EC2 or Fargate data plane, the Kubernetes object model, and the application containers themselves. Without a single pane of glass that stitches these layers together, on-call engineers waste critical minutes during incidents jumping between consoles.
+Running Kubernetes on AWS EKS means metrics come from several layers at once: the AWS control plane, the EC2 or Fargate data plane, the Kubernetes object model, and the application containers themselves. Without one dashboard that pulls all of that together, on-call engineers waste time during incidents jumping between consoles.
 
 A well-designed CloudWatch dashboard eliminates that friction. It answers three questions at a glance: Is the cluster healthy? Are workloads performing? Where is the bottleneck?
 
