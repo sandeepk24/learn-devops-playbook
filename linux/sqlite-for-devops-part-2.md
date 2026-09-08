@@ -29,7 +29,7 @@ What you get *instead* is a file. And a file's security is governed by:
 2. **Encryption at rest** (the OS/disk, or a SQLite encryption extension).
 3. **What your application does** with the data (the real attack surface).
 
-> **Reframe for seniors:** SQLite doesn't make your system more or less secure — it *relocates* the security boundary from "the database server's auth layer" to "the host's filesystem and your app code." If your filesystem and app are hardened, SQLite is arguably a *smaller* attack surface than a networked DB.
+> **Reframe for seniors:** SQLite doesn't make your system more or less secure — it *relocates* the security boundary from "the database server's auth layer" to "the host's filesystem and your app code." If your filesystem and app are hardened, SQLite is often a *smaller* attack surface than a networked DB.
 
 ---
 
@@ -71,7 +71,7 @@ cur.execute("SELECT * FROM deploys WHERE service = ?", (svc,))
 
 ### 2.4 Extensions & untrusted databases
 - **Disable extension loading** unless you explicitly need it — a loaded extension is arbitrary native code.
-- Treat any `.db` from outside your trust boundary as hostile input. The parser is robust but historically *every* serious SQLite CVE has involved either malicious SQL or a malformed database file.
+- Treat any `.db` from outside your trust boundary as hostile input. The parser holds up well but historically *every* serious SQLite CVE has involved either malicious SQL or a malformed database file.
 
 ```python
 conn = sqlite3.connect("app.db")

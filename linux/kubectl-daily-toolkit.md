@@ -28,7 +28,7 @@ kubectl get pod my-app-7d9f8c6b5-xk2p9 -o yaml -n production
 
 ## Exec, But With a Habit of Checking First
 
-`kubectl exec` is indispensable for live debugging, but it's worth building the habit of checking what's already running before you start poking around, especially in a shared cluster where other people's changes might be the actual cause.
+`kubectl exec` is essential for live debugging, but it's worth building the habit of checking what's already running before you start poking around, especially in a shared cluster where other people's changes might be the actual cause.
 
 ```bash
 kubectl exec -it my-app-7d9f8c6b5-xk2p9 -n production -- /bin/sh -c "ps aux"
