@@ -80,7 +80,7 @@ docker-compose down --rmi local
 docker-compose logs
 ```
 
-This aggregates and streams logs from all services defined in your Compose file. This is invaluable for debugging startup race conditions and inter-service communication errors.
+This aggregates and streams logs from all services defined in your Compose file. This is really useful for debugging startup race conditions and inter-service communication errors.
 
 Useful flags:
 
@@ -127,7 +127,7 @@ docker-compose exec api node scripts/seed.js
 
 ## 2. Image Portability: Save, Load, Export & Import
 
-Understanding the difference between these four commands is one of the most misunderstood areas of Docker. They solve different problems and operate on different primitives.
+Understanding the difference between these four commands is one of the most misunderstood areas of Docker. They solve different problems and operate on different underlying objects — images vs. containers.
 
 | Command | Operates On | Preserves Layers/History | Primary Use Case |
 |---|---|---|---|
@@ -350,7 +350,7 @@ docker logout 123456789.dkr.ecr.us-east-1.amazonaws.com
 
 ## 5. Docker Swarm: Container Clustering at Scale
 
-Docker Swarm transforms a pool of Docker hosts into a single, unified cluster. While Kubernetes dominates the enterprise orchestration conversation, Swarm remains a compelling choice for teams that want Kubernetes-like orchestration without the operational overhead.
+Docker Swarm turns a pool of Docker hosts into a single, unified cluster. While Kubernetes dominates the enterprise orchestration conversation, Swarm remains a compelling choice for teams that want Kubernetes-like orchestration without the operational overhead.
 
 ### 5.1 `docker swarm init` — Bootstrapping a Swarm Cluster
 
@@ -358,7 +358,7 @@ Docker Swarm transforms a pool of Docker hosts into a single, unified cluster. W
 docker swarm init
 ```
 
-This command transforms the current Docker host into a **Swarm manager node** and prints a `docker swarm join` token that worker nodes can use to join the cluster.
+This command turns the current Docker host into a **Swarm manager node** and prints a `docker swarm join` token that worker nodes can use to join the cluster.
 
 On a multi-interface host, specify the advertise address:
 
@@ -480,7 +480,7 @@ docker stack ls
 
 ## 7. Container Checkpointing: Freeze & Restore
 
-Docker's checkpoint feature leverages **CRIU (Checkpoint/Restore In Userspace)** to freeze a running container's state to disk and restore it later — potentially on a different host. This is a powerful but experimental feature that requires CRIU to be installed on the host.
+Docker's checkpoint feature uses **CRIU (Checkpoint/Restore In Userspace)** to freeze a running container's state to disk and restore it later — potentially on a different host. This is a powerful but experimental feature that requires CRIU to be installed on the host.
 
 > ⚠️ **Note:** Checkpoint support requires a Docker daemon built with experimental features enabled and CRIU installed (`apt install criu` on Ubuntu/Debian). This feature is primarily available on Linux.
 
@@ -653,7 +653,7 @@ docker-compose down -v
 
 ## Closing Thoughts
 
-Mastering these 21 commands elevates your Docker practice from running isolated containers to orchestrating production systems. The patterns here — declarative Compose files, registry-based image distribution, Swarm services with rolling updates, systematic disk management — are the foundations that real-world containerized architectures are built on.
+Mastering these 21 commands takes your Docker practice from running isolated containers to orchestrating production systems. The patterns here — declarative Compose files, registry-based image distribution, Swarm services with rolling updates, systematic disk management — are the foundations that real-world containerized architectures are built on.
 
 The deeper principle connecting all of these commands is **immutability and declarativeness**: define the desired state, let Docker reconcile reality to it, and use tags + registries to make that desired state portable and auditable across environments.
 

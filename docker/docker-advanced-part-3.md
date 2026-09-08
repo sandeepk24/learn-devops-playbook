@@ -30,7 +30,7 @@
 
 ## Section 7 — Container Networking: Under the Bridge
 
-Docker networking is a full network virtualization stack built from Linux primitives. When you start a container on the default bridge network, Docker creates an entire virtual network infrastructure on the host using tools that have existed in the Linux kernel since 2.6.
+Docker networking is a full network virtualization stack built out of tools the Linux kernel already provides. When you start a container on the default bridge network, Docker creates an entire virtual network infrastructure on the host using tools that have existed in the Linux kernel since 2.6.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
