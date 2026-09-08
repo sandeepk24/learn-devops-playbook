@@ -988,7 +988,7 @@ def run_batch_extraction(documents: dict[str, str], max_workers: int = 10) -> li
 
 ---
 
-**Q2.** An agent running a long incident investigation session starts repeating solutions it already tried and forgetting early constraints. The context window is at 60% utilization. What is the most appropriate intervention?
+**Q2.** An agent running a long incident investigation session starts repeating solutions it already tried and forgetting early constraints. The context window is 60% full. What is the most appropriate intervention?
 
 - A) Increase `max_tokens` to allow more output
 - B) Switch to a model with a larger context window
