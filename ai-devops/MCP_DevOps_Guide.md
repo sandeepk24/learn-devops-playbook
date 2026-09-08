@@ -63,7 +63,7 @@ The key insight: **the AI model never directly calls your APIs**. It talks to MC
 
 ## 2. The Big Picture: Where MCP Lives in the AI Universe
 
-Let's zoom out. The AI landscape right now has a lot of buzzwords flying around — Gen AI, Agentic AI, AI Agents, AI Applications. Here's how they all relate, and where MCP fits.
+Let's zoom out. There's a lot of AI buzzwords flying around right now — Gen AI, Agentic AI, AI Agents, AI Applications. Here's how they all relate, and where MCP fits.
 
 ### The Technology Stack
 
@@ -158,7 +158,7 @@ Here's a practical view of the complexity spectrum, from smallest to most comple
 - **Remediation Agent**: Proposes and (with approval) applies a fix
 - **Comms Agent**: Drafts the incident update for Slack/PagerDuty
 
-**MCP involvement**: The shared language ALL of these agents use to talk to tools. Without MCP, each agent would need its own bespoke integrations. With MCP, they share a common tool ecosystem.
+**MCP involvement**: The shared language ALL of these agents use to talk to tools. Without MCP, each agent would need its own bespoke integrations. With MCP, they share the same set of tools.
 
 ---
 

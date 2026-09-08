@@ -913,7 +913,7 @@ class LLMFallbackChain:
         )
 ```
 
-### Retry strategy — more nuanced than you'd think
+### Retry strategy — trickier than you'd think
 
 With a web service, retry-on-failure is almost always right. With LLMs you have to think about which errors are actually worth retrying. A rate limit error? Worth retrying after a delay. A context length exceeded error? Not worth retrying — the request is fundamentally too large and retrying will just fail again and waste money.
 

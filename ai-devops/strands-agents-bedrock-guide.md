@@ -405,7 +405,7 @@ This agent can now search AWS documentation in real-time and answer your questio
 
 Here's a real problem at scale: what if your agent needs access to hundreds or thousands of tools? You can't list them all in the context window — LLMs can't reliably pick from that many options.
 
-Strands solves this elegantly with the `retrieve` tool for tool discovery:
+Strands has a clean fix for this: the `retrieve` tool for tool discovery:
 
 ```python
 from strands import Agent
@@ -1075,7 +1075,7 @@ Use **Strands** when you're on AWS, want fast iteration, and your tasks benefit 
 
 Use **LangGraph** when you have strict compliance or audit requirements where you need to guarantee the agent follows a specific sequence of steps — like a regulated financial workflow.
 
-Use **LangChain** mainly if your team already has significant investment in it, or you need its broad ecosystem of integrations.
+Use **LangChain** mainly if your team already has significant investment in it, or you need its wide range of existing integrations.
 
 ---
 

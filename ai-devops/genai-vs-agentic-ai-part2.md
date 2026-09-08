@@ -131,7 +131,7 @@ It's an end-to-end platform that goes beyond Bedrock Agents with additional capa
 
 **AgentCore Code Interpreter** — A sandboxed environment for running code that the agent generates. The agent can write and execute Python, analyse data, generate charts, and work with files — in isolation from your production systems.
 
-**AgentCore Browser Tool** — Allows agents to interact with web interfaces — reading dashboards, navigating SaaS tools that don't have APIs, filling forms. Combined with MCP, this opens up integrations that would otherwise require custom scraper code.
+**AgentCore Browser Tool** — Allows agents to interact with web interfaces — reading dashboards, clicking through SaaS tools that don't have APIs, filling forms. Combined with MCP, this opens up integrations that would otherwise require custom scraper code.
 
 **Observability and Evaluation** — Built-in tracing, metrics, and evaluation tools. You can replay agent runs, identify where reasoning went wrong, and continuously improve agent quality. For a DevOps engineer, this is your agent's equivalent of CloudWatch + X-Ray.
 
@@ -332,7 +332,7 @@ Generative AI and agentic AI are not competing approaches — they're different 
 
 Generative AI is powerful for accelerating human work: generating code, summarising logs, drafting runbooks, explaining errors. It's lower risk, easier to govern, and should be your starting point.
 
-Agentic AI is transformative for automating workflows that currently require humans at every step: incident response, deployment validation, security compliance, infrastructure management. It's higher leverage, but also higher responsibility — agents with write access to production are a new kind of infrastructure component, and they need to be treated with the same rigour as your Terraform modules.
+Agentic AI can automate workflows that currently require humans at every step: incident response, deployment validation, security compliance, infrastructure management. It's higher leverage, but also higher responsibility — agents with write access to production are a new kind of infrastructure component, and they need to be treated with the same rigour as your Terraform modules.
 
 AWS has built a comprehensive stack for both — from the model access layer in Bedrock, through the orchestration capabilities in Bedrock Agents, to the production platform in AgentCore, and the development workflow in Kiro. The pieces are mature enough to build real systems with.
 

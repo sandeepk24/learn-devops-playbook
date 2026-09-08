@@ -169,7 +169,7 @@ A/B testing           →  Prompt A/B + model comparison experiments
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Tool Landscape — What to Choose
+### Which Tools to Choose
 
 ```
 OBSERVABILITY PLATFORM (pick one as your primary):

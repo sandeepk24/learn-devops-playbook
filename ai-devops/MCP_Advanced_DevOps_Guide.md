@@ -324,7 +324,7 @@ return [EmbeddedResource(type="resource", resource=TextResourceContents(
 
 ## 4. The DevOps Build Catalog
 
-Twelve production-grade things you can build, organized from tactical wins to transformational systems.
+Twelve production-grade things you can build, organized from quick wins to systems that change how your team operates.
 
 ---
 

@@ -53,7 +53,7 @@ You describe a process, and the model drafts a runbook. You review, edit, publis
 
 ### What generative AI is NOT doing
 
-This is crucial. Generative AI — in its pure form — is **not**:
+This matters. Generative AI — in its pure form — is **not**:
 
 - Accessing your AWS account
 - Running your Terraform plan
@@ -70,7 +70,7 @@ It receives a prompt. It returns a response. Full stop.
 
 ### What it actually is
 
-Agentic AI (also called AI agents or autonomous agents) takes generative AI and adds something transformative: **the ability to take actions, use tools, remember context, plan across multiple steps, and operate with a degree of autonomy** — often without requiring human input at every single step.
+Agentic AI (also called AI agents or autonomous agents) takes generative AI and adds something new: **the ability to take actions, use tools, remember context, plan across multiple steps, and operate with a degree of autonomy** — often without requiring human input at every single step.
 
 An AI agent doesn't just answer your question. It:
 1. Understands a high-level goal
@@ -190,7 +190,7 @@ Fine-tuning is expensive and complex. Most teams should try RAG and prompt engin
 
 ### Tool Use / Function Calling
 
-The mechanism that transforms a generative model into an agentic one. You define a set of "tools" (functions, APIs, bash commands) and their schemas. The model can decide to call these tools mid-response when it needs information or needs to take an action.
+The mechanism that turns a generative model into an agentic one. You define a set of "tools" (functions, APIs, bash commands) and their schemas. The model can decide to call these tools mid-response when it needs information or needs to take an action.
 
 Example: you define a `get_cloudwatch_logs` tool that takes a log group name and time range. When the agent is diagnosing an incident, it can call this tool itself — rather than asking you to paste the logs.
 
@@ -287,7 +287,7 @@ More practically:
 
 **Agentic AI pattern** — automated incident response (the agent detects and acts), autonomous code review + PR creation, self-healing infrastructure, CI/CD pipeline agents that debug and re-run failing builds, chat bots that actually look up your real-time AWS cost data.
 
-The line can blur. A single chatbot session might start generative (write me a runbook) and become agentic (now go create it in Confluence, tag it, and link it to the relevant alert). Modern platforms blur these deliberately — which is why understanding the primitives matters.
+The line can blur. A single chatbot session might start generative (write me a runbook) and become agentic (now go create it in Confluence, tag it, and link it to the relevant alert). Modern platforms blur these deliberately — which is why understanding how the two actually differ matters.
 
 ---
 
