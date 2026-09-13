@@ -51,9 +51,17 @@ Not sure where to jump in? Pick the path that fits where you are right now.
 2. [Bedrock 200-level fundamentals](./aws/aws-bedrock-200-level-fundamentals.md) — build the mental model before you write the code
 3. [MCP — the DevOps engineer's field guide](./ai-devops/MCP_DevOps_Guide.md) — what MCP is and why it matters
 4. [Building your first MCP server](./mcp-server-for-devops/05-your-first-mcp-server.md) — hands-on from scratch
-5. [SRE for LLM applications](./ai-devops/sre-for-llm--applications.md) — what being on-call for an LLM actually looks like
-6. [LLMOps evaluation pipeline for DevOps bots](./ai-devops/llmops-evaluation-pipeline-for-devops-bots.md) — catching prompt drift before users do
-7. [Bedrock AgentCore for DevOps engineers](./learning-amazon-bedrock-agentcore/) — the operational half of deploying an agent
+5. [Agentic AI fundamentals](./agentic-ai/01-agentic-ai-fundamentals-for-devops.md) — the agent loop, and when to build one vs. a plain workflow
+6. [SRE for LLM applications](./ai-devops/sre-for-llm--applications.md) — what being on-call for an LLM actually looks like
+7. [LLMOps evaluation pipeline for DevOps bots](./ai-devops/llmops-evaluation-pipeline-for-devops-bots.md) — catching prompt drift before users do
+8. [Bedrock AgentCore for DevOps engineers](./learning-amazon-bedrock-agentcore/) — the operational half of deploying an agent
+
+### If you're new to Python and want to get comfortable fast
+1. [Python roadmap for DevOps engineers](./python/README.md) — the full plan, start to finish
+2. [Python basics and setup](./python/01-python-basics-and-setup.md) — install it right, run your first script
+3. [Python data structures](./python/02-python-data-structures.md) — lists, dicts, tuples, sets — the shapes all real data comes in
+4. [Python scripting for DevOps automation](./python/06-python-scripting-for-devops-automation.md) — the capstone: CLI args, `subprocess`, logging, a real script end to end
+5. [Pydantic — the complete DevOps guide](./python/python_pydantic_devops_guide.md) — once the basics are solid, this is where type-safe config and validation take over
 
 ---
 
@@ -78,6 +86,17 @@ Not sure where to jump in? Pick the path that fits where you are right now.
 | [MCP advanced guide for DevOps engineers & architects](./ai-devops/MCP_Advanced_DevOps_Guide.md) | LLMs vs RAG vs MCP, advanced server patterns, and the architecture trade-offs. |
 | [AWS Strands Agents — complete guide](./ai-devops/strands-agents-bedrock-guide.md) | The Strands SDK for cloud & DevOps engineers: what it is and why you'd reach for it. |
 | [Amazon Bedrock model availability](./ai-devops/amazon-bedrock-model-availability.md) | Why your model isn't available — and how to actually fix it instead of fighting IAM blind. |
+
+### 🤖 Agentic AI — Building Agents (Design Patterns)
+> Framework and cloud-agnostic. This is the "how do I design this" series — for the "how do I run this" side, see AI/LLMOps above; for the "how do I use this specific SDK" side, see Anthropic, AWS Bedrock, and AgentCore below. See the [series README](./agentic-ai/README.md) for how all of these folders fit together.
+
+| Note | What's in it |
+|---|---|
+| [Agentic AI fundamentals for DevOps](./agentic-ai/01-agentic-ai-fundamentals-for-devops.md) | Chatbot vs. workflow vs. agent, the observe-reason-act loop, and when *not* to build one. |
+| [Agent memory, context, and state](./agentic-ai/02-agent-memory-context-and-state.md) | Short-term vs. long-term memory, managing the context window, and treating agent state like a reconciliation loop. |
+| [Multi-agent orchestration patterns](./agentic-ai/03-multi-agent-orchestration-patterns.md) | Single agent vs. orchestrator-worker vs. pipeline vs. swarm, the framework landscape, and MCP vs. A2A. |
+| [Tool use and function-calling design](./agentic-ai/04-tool-use-and-function-calling-design.md) | What a "tool" actually is to a model, and the design principles that keep an agent from doing something dumb with one. |
+| [Agentic AI security threat model](./agentic-ai/05-agentic-ai-security-threat-model.md) | Prompt injection, excessive agency, tool poisoning, and the "lethal trifecta" — mapped to controls you already know. |
 
 ### 🧠 Anthropic / Claude
 > Study series for the Claude Certified Architect – Foundations (CCAR-F) exam, written from a DevOps/cloud perspective. See the [series README](./anthropic/README.md) for the full exam outline.
@@ -230,8 +249,17 @@ Not sure where to jump in? Pick the path that fits where you are right now.
 | [Post-deployment validation checklist](./sre/post-deployment-validation-checklist.md) | Why green CI isn't "done," and what to actually check after the pipeline passes. |
 
 ### 🐍 Python
+> New to Python? Start with the [Python roadmap](./python/README.md) — a structured, basics-to-intermediate plan built specifically for DevOps engineers, with a realistic weekly pace.
+
 | Note | What's in it |
 |---|---|
+| [Python roadmap for DevOps engineers](./python/README.md) | The full learning plan — what to study in what order, how long it should take, and what to do once you're through it. |
+| [01: Python basics and setup](./python/01-python-basics-and-setup.md) | Installing Python properly, running scripts, variables, types, and f-strings. |
+| [02: Python data structures](./python/02-python-data-structures.md) | Lists, tuples, dicts, and sets — the shapes almost all real data (JSON, YAML, API responses) comes in. |
+| [03: Python control flow and functions](./python/03-python-control-flow-and-functions.md) | Conditionals, loops, functions, and error handling that doesn't swallow real failures. |
+| [04: Python modules, packages, and environments](./python/04-python-modules-packages-and-environments.md) | `pip`, virtual environments, and imports — without breaking your system Python. |
+| [05: Python OOP, files, and error handling](./python/05-python-oop-files-and-error-handling.md) | Classes, dataclasses, reading/writing JSON and YAML, and `pathlib`. |
+| [06: Python scripting for DevOps automation](./python/06-python-scripting-for-devops-automation.md) | The capstone: CLI args, `subprocess`, logging, HTTP calls, and exit codes — a real automation script end to end. |
 | [FastAPI for DevOps engineers](./python/what-devops-engineers-should-know-about-fastapi-in-production.md) | Python fundamentals → production-grade FastAPI. For DevOps folks building internal tools, automation APIs, and AI pipelines. |
 | [Pydantic — the complete DevOps guide](./python/python_pydantic_devops_guide.md) | Why Pydantic matters in DevOps and how to use it for config, validation, and data contracts. |
 | [Uvicorn vs Gunicorn explained](./python/uvicorn-vs-gunicorn-explained.md) | When to use which ASGI/WSGI server, and how to configure them correctly for production workloads. |
@@ -278,8 +306,8 @@ A few of the notes I reach for most often:
 
 ## Repo stats
 
-- **130 notes** across 20 topic areas
-- **~80,000 lines** of content
+- **140+ notes** across 21 topic areas
+- **~82,000 lines** of content
 - Everything is plain Markdown — clone and `grep -r "some error" .` works better than any search UI
 
 ---
