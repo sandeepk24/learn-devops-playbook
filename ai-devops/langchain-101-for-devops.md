@@ -257,4 +257,4 @@ No agent, no autonomous tool-selection — just a grounded, deterministic chain.
 
 ---
 
-*This article is part of an ongoing AI-DevOps series in [devops-field-notes](https://github.com/sandeepk24/devops-field-notes). Follow the repo for the next installment on LangGraph and multi-agent orchestration patterns.*
+*This article is part of an ongoing AI-DevOps series in [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook). Follow the repo for the next installment on LangGraph and multi-agent orchestration patterns.*
