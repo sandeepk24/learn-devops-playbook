@@ -143,4 +143,4 @@ That's the series. The framework will keep changing shape under the hood — it 
 
 ---
 
-*This is Part 5, the final post, of a 5-part series in [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook). Start from [Part 1](./langchain-langgraph-part1-core-architecture.md) if you're arriving here first.*
+*This is Part 5, the final post, of a 5-part series in [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook). Start from [Part 1](./01-core-architecture.md) if you're arriving here first.*
