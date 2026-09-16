@@ -1,6 +1,8 @@
 # LangChain 101 for DevOps Engineers, Senior Engineers, and Architects
 
 > Part of the [learn-devops-playbook](https://github.com/sandeepk24/learn-devops-playbook) AI-DevOps series.
+>
+> **Looking for something deeper?** This page is a quick overview. For an in-depth, 5-part walkthrough of LangChain and LangGraph built around Kubernetes and CI/CD analogies, start with [Part 1: Core Architecture](./langchain-langgraph-part1-core-architecture.md), then [Part 2: State, Nodes, Edges](./langchain-langgraph-part2-state-nodes-edges.md), [Part 3: Tools and Agents](./langchain-langgraph-part3-tools-and-agents.md), [Part 4: Memory and Retrieval](./langchain-langgraph-part4-memory-and-retrieval.md), and [Part 5: Production and Observability](./langchain-langgraph-part5-production-observability.md).
 
 ## Why a DevOps engineer should care about LangChain
 
