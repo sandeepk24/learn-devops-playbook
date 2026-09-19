@@ -1,0 +1,17 @@
+# Core LangChain packages
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-openai>=0.2.0
+langchain-community>=0.3.0
+
+# LangGraph for stateful agents
+langgraph>=0.2.0
+
+# Vector store for RAG examples
+chromadb>=0.5.0
+
+# Utilities
+python-dotenv>=1.0.0
+
+# For structured output examples
+pydantic>=2.0.0
