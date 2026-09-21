@@ -158,3 +158,69 @@ Rollback is just shifting traffic back — the old version is still running. Tha
 ### 6. Graceful draining
 
 Don't forget the shutdown side. Tune your target group's `deregistration_delay` and make sure your app handles SIGTERM properly. Old tasks need to finish in-flight requests before stopping, not just drop connections.
+
+---
+
+## Putting it together: boto3 example
+
+Here's what this looks like in Python if you're scripting deployments:
+
+```python
+import boto3
+
+ecs = boto3.client("ecs")
+
+ecs.update_service(
+    cluster="prod",
+    service="my-api",
+    taskDefinition="my-api:42",
+    healthCheckGracePeriodSeconds=60,
+    deploymentConfiguration={
+        "minimumHealthyPercent": 100,   # never drop below desired count
+        "maximumPercent": 200,          # allow a full parallel set
+        "deploymentCircuitBreaker": {"enable": True, "rollback": True},
+        "alarms": {                     # catch "running but broken"
+            "alarmNames": ["my-api-5xx-high", "my-api-p99-latency"],
+            "enable": True,
+            "rollback": True,
+        },
+    },
+)
+
+# Block until the deployment settles, then check the outcome
+ecs.get_waiter("services_stable").wait(cluster="prod", services=["my-api"])
+svc = ecs.describe_services(cluster="prod", services=["my-api"])["services"][0]
+primary = next(d for d in svc["deployments"] if d["status"] == "PRIMARY")
+print(primary["taskDefinition"], primary.get("rolloutState"))
+```
+
+Here's the trick for CI/CD pipelines: compare `primary["taskDefinition"]` with the revision you just deployed. If ECS rolled back, the PRIMARY revision will be the *old* one. Your pipeline should fail in that case, even though the service itself is stable. Otherwise you'll think deployments succeeded when they actually got reverted.
+
+---
+
+## Terraform equivalent
+
+Same thing in Terraform, if that's your jam:
+
+```hcl
+resource "aws_ecs_service" "api" {
+  # ... other config ...
+  
+  deployment_minimum_healthy_percent = 100
+  deployment_maximum_percent         = 200
+  health_check_grace_period_seconds  = 60
+
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
+  alarms {
+    alarm_names = ["my-api-5xx-high"]
+    enable      = true
+    rollback    = true
+  }
+}
+```
+
+Nothing fancy — it maps pretty directly to the API.
