@@ -86,3 +86,29 @@ Once you enable the circuit breaker, deployments expose some new fields that are
 When a rollback happens, watch what ECS does: the PRIMARY deployment flips back to the previous task definition. You'll see it in the console — the task definition revision number changes.
 
 If you've got rollback disabled, a failed deployment just stays in the `FAILED` state. ECS stops trying to push the broken version, but it doesn't automatically go back. You deal with it however you want.
+
+---
+
+## EventBridge integration
+
+Deployment state changes get emitted to EventBridge. So you can:
+
+- Trigger SNS alerts when a deployment fails
+- Kick off Lambda automation for custom handling
+- Feed deployment events into your observability pipeline
+
+The service events tell the whole story in sequence: tasks failed to start, rolling back, rollback successful, steady state reached. Good stuff for your dashboards.
+
+---
+
+## Load balancers: nothing changes
+
+If you're using an ALB or NLB, the circuit breaker just works. No configuration changes needed on the load balancer side.
+
+One thing worth noting: unhealthy new tasks never get registered into the target group. So even while ECS is detecting failures and deciding whether to roll back, your load balancer is only sending traffic to healthy tasks — which are your old ones.
+
+---
+
+## IaC support
+
+At the time Adam recorded the demo, Terraform and CloudFormation support was still pending. But that was a while ago — both support it now. You'll find `deployment_circuit_breaker` blocks in Terraform and the equivalent in CloudFormation templates.
