@@ -52,7 +52,7 @@ model = ChatBedrock(model_id="anthropic.claude-3-5-sonnet-20241022-v2:0")
 
 **The DevOps parallel:** this is the same job a load balancer's health-check config or a `kubectl` provider abstraction does for you — one interface, swappable backend. You don't rewrite your deployment scripts because you moved from one cloud provider's managed database to another; you change a connection string. Same idea here: you change a class name and a model ID, not your prompt logic, your parsing logic, or your tool definitions.
 
-One thing worth internalizing early: **the model itself has no state and no memory.** Every call is a fresh request-response, exactly like a stateless HTTP call to an API. If a workflow needs to remember what happened three steps ago, that memory has to live outside the model, in your code. We'll come back to this — it's the entire reason LangGraph exists.
+One thing worth getting in your head early: **the model itself has no state and no memory.** Every call is a fresh request-response, exactly like a stateless HTTP call to an API. If a workflow needs to remember what happened three steps ago, that memory has to live outside the model, in your code. We'll come back to this — it's the entire reason LangGraph exists.
 
 ---
 
@@ -90,7 +90,7 @@ LCEL stands for LangChain Expression Language. Don't let the name make it sound 
 chain = prompt | model | parser
 ```
 
-Read that exactly like a shell pipeline: output of the left side becomes input to the right side. `prompt` builds the message, `model` sends it and gets a response, `parser` cleans that response into whatever shape you want back (a plain string, a JSON object, whatever). Nothing about this is clever — it's function composition with a readable syntax, the same reason you like `grep | sort | uniq -c` more than one script that does all three things in a row with no clear seams.
+Read that exactly like a shell pipeline: output of the left side becomes input to the right side. `prompt` builds the message, `model` sends it and gets a response, `parser` cleans that response into whatever shape you want back (a plain string, a JSON object, whatever). Nothing clever here — it's function composition with a readable syntax, the same reason you like `grep | sort | uniq -c` more than one script that does all three things in a row with no clear seams.
 
 Here's a complete, runnable example — the smallest realistic LangChain pipeline:
 
@@ -136,7 +136,7 @@ Every piece in that chain is a `Runnable`. That's the actual base class undernea
 
 ## Where a straight pipeline stops being enough
 
-A chain like the one above runs once, start to finish, in a straight line. That's fine for "take this input, produce this output." It falls apart the moment you need any of the following, all of which are completely normal asks in a real system:
+A chain like the one above runs once, start to finish, in a straight line. That's fine for "take this input, produce this output." It falls apart the moment you need any of the following — all of which are completely normal asks in a real system:
 
 - **Branching:** "if the retrieved context doesn't actually answer the question, do a web search instead of just answering anyway."
 - **Looping:** "let the model try calling a tool, look at the result, and decide whether it needs to call another tool before answering."
@@ -149,7 +149,7 @@ A plain LCEL chain is a straight line. None of the four things above are a strai
 
 ## Enter LangGraph: a control loop, not a bigger chain
 
-Here's the mental model that will save you time: **stop thinking of LangGraph as "LangChain but fancier."** Think of it as a small state machine runtime, closer in spirit to a Kubernetes controller than to a pipeline tool.
+Here's the mental model that'll save you time: **stop thinking of LangGraph as "LangChain but fancier."** Think of it as a small state machine runtime, closer in spirit to a Kubernetes controller than to a pipeline tool.
 
 A Kubernetes controller does one thing, over and over: look at the current state of the world, compare it to the desired state, do something to close the gap, and check again. It doesn't run once and exit — it keeps looping until the actual state matches the desired state, and it keeps a record of where things stand the whole time.
 
@@ -190,7 +190,7 @@ The concepts line up directly:
 | A `Ready` condition that stops reconciliation | **Conditional edge** — a function that inspects the state and decides "loop again" or "stop, we're done" |
 | Controller restart resuming from last known state | **Checkpointing** — LangGraph can persist state after each step so a run can resume exactly where it left off, instead of starting over |
 
-That last row matters more than it looks. A plain LCEL chain has no concept of "resume from where I crashed" — if step 2 of 3 fails, you re-run the whole chain from the top. A LangGraph graph with checkpointing enabled can pick back up at the node it was on, with the state it had, the same way a controller doesn't re-provision every resource in the cluster just because it got restarted — it reads current state and carries on.
+That last row matters more than it looks. A plain LCEL chain has no concept of "resume from where I crashed" — if step 2 of 3 fails, you re-run the whole chain from the top. A LangGraph graph with checkpointing enabled can pick back up at the node it was on, with the state it had. Same way a controller doesn't re-provision every resource in the cluster just because it got restarted — it reads current state and carries on.
 
 We'll build a real multi-node graph with branching and looping in Part 2. For this post, here's the smallest possible LangGraph example, just to see the shape of the API — a two-node graph that always runs node A then node B, no branching yet:
 
@@ -251,7 +251,7 @@ Notice this graph doesn't branch or loop yet — it's a straight line, same as t
 - Know the actual trigger for reaching for LangGraph instead of a chain: branching, looping, or needing to resume after a crash.
 - Read the state/node/edge table above and map it back to a reconciliation loop without having to re-read it.
 
-Part 2 picks up right here: we'll build a graph with a real conditional edge and a real loop — an incident-triage flow that keeps pulling more context until it has enough to answer, the same way a controller keeps reconciling until the object is actually `Ready` — and we'll look at how LangGraph's checkpointing actually gets stored so a run can survive a process restart.
+Part 2 picks up right here: we'll build a graph with a real conditional edge and a real loop — an incident-triage flow that keeps pulling more context until it has enough to answer. Same way a controller keeps reconciling until the object is actually `Ready`. And we'll look at how LangGraph's checkpointing actually gets stored so a run can survive a process restart.
 
 ---
 
