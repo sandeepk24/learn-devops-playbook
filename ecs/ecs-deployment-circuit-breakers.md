@@ -31,3 +31,25 @@ And here's something that trips people up: there's nothing to upgrade. The ECS c
 Here's the thing — you don't configure a threshold like "roll back after 5 failures." ECS calculates the threshold based on your service's desired task count. It's managed for you.
 
 Adam mentioned this was a first iteration when he recorded the demo, and acknowledged some edge cases might not get caught. But for the common case of "my new image is completely broken and crashes on startup," it works well.
+
+---
+
+## Quick refresher: task definitions vs services
+
+If you're coming from Kubernetes, here's the mental mapping.
+
+A **task definition** is basically your pod spec. It's the JSON that describes your containers — the image, ports, CPU and memory, environment variables, and importantly, the execution role. That execution role is what lets ECS pull your image from ECR. Without it, you get cryptic "image not found" errors even when the image definitely exists.
+
+A **service** is what maintains your desired state. You say "I want 5 tasks running," and ECS makes sure there are always 5. Same concept as replicas in Kubernetes.
+
+---
+
+## Rolling deployment settings you need to understand
+
+Two numbers control everything here:
+
+**`minimumHealthyPercent: 100`** — This means ECS has to start new tasks *before* it stops old ones. You never dip below your desired count.
+
+**`maximumPercent: 200`** — This allows double the tasks during rollout. So if you're going from 5 old tasks to 5 new ones, you might briefly have 10 running while the transition happens.
+
+Together, these give you the "add before remove" behavior. Old tasks keep serving traffic until new ones are proven healthy. This is different from the default behavior where ECS might stop some old tasks first to make room.
