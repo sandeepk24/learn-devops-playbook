@@ -53,3 +53,36 @@ Two numbers control everything here:
 **`maximumPercent: 200`** — This allows double the tasks during rollout. So if you're going from 5 old tasks to 5 new ones, you might briefly have 10 running while the transition happens.
 
 Together, these give you the "add before remove" behavior. Old tasks keep serving traffic until new ones are proven healthy. This is different from the default behavior where ECS might stop some old tasks first to make room.
+
+---
+
+## How to enable the circuit breaker
+
+Here's the actual config:
+
+```json
+"deploymentCircuitBreaker": {
+  "enable": true,
+  "rollback": true
+}
+```
+
+Two things to know:
+
+1. **It's off by default.** You have to explicitly enable it.
+2. **Rollback is a separate flag.** You can enable detection without automatic rollback if you want to handle failures yourself.
+
+Adam's recommendation: unless you've already built custom rollback logic that you prefer, just turn rollback on. Let ECS handle it.
+
+---
+
+## New deployment observability
+
+Once you enable the circuit breaker, deployments expose some new fields that are really useful:
+
+- **`rolloutState`** — Can be `IN_PROGRESS`, `COMPLETED`, or `FAILED`
+- **`failedTasks`** — A count of how many tasks have failed during this deployment
+
+When a rollback happens, watch what ECS does: the PRIMARY deployment flips back to the previous task definition. You'll see it in the console — the task definition revision number changes.
+
+If you've got rollback disabled, a failed deployment just stays in the `FAILED` state. ECS stops trying to push the broken version, but it doesn't automatically go back. You deal with it however you want.
