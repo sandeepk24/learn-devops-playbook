@@ -112,3 +112,49 @@ One thing worth noting: unhealthy new tasks never get registered into the target
 ## IaC support
 
 At the time Adam recorded the demo, Terraform and CloudFormation support was still pending. But that was a while ago — both support it now. You'll find `deployment_circuit_breaker` blocks in Terraform and the equivalent in CloudFormation templates.
+
+---
+
+## The circuit breaker alone isn't enough
+
+Okay, so here's the honest truth. The circuit breaker is great, but it doesn't guarantee zero downtime by itself. You need several settings working together. Let me walk through them.
+
+### 1. Rolling deployment that never drops below full capacity
+
+Set `minimumHealthyPercent: 100` and `maximumPercent: 200`. This way ECS only stops an old task *after* its replacement is healthy.
+
+But — and this matters on EC2 — make sure your cluster can actually fit 2x tasks. If you're using a capacity provider with managed scaling, you're probably fine. If not, new tasks might sit in PENDING while waiting for capacity, and the deployment stalls rather than failing cleanly.
+
+### 2. Circuit breaker with rollback
+
+You know this one now: `enable: true, rollback: true`. It catches tasks that fail to reach RUNNING or fail health checks.
+
+### 3. Real health checks (because "RUNNING" doesn't mean healthy)
+
+This is where a lot of teams mess up. Add a container `healthCheck` in your task definition:
+
+```json
+"healthCheck": {
+  "command": ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+}
+```
+
+But here's the thing — make that endpoint check real dependencies. Don't just return 200 immediately. If your app can start, pass the health check, but not actually talk to the database yet, you're lying to ECS.
+
+Also configure your ALB target group health check with a sensible path, interval, and thresholds. And set `healthCheckGracePeriodSeconds` on the service so slow-starting apps don't get killed before they finish booting.
+
+### 4. Deployment alarms for failures the circuit breaker can't see
+
+Here's the gap. Your app can start, pass health checks, and still be broken. Maybe it's returning 5xx errors. Maybe latency is through the roof. The circuit breaker won't catch that — the tasks are technically healthy.
+
+Solution: attach CloudWatch alarms to your deployment configuration. Things like target 5xx count, p99 latency. Set `rollback: true` on the alarms config. ECS will roll back if an alarm fires during deployment.
+
+### 5. For the strictest control: ECS native blue/green
+
+If rolling updates with alarms aren't enough assurance, there's the newer built-in blue/green strategy (`strategy: BLUE_GREEN`). It runs the full green fleet alongside blue. Traffic shifts via the ALB listener. ECS holds for a configurable bake time before tearing down blue.
+
+Rollback is just shifting traffic back — the old version is still running. That's the cleanest form of "keep old running until new is stable."
+
+### 6. Graceful draining
+
+Don't forget the shutdown side. Tune your target group's `deregistration_delay` and make sure your app handles SIGTERM properly. Old tasks need to finish in-flight requests before stopping, not just drop connections.
