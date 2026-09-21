@@ -224,3 +224,26 @@ resource "aws_ecs_service" "api" {
 ```
 
 Nothing fancy — it maps pretty directly to the API.
+
+---
+
+## The question you should be asking
+
+Here's something to think about, especially if you're running multiple environments.
+
+What does "stable" actually mean for your services? Is passing a `/health` check enough? Or do you need business signals — error rate, queue lag, response time — to stay clean for a while before you trust a new revision?
+
+The answer determines your strategy:
+
+- If health checks are sufficient, rolling updates with circuit breakers and alarms will probably work fine.
+- If you need stronger guarantees — like watching metrics for five minutes before committing — native blue/green with a bake time is worth the extra ALB listener and target group setup.
+
+Honestly, most teams I've talked to start with rolling updates plus alarms, then move to blue/green for their most critical services once they've seen a few "healthy but broken" deployments slip through.
+
+---
+
+## What Adam demoed
+
+For context, Adam's demo setup used CDK in Python to build the ECS cluster, ECR repo, IAM roles, and security groups. The app was a simple Flask service that called the task metadata endpoint to display which task definition revision was serving. Super useful for making rollbacks visible from outside — you can just hit the endpoint and see the revision number change.
+
+He deployed a working version first, then pushed a deliberately broken image (the Dockerfile exited with an error on startup). ECS detected the failures, marked the deployment failed, and rolled back. The old tasks served traffic the whole time. Clean demo of the feature working exactly as advertised.
