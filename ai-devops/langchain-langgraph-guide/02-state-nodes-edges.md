@@ -34,7 +34,7 @@ Let's take these one at a time with actual code, building up from Part 1's two-n
 
 ## State: the object every node reads and writes
 
-State in LangGraph is not memory in the "chat history" sense (that's Part 4's topic). It's closer to a work order that gets passed from station to station, picking up more detail at each stop. You define its shape up front, the same way you'd define a CRD schema before writing a controller for it.
+State in LangGraph isn't memory in the "chat history" sense (that's Part 4's topic). It's closer to a work order that gets passed from station to station, picking up more detail at each stop. You define its shape up front, the same way you'd define a CRD schema before writing a controller for it.
 
 ```python
 from typing import TypedDict, Annotated
@@ -114,7 +114,9 @@ result = app.invoke({
 print(result["answer"])
 ```
 
-Walk through what this actually does: fetch logs once, retrieve context, draft an answer, then check — if the answer says "I don't have enough context" and we haven't tried more than three times, go back and retrieve more context; otherwise stop. That's a loop with an exit condition, capped at a fixed number of attempts so it can't run forever. Sound familiar? It's the same shape as a Kubernetes controller that keeps reconciling until a resource is `Ready`, except with a hard iteration cap standing in for the kind of backoff limit you'd put on a `CronJob` or a retrying HTTP client — you never want an unbounded retry loop in either world, for the same reason: a bug in the exit condition turns into an infinite loop, and every iteration here is a billed API call, not a free retry.
+Walk through what this actually does: fetch logs once, retrieve context, draft an answer, then check — if the answer says "I don't have enough context" and we haven't tried more than three times, go back and retrieve more context; otherwise stop. That's a loop with an exit condition, capped at a fixed number of attempts so it can't run forever.
+
+Sound familiar? It's the same shape as a Kubernetes controller that keeps reconciling until a resource is `Ready`, except with a hard iteration cap standing in for the kind of backoff limit you'd put on a `CronJob` or a retrying HTTP client. You never want an unbounded retry loop in either world, for the same reason: a bug in the exit condition turns into an infinite loop. And every iteration here is a billed API call, not a free retry.
 
 ```
                  ┌──────────────┐
@@ -179,7 +181,7 @@ You could write all of this yourself with a `while` loop and a database row trac
 
 **Do** start a graph with the smallest state object that solves the problem in front of you. Adding a field later is cheap; a bloated state object that nothing reads is just as much of a liability as an over-broad IAM role — something will eventually depend on it by accident.
 
-**Don't** put anything in state that doesn't need to survive a checkpoint. Large blobs (full log files, entire documents) belong in a store you reference by ID, not inlined into the state object, for the same reason you don't put a 50MB file into a Kubernetes ConfigMap.
+**Don't** put anything in state that doesn't need to survive a checkpoint. Large blobs (full log files, entire documents) belong in a store you reference by ID, not inlined into the state object. Same reason you don't put a 50MB file into a Kubernetes ConfigMap.
 
 ---
 
