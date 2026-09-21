@@ -13,3 +13,21 @@ Here's the problem it solves. Before this existed, a broken deployment would jus
 That's painful enough when you're watching the console. But in an automated pipeline? Teams were building their own remediation logic, or they'd get paged at 2am to fix something manually. Not great.
 
 The circuit breaker moves that failure detection into ECS itself. ECS can now notice that your tasks keep dying, mark the deployment as failed, and — if you turn on rollback — automatically flip back to the last working task definition. The whole time, your old tasks keep serving traffic. That's the key part.
+
+---
+
+## Where does this logic actually live?
+
+This is important. The detection lives in the ECS control plane — not in your deployment tool. So it doesn't matter whether you're deploying with the CLI, the SDK, Terraform, CloudFormation, CDK, or some custom tooling you built yourself. The circuit breaker works the same way regardless.
+
+It also works with both EC2-backed tasks and Fargate. No difference there.
+
+And here's something that trips people up: there's nothing to upgrade. The ECS control plane is managed by AWS, unversioned from your perspective. The feature just... exists. The only thing with versions is the ECS agent running on your EC2 instances, and that's a separate concern.
+
+---
+
+## How does ECS decide when to trip the breaker?
+
+Here's the thing — you don't configure a threshold like "roll back after 5 failures." ECS calculates the threshold based on your service's desired task count. It's managed for you.
+
+Adam mentioned this was a first iteration when he recorded the demo, and acknowledged some edge cases might not get caught. But for the common case of "my new image is completely broken and crashes on startup," it works well.
