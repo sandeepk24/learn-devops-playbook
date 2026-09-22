@@ -1,29 +1,29 @@
-# 🚀 AWS ECS — Part 2: Operations, Scaling & Troubleshooting
+# AWS ECS — Part 2: Operations, Scaling & Troubleshooting
 
 > **Learn DevOps Playbook** · ECS Series (Part 2 of 3)
 >
 > Part 2 is the day-to-day operations playbook: managing **services**, reading **logs**, **scaling**, **deployments & rollbacks**, **ECS Exec**, and a battle-tested **troubleshooting** section.
 >
-> 👈 **Part 1 — Fundamentals:** concepts, Task Definitions, Tasks, and building a Fargate app from scratch.
-> 👉 **Part 3 — Deep Dives:** ALB → target group connectivity, networking, IAM, kubectl→ECS cheat sheet.
+> **Part 1 — Fundamentals:** concepts, Task Definitions, Tasks, and building a Fargate app from scratch.
+> **Part 3 — Deep Dives:** ALB → target group connectivity, networking, IAM, kubectl→ECS cheat sheet.
 
 > Assumes the `$CLUSTER`, `$SERVICE`, and `$AWS_DEFAULT_REGION` environment variables from Part 1.
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
-1. [Services](#-services)
-2. [Logs & Observability](#-logs--observability)
-3. [Scaling](#-scaling)
-4. [ECS Exec — Shell into a Container](#-ecs-exec--shell-into-a-container)
-5. [Deployments & Rollbacks](#-deployments--rollbacks)
-6. [Common Issues & Troubleshooting](#-common-issues--troubleshooting)
-7. [Useful Aliases & Shell Helpers](#-useful-aliases--shell-helpers)
+1. [Services](#services)
+2. [Logs & Observability](#logs--observability)
+3. [Scaling](#scaling)
+4. [ECS Exec — Shell into a Container](#ecs-exec--shell-into-a-container)
+5. [Deployments & Rollbacks](#deployments--rollbacks)
+6. [Common Issues & Troubleshooting](#common-issues--troubleshooting)
+7. [Useful Aliases & Shell Helpers](#useful-aliases--shell-helpers)
 
 ---
 
-## 🚀 Services
+## Services
 
 > In ECS, a **Service** is the equivalent of a Kubernetes **Deployment**. It manages desired task count, rolling updates, and load balancer registration.
 
@@ -78,7 +78,7 @@ aws ecs describe-services \
   --output table
 ```
 
-> 💡 **Tip:** Service events are the first place to look when a deployment is stuck or tasks keep failing.
+**Tip:** Service events are the first place to look when a deployment is stuck or tasks keep failing. Seriously, check this before anything else.
 
 ### Check Service Deployment Status
 
@@ -130,7 +130,7 @@ print(service_health("your-cluster", "your-service"))
 
 ---
 
-## 📊 Logs & Observability
+## Logs & Observability
 
 ### View Logs for a Container (CloudWatch)
 
@@ -223,7 +223,7 @@ for line in tail_errors("/ecs/your-service"):
 
 ---
 
-## 📏 Scaling
+## Scaling
 
 ### Manually Scale a Service (Change Desired Count)
 
@@ -285,7 +285,7 @@ aws application-autoscaling put-scaling-policy \
   }'
 ```
 
-> 💡 **Target tracking vs step scaling.** Target tracking ("keep CPU at 60%") is the right default — AWS computes the math for you. Reach for step scaling only when you need custom thresholds tied to specific CloudWatch alarms.
+**Target tracking vs step scaling.** Target tracking ("keep CPU at 60%") is the right default — AWS computes the math for you. Reach for step scaling only when you need custom thresholds tied to specific CloudWatch alarms.
 
 ### Auto-scaling setup in boto3
 
@@ -327,7 +327,7 @@ enable_cpu_autoscaling()
 
 ---
 
-## 🔐 ECS Exec — Shell into a Container
+## ECS Exec — Shell into a Container
 
 > The ECS equivalent of `kubectl exec -it <pod> -- /bin/sh`
 
@@ -351,10 +351,11 @@ aws ecs update-service \
   --enable-execute-command
 ```
 
-> ⚠️ After enabling, force a new deployment so tasks are re-launched with exec enabled:
-> ```bash
-> aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
-> ```
+**Important:** After enabling, force a new deployment so tasks are re-launched with exec enabled:
+
+```bash
+aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
+```
 
 ### Exec into a Container
 
@@ -382,7 +383,7 @@ aws ecs describe-tasks \
 
 ---
 
-## 🔄 Deployments & Rollbacks
+## Deployments & Rollbacks
 
 ### Force a New Deployment (like kubectl rollout restart)
 
@@ -410,7 +411,7 @@ aws ecs wait services-stable \
   --cluster $CLUSTER \
   --services $SERVICE
 
-echo "✅ Deployment complete and stable"
+echo "Deployment complete and stable"
 ```
 
 ### Rollback to a Previous Task Definition
@@ -432,7 +433,7 @@ aws ecs update-service \
 aws ecs wait services-stable --cluster $CLUSTER --services $SERVICE
 ```
 
-> 🤔 **Answering Part 1's question:** rollback is trivial *because* task definitions are immutable. A previous revision still exists, unmodified, so "roll back" just means pointing the service at `your-app:10` again. During a rolling deploy the service legitimately runs two revisions (PRIMARY + ACTIVE) at once — if revisions were mutable, "which version is this task running?" would have no stable answer.
+**Answering Part 1's question:** rollback is trivial *because* task definitions are immutable. A previous revision still exists, unmodified, so "roll back" just means pointing the service at `your-app:10` again. During a rolling deploy the service legitimately runs two revisions (PRIMARY + ACTIVE) at once — if revisions were mutable, "which version is this task running?" would have no stable answer.
 
 ### Monitor Deployment Progress
 
@@ -459,7 +460,7 @@ def deploy_revision(cluster: str, service: str, task_def: str) -> None:
         taskDefinition=task_def,  # e.g. "my-app:11"
     )
     ecs.get_waiter("services_stable").wait(cluster=cluster, services=[service])
-    print(f"✅ {service} now running {task_def}")
+    print(f"{service} now running {task_def}")
 
 # Rollback is the same call with an older revision:
 # deploy_revision("your-cluster", "your-service", "my-app:10")
@@ -467,7 +468,7 @@ def deploy_revision(cluster: str, service: str, task_def: str) -> None:
 
 ---
 
-## 🔥 Common Issues & Troubleshooting
+## Common Issues & Troubleshooting
 
 ### 1. Tasks Stuck in PENDING State
 
@@ -483,6 +484,7 @@ aws ecs describe-services \
 ```
 
 **Common Causes:**
+
 | Cause | What to Check |
 |---|---|
 | Not enough CPU/Memory | Check container instance capacity (`describe-container-instances`) or Fargate limits |
@@ -529,6 +531,7 @@ aws ecs describe-tasks \
 ```
 
 **Common Exit Codes:**
+
 | Exit Code | Meaning |
 |---|---|
 | `0` | Clean exit — but if essential, the task still stops (long-running apps shouldn't exit 0) |
@@ -563,6 +566,7 @@ aws ecs describe-services \
 ```
 
 **Things to Check:**
+
 ```bash
 # 1. Is the task definition valid?
 aws ecs describe-task-definition --task-definition $TASK_DEF
@@ -600,6 +604,7 @@ aws ecs describe-tasks \
 ```
 
 **Common Health Check Failures:**
+
 | Issue | Solution |
 |---|---|
 | Wrong port in target group | Verify container port matches target group port |
@@ -621,7 +626,7 @@ aws ecs update-service \
   --health-check-grace-period-seconds 120
 ```
 
-> 📎 The full ALB → target group health-check chain (and why there are *two* kinds of health check) is covered in **Part 3**.
+The full ALB → target group health-check chain (and why there are *two* kinds of health check) is covered in **Part 3**.
 
 ---
 
@@ -647,6 +652,7 @@ aws ecs describe-services \
 ```
 
 **Check if Deployment Circuit Breaker Triggered:**
+
 ```bash
 aws ecs describe-services \
   --cluster $CLUSTER \
@@ -670,6 +676,7 @@ aws ecs describe-tasks \
 ```
 
 **Common Causes:**
+
 ```bash
 # 1. Check execution role has ECR permissions
 aws iam get-role-policy \
@@ -687,7 +694,7 @@ aws ecr get-login-password --region $AWS_DEFAULT_REGION | \
   YOUR_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 ```
 
-> 💡 On Fargate in a **private subnet**, `CannotPullContainerError` is very often a *networking* problem, not a permissions one — no NAT gateway or no VPC endpoints means the task can't reach ECR. See Part 3.
+On Fargate in a **private subnet**, `CannotPullContainerError` is very often a *networking* problem, not a permissions one — no NAT gateway or no VPC endpoints means the task can't reach ECR. See Part 3.
 
 ---
 
@@ -710,11 +717,11 @@ aws ecs describe-tasks \
 ```
 
 **Requirements Checklist:**
-- [ ] `--enable-execute-command` set on service
-- [ ] Tasks re-deployed after enabling exec
-- [ ] Task role has `ssmmessages:*` permissions
-- [ ] Session Manager Plugin installed on your machine
-- [ ] Container has `/bin/sh` or `/bin/bash` available
+- `--enable-execute-command` set on service
+- Tasks re-deployed after enabling exec
+- Task role has `ssmmessages:*` permissions
+- Session Manager Plugin installed on your machine
+- Container has `/bin/sh` or `/bin/bash` available
 
 ```bash
 # Required task role permissions
@@ -759,7 +766,7 @@ aws servicediscovery list-instances \
 
 ---
 
-## 🛠️ Useful Aliases & Shell Helpers
+## Useful Aliases & Shell Helpers
 
 Add these to your `~/.bashrc` or `~/.zshrc` to speed up day-to-day ECS work:
 
@@ -804,7 +811,7 @@ ecs-exec() {
 # Force redeploy a service
 ecs-redeploy() {
   aws ecs update-service --cluster $CLUSTER --service $1 --force-new-deployment
-  echo "🚀 Redeployment triggered for $1"
+  echo "Redeployment triggered for $1"
 }
 
 # Check service events (last 5)
@@ -840,10 +847,10 @@ ecs-stopped my-service         # Debug crash reasons
 
 ---
 
-## 🎯 What's Next
+## What's Next
 
 **Part 3 — Deep Dives** ties the whole series together: exactly how an **ALB connects to target groups** (listeners, rules, target types, the two health checks, registration/deregistration), networking internals for `awsvpc`/Fargate, the full **IAM reference**, EC2 launch-type container instances, and the **kubectl→ECS cheat sheet**.
 
 ---
 
-> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR on `learn-devops-playbook`.
+> **Contributions welcome!** Found a command that saved your day? Open a PR on `learn-devops-playbook`.
