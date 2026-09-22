@@ -1,29 +1,29 @@
-# 🚀 AWS ECS — Part 1: Fundamentals, Task Definitions & Building Your First App
+# AWS ECS — Part 1: Fundamentals, Task Definitions, and Building Your First App
 
 > **Learn DevOps Playbook** · ECS Series (Part 1 of 3)
 >
 > Part 1 covers the mental model, a deep dive on **Task Definitions** and **Tasks**, and a complete **Fargate walkthrough** to deploy a working app from zero.
 >
-> 👉 **Part 2 — Operations:** services, logs, scaling, deployments, ECS Exec, troubleshooting.
-> 👉 **Part 3 — Deep Dives:** ALB → target group connectivity, networking internals, IAM, the kubectl→ECS cheat sheet.
+> **Part 2 — Operations:** services, logs, scaling, deployments, ECS Exec, troubleshooting.
+> **Part 3 — Deep Dives:** ALB → target group connectivity, networking internals, IAM, the kubectl→ECS cheat sheet.
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
-1. [ECS Core Concepts](#-ecs-core-concepts)
-2. [Prerequisites & Setup](#-prerequisites--setup)
-3. [Cluster Information](#-cluster-information)
-4. [Task Definitions — Deep Dive](#-task-definitions--deep-dive)
-5. [Tasks — Deep Dive](#-tasks--deep-dive)
-6. [Build a Basic ECS App on Fargate (End-to-End)](#-build-a-basic-ecs-app-on-fargate-end-to-end)
-7. [What's Next](#-whats-next)
+1. [ECS Core Concepts](#ecs-core-concepts)
+2. [Prerequisites & Setup](#prerequisites--setup)
+3. [Cluster Information](#cluster-information)
+4. [Task Definitions — Deep Dive](#task-definitions--deep-dive)
+5. [Tasks — Deep Dive](#tasks--deep-dive)
+6. [Build a Basic ECS App on Fargate (End-to-End)](#build-a-basic-ecs-app-on-fargate-end-to-end)
+7. [What's Next](#whats-next)
 
 ---
 
-## 🧠 ECS Core Concepts
+## ECS Core Concepts
 
-Understanding the ECS hierarchy is essential before running any commands.
+Okay, before we run any commands, let's make sure we're on the same page about the ECS hierarchy. This stuff trips people up constantly.
 
 ```
 ECS Cluster
@@ -46,16 +46,16 @@ ECS Cluster
 
 ### The one distinction that trips people up
 
-A **Task Definition** is a *versioned, immutable template*. A **Task** is a *running instance* of that template. You never edit a task definition in place — you register a new **revision** (`my-app:11` supersedes `my-app:10`) and point your service at it. This immutability is what makes rollbacks trivial: roll back = point the service at an older revision.
+Here's the thing: a **Task Definition** is a *versioned, immutable template*. A **Task** is a *running instance* of that template. You never edit a task definition in place — you register a new **revision** (`my-app:11` supersedes `my-app:10`) and point your service at it. This immutability is what makes rollbacks trivial: roll back = point the service at an older revision. That's it.
 
 ---
 
-## ⚙️ Prerequisites & Setup
+## Prerequisites & Setup
 
 ### Install AWS CLI v2 (Ubuntu/Debian)
 
 ```bash
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+curl "https://awscli.amazonaws.com/awscliv2.zip" -o "awscliv2.zip"
 sudo apt install -y unzip
 unzip awscliv2.zip
 sudo ./aws/install
@@ -107,7 +107,7 @@ aws ecs list-services --cluster $CLUSTER  # Can I see my cluster?
 
 ### Python (boto3) setup
 
-Throughout this series, CLI examples are paired with `boto3` equivalents so you can drop them into scripts, Lambdas, or FastAPI handlers.
+Throughout this series, I'll pair CLI examples with `boto3` equivalents so you can drop them into scripts, Lambdas, or FastAPI handlers.
 
 ```bash
 pip install boto3
@@ -125,7 +125,7 @@ print(ecs.list_clusters()["clusterArns"])
 
 ---
 
-## 🏗️ Cluster Information
+## Cluster Information
 
 ### List All Clusters
 
@@ -188,13 +188,13 @@ print(cluster_summary("your-cluster-name"))
 
 ---
 
-## 📋 Task Definitions — Deep Dive
+## Task Definitions — Deep Dive
 
-> A **Task Definition** is the blueprint for your containers — equivalent to a Pod spec or a `docker-compose.yml`. It is *versioned* and *immutable*: every change creates a new revision.
+> A **Task Definition** is the blueprint for your containers — equivalent to a Pod spec or a `docker-compose.yml`. It's *versioned* and *immutable*: every change creates a new revision.
 
 ### Anatomy of a Task Definition
 
-A task definition is built from a handful of top-level fields plus one or more **container definitions**. Here is an annotated Fargate example you can use as a template:
+A task definition is built from a handful of top-level fields plus one or more **container definitions**. Here's an annotated Fargate example you can use as a template:
 
 ```json
 {
@@ -256,7 +256,7 @@ A task definition is built from a handful of top-level fields plus one or more *
 | `family` | Task | Logical name; revisions increment under it | `my-app:1`, `my-app:2`, … |
 | `networkMode` | Task | `awsvpc`, `bridge`, `host`, `none` | **Fargate requires `awsvpc`** (each task gets its own ENI + private IP) |
 | `requiresCompatibilities` | Task | `FARGATE` and/or `EC2` | Validates the def against that launch type |
-| `cpu` / `memory` | Task | Task-level resource reservation | On Fargate these must be a [valid CPU/memory combo](#fargate-cpu--memory-combos) |
+| `cpu` / `memory` | Task | Task-level resource reservation | On Fargate these must be a valid CPU/memory combo |
 | `executionRoleArn` | Task | Role **ECS itself** uses to pull images & write logs | Needs ECR + CloudWatch Logs perms |
 | `taskRoleArn` | Task | Role **your app** assumes at runtime | This is what your boto3 calls use inside the container |
 | `name` | Container | Container name; referenced by load balancers, exec, logs | |
@@ -269,11 +269,11 @@ A task definition is built from a handful of top-level fields plus one or more *
 | `healthCheck` | Container | Container-level (Docker) health check | Distinct from the ALB target-group health check — see Part 3 |
 | `logConfiguration` | Container | Where stdout/stderr go | `awslogs` driver → CloudWatch |
 
-> 💡 **Two roles, two jobs.** `executionRoleArn` is for the ECS *agent* (pull image, fetch secrets, ship logs). `taskRoleArn` is for *your code* (e.g. reading from S3 or DynamoDB via boto3). Mixing these up is the single most common task-definition mistake.
+**Two roles, two jobs.** This is the single most common task-definition mistake people make: mixing up `executionRoleArn` and `taskRoleArn`. The execution role is for the ECS *agent* — it pulls images, fetches secrets, ships logs. The task role is for *your code* — e.g. reading from S3 or DynamoDB via boto3. Keep them straight.
 
 ### Fargate CPU & memory combos
 
-Fargate only accepts specific pairings. A few common ones:
+Fargate only accepts specific pairings. Here are a few common ones:
 
 | CPU (vCPU) | Valid memory values |
 |---|---|
@@ -283,7 +283,7 @@ Fargate only accepts specific pairings. A few common ones:
 | 2048 (2) | 4096 – 16384 (1 GB increments) |
 | 4096 (4) | 8192 – 30720 (1 GB increments) |
 
-Pick the wrong pairing and `register-task-definition` fails immediately with a validation error.
+Pick the wrong pairing and `register-task-definition` fails immediately with a validation error. So that's nice — at least it fails fast.
 
 ### List & inspect task definitions
 
@@ -368,11 +368,11 @@ def current_images(task_def: str) -> list[dict]:
 print(current_images("my-app"))
 ```
 
-> 🤔 **Worth pausing on:** why is a task definition immutable instead of a mutable object you patch? Think about what a rollback would mean if revisions could be edited in place — and what happens to a service mid-deploy that's running two revisions at once. (Answer in Part 2's deployment section.)
+**Worth pausing on:** why is a task definition immutable instead of a mutable object you patch? Think about what a rollback would mean if revisions could be edited in place — and what happens to a service mid-deploy that's running two revisions at once. The answer shows up in Part 2's deployment section.
 
 ---
 
-## 📦 Tasks — Deep Dive
+## Tasks — Deep Dive
 
 > A **Task** is a running instance of a task definition — the ECS equivalent of a Kubernetes **Pod**. One task can hold several containers that share the same network namespace (on `awsvpc`, the same ENI/IP).
 
@@ -522,13 +522,13 @@ for row in stopped_task_reasons("your-cluster", "your-service"):
 
 ---
 
-## 🛠️ Build a Basic ECS App on Fargate (End-to-End)
+## Build a Basic ECS App on Fargate (End-to-End)
 
-This walkthrough takes you from a Dockerfile to a publicly reachable container on **Fargate**. We'll keep it deliberately minimal — a single FastAPI container behind a public IP. (Putting it behind an ALB is covered in Part 3.)
+Alright, let's actually build something. This walkthrough takes you from a Dockerfile to a publicly reachable container on **Fargate**. We'll keep it deliberately minimal — a single FastAPI container behind a public IP. Putting it behind an ALB is covered in Part 3.
 
 ### Step 0 — The app
 
-A tiny FastAPI app with a `/health` endpoint (so we can wire up health checks later):
+A tiny FastAPI app with a `/health` endpoint so we can wire up health checks later:
 
 ```python
 # app.py
@@ -538,7 +538,7 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return {"message": "Hello from ECS Fargate 👋"}
+    return {"message": "Hello from ECS Fargate"}
 
 @app.get("/health")
 def health():
@@ -672,7 +672,7 @@ aws ec2 authorize-security-group-ingress \
   --protocol tcp --port 8080 --cidr 0.0.0.0/0
 ```
 
-> ⚠️ `--cidr 0.0.0.0/0` opens 8080 to the whole internet. Fine for a throwaway demo, never for anything real — restrict to your IP or an ALB security group (Part 3).
+**Note:** `--cidr 0.0.0.0/0` opens 8080 to the whole internet. Fine for a throwaway demo, never for anything real — restrict to your IP or an ALB security group (Part 3).
 
 ### Step 6 — Run the task
 
@@ -769,7 +769,7 @@ def deploy():
     # Block until the service settles into a steady state
     waiter = ecs.get_waiter("services_stable")
     waiter.wait(cluster=CLUSTER, services=[SERVICE])
-    print("✅ Service is stable")
+    print("Service is stable")
 
 if __name__ == "__main__":
     deploy()
@@ -787,7 +787,7 @@ aws ec2 delete-security-group --group-id $SG_ID
 
 ---
 
-## 🎯 What's Next
+## What's Next
 
 You now have a working Fargate app and a solid grip on task definitions and tasks. The next two parts build on this exact setup:
 
@@ -796,4 +796,4 @@ You now have a working Fargate app and a solid grip on task definitions and task
 
 ---
 
-> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR on `learn-devops-playbook` and add it.
+> **Contributions welcome!** Found a command that saved your day? Open a PR on `learn-devops-playbook` and add it.
