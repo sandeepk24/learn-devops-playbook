@@ -1,30 +1,30 @@
-# 🚀 AWS ECS — Part 3: ALB Connectivity, Networking & Deep Dives
+# AWS ECS — Part 3: ALB Connectivity, Networking & Deep Dives
 
 > **Learn DevOps Playbook** · ECS Series (Part 3 of 3)
 >
 > Part 3 is the deep-dive finale: exactly **how an ALB connects to target groups** (and every term in that chain), **networking internals** for `awsvpc`/Fargate, **EC2 container instances**, the full **IAM reference**, and the **kubectl→ECS cheat sheet**.
 >
-> 👈 **Part 1 — Fundamentals:** concepts, Task Definitions, Tasks, building a Fargate app.
-> 👈 **Part 2 — Operations:** services, logs, scaling, deployments, ECS Exec, troubleshooting.
+> **Part 1 — Fundamentals:** concepts, Task Definitions, Tasks, building a Fargate app.
+> **Part 2 — Operations:** services, logs, scaling, deployments, ECS Exec, troubleshooting.
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
-1. [ALB → Target Group: The Whole Chain](#-alb--target-group-the-whole-chain)
-2. [Wiring an ALB to an ECS Service (End-to-End)](#-wiring-an-alb-to-an-ecs-service-end-to-end)
-3. [The Two Health Checks](#-the-two-health-checks)
-4. [Networking & awsvpc Internals](#-networking--awsvpc-internals)
-5. [Container Instances (EC2 Launch Type)](#-container-instances-ec2-launch-type)
-6. [IAM Permissions Reference](#-iam-permissions-reference)
-7. [kubectl → ECS Cheat Sheet](#-kubectl--ecs-cheat-sheet)
-8. [Further Reading](#-further-reading)
+1. [ALB → Target Group: The Whole Chain](#alb--target-group-the-whole-chain)
+2. [Wiring an ALB to an ECS Service (End-to-End)](#wiring-an-alb-to-an-ecs-service-end-to-end)
+3. [The Two Health Checks](#the-two-health-checks)
+4. [Networking & awsvpc Internals](#networking--awsvpc-internals)
+5. [Container Instances (EC2 Launch Type)](#container-instances-ec2-launch-type)
+6. [IAM Permissions Reference](#iam-permissions-reference)
+7. [kubectl → ECS Cheat Sheet](#kubectl--ecs-cheat-sheet)
+8. [Further Reading](#further-reading)
 
 ---
 
-## 🔗 ALB → Target Group: The Whole Chain
+## ALB → Target Group: The Whole Chain
 
-This is the part people wave their hands at. Let's name every component and how requests actually flow from the internet to your container.
+This is the part people wave their hands at. Let's name every component and trace how requests actually flow from the internet to your container.
 
 ### The components, top to bottom
 
@@ -80,7 +80,7 @@ This is the part people wave their hands at. Let's name every component and how 
 4. The TG picks a healthy **target** (one task's IP:port) using its load-balancing algorithm (round robin by default).
 5. The request reaches the container — *if* the task's security group allows inbound from the ALB's security group on the container port.
 
-> 💡 **The #1 silent failure:** everything looks configured, but the **task security group** doesn't allow inbound from the **ALB security group** on the container port. Traffic dies between target group and target, and the target shows `unhealthy` with reason `Health checks failed`.
+**The #1 silent failure:** everything looks configured, but the **task security group** doesn't allow inbound from the **ALB security group** on the container port. Traffic dies between target group and target, and the target shows `unhealthy` with reason `Health checks failed`. I see this constantly.
 
 ### Who registers the targets?
 
@@ -93,7 +93,7 @@ This is the ECS equivalent of how a Kubernetes Service's endpoints controller ke
 
 ---
 
-## 🧩 Wiring an ALB to an ECS Service (End-to-End)
+## Wiring an ALB to an ECS Service (End-to-End)
 
 Building directly on the Fargate app from **Part 1**. Goal: put the `hello-svc` service behind a public ALB.
 
@@ -120,7 +120,7 @@ aws ec2 authorize-security-group-ingress \
   --source-group $ALB_SG
 ```
 
-> This source-group rule (`--source-group $ALB_SG`) is the fix for the "#1 silent failure" above. The task accepts traffic *only* from the ALB.
+That source-group rule (`--source-group $ALB_SG`) is the fix for the "#1 silent failure" above. The task accepts traffic *only* from the ALB.
 
 ### Step 2 — Create the ALB (needs ≥2 subnets in different AZs)
 
@@ -157,7 +157,7 @@ export TG_ARN=$(aws elbv2 create-target-group \
   --query 'TargetGroups[0].TargetGroupArn' --output text)
 ```
 
-> `--target-type ip` is mandatory for Fargate/awsvpc. `instance` is only for EC2 bridge mode. Target type is fixed at creation — you can't change it later.
+`--target-type ip` is mandatory for Fargate/awsvpc. `instance` is only for EC2 bridge mode. Target type is fixed at creation — you can't change it later.
 
 ### Step 4 — Create a listener that forwards to the target group
 
@@ -269,7 +269,7 @@ def create_alb_stack(vpc_id, subnets, alb_sg, task_sg, cluster):
 
 ---
 
-## ❤️ The Two Health Checks
+## The Two Health Checks
 
 A constant source of confusion: there are **two independent health checks**, and a task can pass one while failing the other.
 
@@ -312,7 +312,7 @@ aws elbv2 describe-target-group-attributes --target-group-arn $TG_ARN \
 
 ---
 
-## 🌐 Networking & awsvpc Internals
+## Networking & awsvpc Internals
 
 ### What `awsvpc` actually does
 
@@ -329,7 +329,7 @@ On Fargate (and EC2 tasks using `awsvpc`), **every task gets its own elastic net
 | **Public subnet** | `ENABLED` | Directly via the subnet's internet gateway route | Demos, simple public services |
 | **Private subnet** | `DISABLED` | Via a **NAT gateway** *or* **VPC endpoints** | Production |
 
-> ⚠️ A Fargate task in a **private subnet** with `assignPublicIp=DISABLED` and **no NAT/endpoints** cannot pull its image. This surfaces as `CannotPullContainerError` (Part 2, issue #6) — a networking problem masquerading as a permissions one.
+**Warning:** A Fargate task in a **private subnet** with `assignPublicIp=DISABLED` and **no NAT/endpoints** cannot pull its image. This surfaces as `CannotPullContainerError` (Part 2, issue #6) — a networking problem masquerading as a permissions one.
 
 ### VPC endpoints to keep Fargate fully private
 
@@ -364,7 +364,7 @@ aws ecs describe-services --cluster $CLUSTER --services $SERVICE \
 
 ---
 
-## 🖥️ Container Instances (EC2 Launch Type)
+## Container Instances (EC2 Launch Type)
 
 > Only relevant if you use the **EC2 launch type**. Skip if you're on **Fargate**.
 
@@ -421,7 +421,7 @@ Draining tells ECS to reschedule tasks elsewhere and stop placing new ones — t
 
 ---
 
-## 🔑 IAM Permissions Reference
+## IAM Permissions Reference
 
 ### Minimum Read-Only Policy (Monitoring / Debugging)
 
@@ -476,7 +476,7 @@ Draining tells ECS to reschedule tasks elsewhere and stop placing new ones — t
 }
 ```
 
-> 🔐 `iam:PassRole` is required so you can assign the task/execution roles to a task definition — but it's powerful. In production, scope it with a `Condition` on `iam:PassedToService = ecs-tasks.amazonaws.com` and to specific role ARNs rather than `Resource: "*"`.
+**Note:** `iam:PassRole` is required so you can assign the task/execution roles to a task definition — but it's powerful. In production, scope it with a `Condition` on `iam:PassedToService = ecs-tasks.amazonaws.com` and to specific role ARNs rather than `Resource: "*"`.
 
 ### The two task-definition roles (recap from Part 1)
 
@@ -496,7 +496,7 @@ The **task role** (separate) is what your application code uses at runtime — g
 
 ---
 
-## 📖 kubectl → ECS Cheat Sheet
+## kubectl → ECS Cheat Sheet
 
 | kubectl Command | AWS ECS CLI Equivalent |
 |---|---|
@@ -519,11 +519,11 @@ The **task role** (separate) is what your application code uses at runtime — g
 | `kubectl get events` | `aws ecs describe-services --query 'services[0].events'` |
 | `kubectl get endpoints` | `aws elbv2 describe-target-health --target-group-arn $TG_ARN` |
 
-> The last row is the Part 3 payoff: a Kubernetes Service's **Endpoints** are the conceptual twin of an ALB **target group's registered targets** — both track "which backends are alive right now."
+The last row is the Part 3 payoff: a Kubernetes Service's **Endpoints** are the conceptual twin of an ALB **target group's registered targets** — both track "which backends are alive right now."
 
 ---
 
-## 📌 Quick Reference Card
+## Quick Reference Card
 
 ```
 # CLUSTER
@@ -558,7 +558,7 @@ aws ecs wait services-stable --cluster $CLUSTER --services $SERVICE
 
 ---
 
-## 📚 Further Reading
+## Further Reading
 
 - [AWS ECS Developer Guide](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
 - [AWS ECS CLI Reference](https://docs.aws.amazon.com/cli/latest/reference/ecs/index.html)
@@ -571,6 +571,6 @@ aws ecs wait services-stable --cluster $CLUSTER --services $SERVICE
 
 ---
 
-> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR on `learn-devops-playbook` and add it.
+> **Contributions welcome!** Found a command that saved your day? Open a PR on `learn-devops-playbook` and add it.
 >
-> ⬅️ **Back to [Part 1 — Fundamentals](ecs-part-1-fundamentals.md)** · **[Part 2 — Operations](ecs-part-2-operations.md)**
+> **Back to [Part 1 — Fundamentals](ecs-part-1-fundamentals.md)** · **[Part 2 — Operations](ecs-part-2-operations.md)**
