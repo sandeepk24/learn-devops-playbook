@@ -235,7 +235,7 @@ Not all alerts are equal. An alerting strategy that pages on everything trains p
 }
 ```
 
-> 💡 High CPU *alone* is often fine — that's a task working hard, exactly what you paid for. High CPU *with* rising errors is a real problem. Composite alarms encode that judgment so humans don't get paged to make it at 3 AM.
+> High CPU *alone* is often fine — that's a task working hard, exactly what you paid for. High CPU *with* rising errors is a real problem. Composite alarms encode that judgment so humans don't get paged to make it at 3 AM.
 
 ---
 
@@ -334,7 +334,7 @@ def check_hidden_issues():
         print(f"ALERT: latency variance — p50 {rt['p50']}ms, p99 {rt['p99']}ms")
 ```
 
-> 🎯 **The averages lie.** A healthy-looking 200ms average can hide a p99 of 4 seconds — meaning 1 in 100 requests is miserable. Always alarm on tail latency.
+> **The averages lie.** A healthy-looking 200ms average can hide a p99 of 4 seconds — meaning 1 in 100 requests is miserable. Always alarm on tail latency.
 
 ---
 
@@ -482,24 +482,24 @@ aws ecs update-service --cluster production --service api-service \
 ## 8. Part 2 Checklist
 
 **Monitoring**
-- ☐ CloudWatch alarms on critical service + ALB metrics
-- ☐ Synthetic monitoring from *outside* AWS
-- ☐ Custom metric for task placement failures
-- ☐ Task churn and deployment-success metrics emitted
-- ☐ Log-based metrics for application errors
+- CloudWatch alarms on critical service + ALB metrics
+- Synthetic monitoring from *outside* AWS
+- Custom metric for task placement failures
+- Task churn and deployment-success metrics emitted
+- Log-based metrics for application errors
 
 **Alerting**
-- ☐ Severity tiers (P1–P4) with distinct routes
-- ☐ Composite alarms to suppress single-signal noise
-- ☐ `TreatMissingData: breaching` on "service down"
+- Severity tiers (P1–P4) with distinct routes
+- Composite alarms to suppress single-signal noise
+- `TreatMissingData: breaching` on "service down"
 
 **Operations**
-- ☐ Daily 5-minute health review (automated report)
-- ☐ Weekly capacity + cost review
-- ☐ Runbooks for the four failure modes
-- ☐ On-call rotation and escalation path
-- ☐ DR procedure tested, not just written
-- ☐ Post-mortem process that updates monitoring
+- Daily 5-minute health review (automated report)
+- Weekly capacity + cost review
+- Runbooks for the four failure modes
+- On-call rotation and escalation path
+- DR procedure tested, not just written
+- Post-mortem process that updates monitoring
 
 ---
 
@@ -545,7 +545,7 @@ DAY-2 RHYTHM
   Monthly RI review, image refresh, TEST DR, update runbooks
 
 GOLDEN RULE
-  ► The best clusters are boring. Catch it before users do. ◄
+   The best clusters are boring. Catch it before users do. ◄
 ```
 
 ---

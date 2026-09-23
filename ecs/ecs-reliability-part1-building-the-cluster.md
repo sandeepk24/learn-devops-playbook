@@ -98,7 +98,7 @@ resource "aws_ecs_service" "api" {
 
 **Private vs public subnets:** Put tasks in **private subnets** behind a NAT Gateway. Public subnets (tasks with public IPs) are rarely needed and widen your attack surface for no good reason.
 
-> 💡 **Sizing foreshadow:** subnet size determines how many tasks you can run. A `/24` gives you 256 IPs; a `/23` gives 512. In `awsvpc` mode every task eats an IP — undersized subnets are a top cause of "tasks stuck in PENDING," which we'll dissect in Part 2.
+> **Sizing foreshadow:** subnet size determines how many tasks you can run. A `/24` gives you 256 IPs; a `/23` gives 512. In `awsvpc` mode every task eats an IP — undersized subnets are a top cause of "tasks stuck in PENDING," which we'll dissect in Part 2.
 
 ---
 
@@ -354,7 +354,7 @@ Too lenient:    interval 60s, threshold 5  → 300s          → unhealthy tasks
 Just right:     interval 30s, threshold 2–3 → 60–90s       → quick detection, few false alarms
 ```
 
-> 🔗 **This connects forward:** in Part 2, "tasks constantly restarting" and "deployment stuck" both trace back to health-check tuning. A grace period that's shorter than your real startup time will fail healthy tasks forever. Get this right here and you prevent a whole class of incidents later.
+> **This connects forward:** in Part 2, "tasks constantly restarting" and "deployment stuck" both trace back to health-check tuning. A grace period that's shorter than your real startup time will fail healthy tasks forever. Get this right here and you prevent a whole class of incidents later.
 
 ### 3.4 Deployment Configuration
 
@@ -408,28 +408,28 @@ Now other services reach yours by DNS — `api-server.production.local` — with
 Before you consider the cluster "built," verify:
 
 **Architecture**
-- ☐ Using 3+ Availability Zones
-- ☐ Subnets sized for enough IPs (`awsvpc` eats one per task)
-- ☐ `awsvpc` networking mode configured
-- ☐ Task placement strategy spreads across AZs, then instances
-- ☐ Load balancer with health checks configured
+- Using 3+ Availability Zones
+- Subnets sized for enough IPs (`awsvpc` eats one per task)
+- `awsvpc` networking mode configured
+- Task placement strategy spreads across AZs, then instances
+- Load balancer with health checks configured
 
 **Capacity**
-- ☐ 30% capacity buffer (EC2) or sufficient service quotas (Fargate)
-- ☐ Auto-scaling configured at *both* levels (service + cluster, on EC2)
-- ☐ Capacity provider auto-scaling enabled (EC2)
+- 30% capacity buffer (EC2) or sufficient service quotas (Fargate)
+- Auto-scaling configured at *both* levels (service + cluster, on EC2)
+- Capacity provider auto-scaling enabled (EC2)
 
 **Task Configuration**
-- ☐ Resource requests tested under real load
-- ☐ Health check endpoint implemented *and* dependency-aware
-- ☐ Grace period covers true startup time
-- ☐ Logging configured with a retention policy
-- ☐ Secrets in Secrets Manager / SSM, not env vars
+- Resource requests tested under real load
+- Health check endpoint implemented *and* dependency-aware
+- Grace period covers true startup time
+- Logging configured with a retention policy
+- Secrets in Secrets Manager / SSM, not env vars
 
 **Deployment**
-- ☐ Circuit breaker enabled with rollback
-- ☐ Config allows zero-downtime rollout
-- ☐ Rollback procedure documented
+- Circuit breaker enabled with rollback
+- Config allows zero-downtime rollout
+- Rollback procedure documented
 
 ---
 
@@ -479,7 +479,7 @@ DEPLOYMENT
   circuit breaker + rollback = ENABLE IT (saves 3 AM pushes)
 
 GOLDEN RULE
-  ► Reliability is decided BEFORE launch. Foundation first. ◄
+   Reliability is decided BEFORE launch. Foundation first. ◄
 ```
 
 ---

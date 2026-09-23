@@ -404,12 +404,12 @@ Many teams use both:
 
 ### Capacity Planning (EC2)
 
-✅ **Do**: Over-provision by 20-30% for scaling headroom  
+**Do**: Over-provision by 20-30% for scaling headroom  
 ❌ **Don't**: Run instances at 100% capacity—tasks will fail to place
 
 ### Right-Sizing Resources
 
-✅ **Do**: Monitor actual CPU/memory usage and adjust task definitions  
+**Do**: Monitor actual CPU/memory usage and adjust task definitions  
 ❌ **Don't**: Request 4 GB RAM if your app uses 512 MB—you're wasting money
 
 ### Network Mode Matters
