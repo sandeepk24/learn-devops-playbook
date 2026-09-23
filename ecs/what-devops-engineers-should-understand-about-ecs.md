@@ -1,10 +1,10 @@
-# 🚀 AWS ECS Fundamentals — DevOps Reference Guide
+# AWS ECS Fundamentals — DevOps Reference Guide
 
 > A hands-on reference for beginners and advanced DevOps engineers covering everything from basic cluster inspection to solving real-world ECS issues in day-to-day operations.
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
 1. [ECS Core Concepts](#-ecs-core-concepts)
 2. [Prerequisites & Setup](#-prerequisites--setup)
@@ -25,7 +25,7 @@
 
 ---
 
-## 🧠 ECS Core Concepts
+## ECS Core Concepts
 
 Understanding the ECS hierarchy is essential before running any commands.
 
@@ -50,7 +50,7 @@ ECS Cluster
 
 ---
 
-## ⚙️ Prerequisites & Setup
+## Prerequisites & Setup
 
 ### Install AWS CLI v2 (Ubuntu/Debian)
 
@@ -107,7 +107,7 @@ aws ecs list-services --cluster $CLUSTER  # Can I see my cluster?
 
 ---
 
-## 🏗️ Cluster Information
+## Cluster Information
 
 ### List All Clusters
 
@@ -149,7 +149,7 @@ aws ecs describe-clusters \
 
 ---
 
-## 🚀 Services
+## Services
 
 > In ECS, a **Service** is the equivalent of a Kubernetes **Deployment**. It manages desired task count, rolling updates, and load balancer registration.
 
@@ -204,7 +204,7 @@ aws ecs describe-services \
   --output table
 ```
 
-> 💡 **Tip:** Service events are the first place to look when a deployment is stuck or tasks keep failing.
+> **Tip:** Service events are the first place to look when a deployment is stuck or tasks keep failing.
 
 ### Check Service Deployment Status
 
@@ -234,7 +234,7 @@ aws application-autoscaling describe-scalable-targets \
 
 ---
 
-## 📦 Tasks
+## Tasks
 
 > In ECS, a **Task** is the equivalent of a Kubernetes **Pod** — it's one running unit containing one or more containers.
 
@@ -337,11 +337,11 @@ aws ecs describe-tasks \
   }'
 ```
 
-> 💡 **Tip:** `stoppedReason` and container `exitCode` are the most important fields for debugging why a task stopped.
+> **Tip:** `stoppedReason` and container `exitCode` are the most important fields for debugging why a task stopped.
 
 ---
 
-## 📋 Task Definitions
+## Task Definitions
 
 > A **Task Definition** is the blueprint for your containers — equivalent to a Pod spec or a `docker-compose.yml`.
 
@@ -402,7 +402,7 @@ diff \
 
 ---
 
-## 🖥️ Container Instances (EC2 Launch Type)
+## Container Instances (EC2 Launch Type)
 
 > Only relevant if you are using the **EC2 launch type**. Skip this section if you use **Fargate**.
 
@@ -459,7 +459,7 @@ aws ecs update-container-instances-state \
 
 ---
 
-## 🌐 Networking & Load Balancers
+## Networking & Load Balancers
 
 ### Get Load Balancer Attached to a Service
 
@@ -494,7 +494,7 @@ aws elbv2 describe-target-health \
   --output table
 ```
 
-> 💡 **Tip:** If tasks are running but traffic isn't reaching them, check target health — `unhealthy` targets with reason `Health checks failed` is the most common culprit.
+> **Tip:** If tasks are running but traffic isn't reaching them, check target health — `unhealthy` targets with reason `Health checks failed` is the most common culprit.
 
 ### Check VPC and Subnet of Running Tasks (Fargate)
 
@@ -516,7 +516,7 @@ aws ecs describe-services \
 
 ---
 
-## 📊 Logs & Observability
+## Logs & Observability
 
 ### View Logs for a Container (CloudWatch)
 
@@ -584,7 +584,7 @@ aws cloudwatch get-metric-statistics \
 
 ---
 
-## 📏 Scaling
+## Scaling
 
 ### Manually Scale a Service (Change Desired Count)
 
@@ -648,7 +648,7 @@ aws application-autoscaling put-scaling-policy \
 
 ---
 
-## 🔐 ECS Exec — Shell into a Container
+## ECS Exec — Shell into a Container
 
 > The ECS equivalent of `kubectl exec -it <pod> -- /bin/sh`
 
@@ -672,7 +672,7 @@ aws ecs update-service \
   --enable-execute-command
 ```
 
-> ⚠️ After enabling, force a new deployment so tasks are re-launched with exec enabled:
+> After enabling, force a new deployment so tasks are re-launched with exec enabled:
 > ```bash
 > aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
 > ```
@@ -703,7 +703,7 @@ aws ecs describe-tasks \
 
 ---
 
-## 🔄 Deployments & Rollbacks
+## Deployments & Rollbacks
 
 ### Force a New Deployment (like kubectl rollout restart)
 
@@ -731,7 +731,7 @@ aws ecs wait services-stable \
   --cluster $CLUSTER \
   --services $SERVICE
 
-echo "✅ Deployment complete and stable"
+echo "Deployment complete and stable"
 ```
 
 ### Rollback to a Previous Task Definition
@@ -765,7 +765,7 @@ watch -n 5 "aws ecs describe-services \
 
 ---
 
-## 📖 kubectl → ECS Cheat Sheet
+## kubectl → ECS Cheat Sheet
 
 | kubectl Command | AWS ECS CLI Equivalent |
 |---|---|
@@ -788,7 +788,7 @@ watch -n 5 "aws ecs describe-services \
 
 ---
 
-## 🔥 Common Issues & Troubleshooting
+## Common Issues & Troubleshooting
 
 ### 1. Tasks Stuck in PENDING State
 
@@ -1074,7 +1074,7 @@ aws servicediscovery list-instances \
 
 ---
 
-## 🔑 IAM Permissions Reference
+## IAM Permissions Reference
 
 ### Minimum Read-Only Policy (Monitoring / Debugging)
 
@@ -1145,7 +1145,7 @@ aws iam attach-role-policy \
 
 ---
 
-## 🛠️ Useful Aliases & Shell Helpers
+## Useful Aliases & Shell Helpers
 
 Add these to your `~/.bashrc` or `~/.zshrc` to speed up day-to-day ECS work:
 
@@ -1190,7 +1190,7 @@ ecs-exec() {
 # Force redeploy a service
 ecs-redeploy() {
   aws ecs update-service --cluster $CLUSTER --service $1 --force-new-deployment
-  echo "🚀 Redeployment triggered for $1"
+  echo "Redeployment triggered for $1"
 }
 
 # Check service events (last 5)
@@ -1226,7 +1226,7 @@ ecs-stopped my-service         # Debug crash reasons
 
 ---
 
-## 📌 Quick Reference Card
+## Quick Reference Card
 
 ```
 # CLUSTER
@@ -1258,7 +1258,7 @@ aws ecs wait services-stable --cluster $CLUSTER --services $SERVICE
 
 ---
 
-## 📚 Further Reading
+## Further Reading
 
 - [AWS ECS Developer Guide](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
 - [AWS ECS CLI Reference](https://docs.aws.amazon.com/cli/latest/reference/ecs/index.html)
@@ -1269,4 +1269,4 @@ aws ecs wait services-stable --cluster $CLUSTER --services $SERVICE
 
 ---
 
-> 💬 **Contributions welcome!** Found a command that saved your day? Open a PR and add it to the troubleshooting section.
+> **Contributions welcome!** Found a command that saved your day? Open a PR and add it to the troubleshooting section.
