@@ -1,30 +1,30 @@
-# 🚀 AWS ECS — Part 4: Resource Exhaustion (OOM & CPU) on Fargate
+# AWS ECS — Part 4: Resource Exhaustion (OOM & CPU) on Fargate
 
 > **Learn DevOps Playbook** · ECS Series (Part 4 of 5)
 >
 > What *actually* happens when a Fargate task runs out of memory or pins the CPU — at the container, kernel, and ECS-service layers. Concept first, then a hands-on repro you can run to watch an OOM kill unfold.
 >
-> 👈 **Part 3 — Deep Dives:** ALB → target groups, networking, IAM.
-> 👉 **Part 5 — Recovery & Self-Healing:** how ECS brings the service back after these failures.
+> **Part 3 — Deep Dives:** ALB → target groups, networking, IAM.
+> **Part 5 — Recovery & Self-Healing:** how ECS brings the service back after these failures.
 
 > Assumes `$CLUSTER`, `$SERVICE`, `$AWS_DEFAULT_REGION` from earlier parts, and the `hello-ecs` app from Part 1.
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
-1. [The Mental Model: Where Limits Live](#-the-mental-model-where-limits-live)
-2. [Memory Exhaustion — What Actually Happens](#-memory-exhaustion--what-actually-happens)
-3. [CPU Exhaustion — What Actually Happens](#-cpu-exhaustion--what-actually-happens)
-4. [Memory vs CPU: The Critical Asymmetry](#-memory-vs-cpu-the-critical-asymmetry)
-5. [Hands-On: Reproduce an OOM Kill](#-hands-on-reproduce-an-oom-kill)
-6. [Hands-On: Reproduce CPU Saturation](#-hands-on-reproduce-cpu-saturation)
-7. [Detecting Exhaustion Before It Kills You](#-detecting-exhaustion-before-it-kills-you)
-8. [What's Next](#-whats-next)
+1. [The Mental Model: Where Limits Live](#the-mental-model-where-limits-live)
+2. [Memory Exhaustion — What Actually Happens](#memory-exhaustion--what-actually-happens)
+3. [CPU Exhaustion — What Actually Happens](#cpu-exhaustion--what-actually-happens)
+4. [Memory vs CPU: The Critical Asymmetry](#memory-vs-cpu-the-critical-asymmetry)
+5. [Hands-On: Reproduce an OOM Kill](#hands-on-reproduce-an-oom-kill)
+6. [Hands-On: Reproduce CPU Saturation](#hands-on-reproduce-cpu-saturation)
+7. [Detecting Exhaustion Before It Kills You](#detecting-exhaustion-before-it-kills-you)
+8. [What's Next](#whats-next)
 
 ---
 
-## 🧠 The Mental Model: Where Limits Live
+## The Mental Model: Where Limits Live
 
 On Fargate there are **two layers of resource limits**, and they behave completely differently. Getting these straight is the whole game.
 
@@ -50,11 +50,11 @@ On Fargate there are **two layers of resource limits**, and they behave complete
 | `memoryReservation` (container) | Container | **Soft cap** | Guaranteed floor; container can burst above until task memory is contended |
 | `cpu` (container) | Container | **Relative weight** | Throttled, never killed — shares are divided by weight under contention |
 
-> 💡 **The one sentence to remember:** memory limits are *hard walls* (breach them → your process dies); CPU limits are *speed limits* (breach them → your process slows down). This asymmetry drives everything below.
+**The one sentence to remember:** memory limits are *hard walls* (breach them → your process dies); CPU limits are *speed limits* (breach them → your process slows down). This asymmetry drives everything below.
 
 ---
 
-## 💥 Memory Exhaustion — What Actually Happens
+## Memory Exhaustion — What Actually Happens
 
 ### The sequence, layer by layer
 
@@ -110,11 +110,11 @@ An OOM kill shows: `ExitCode: 137` and `ContainerReason` / `StoppedReason` menti
 - Set **only `memoryReservation`** → soft floor; the container can use up to the *task's* total memory. Flexible, but one greedy container can starve siblings.
 - Set **both** → soft floor of 256 with a hard ceiling of 512. Common best practice: reservation = normal usage, memory = absolute max you'll tolerate.
 
-> ⚠️ On Fargate, if a container has no hard `memory` but the whole **task** hits its memory allotment, the kernel still OOM-kills a process in the task — you just have less control over *which* one.
+**On Fargate:** if a container has no hard `memory` but the whole **task** hits its memory allotment, the kernel still OOM-kills a process in the task — you just have less control over *which* one.
 
 ---
 
-## 🔥 CPU Exhaustion — What Actually Happens
+## CPU Exhaustion — What Actually Happens
 
 CPU is the opposite story: **nothing gets killed**. When a container demands more CPU than it's entitled to, the kernel's CFS (Completely Fair Scheduler) simply **throttles** it.
 
@@ -161,11 +161,11 @@ aws cloudwatch get-metric-statistics \
   --output table
 ```
 
-> 📎 To see genuine per-task CPU/memory and throttle counts, enable **Container Insights** on the cluster — covered in the detection section below.
+To see genuine per-task CPU/memory and throttle counts, enable **Container Insights** on the cluster — covered in the detection section below.
 
 ---
 
-## ⚖️ Memory vs CPU: The Critical Asymmetry
+## Memory vs CPU: The Critical Asymmetry
 
 This table is the article in miniature — worth committing to memory:
 
@@ -180,11 +180,11 @@ This table is the article in miniature — worth committing to memory:
 | How it usually kills a task | Directly | Indirectly, via health-check timeouts |
 | Graceful shutdown? | No | Yes (app never stops) |
 
-> 🤔 **Worth thinking through:** given SIGKILL can't be caught, is there *anything* your app can do to shut down cleanly on OOM? (Hint: there's nothing you can do at kill time — the real control is earlier, at the `memoryReservation`/`memory` gap and at what you do when memory *approaches* the limit. We revisit graceful drain in Part 5.)
+**Worth thinking through:** given SIGKILL can't be caught, is there *anything* your app can do to shut down cleanly on OOM? (Hint: there's nothing you can do at kill time — the real control is earlier, at the `memoryReservation`/`memory` gap and at what you do when memory *approaches* the limit. We revisit graceful drain in Part 5.)
 
 ---
 
-## 🧪 Hands-On: Reproduce an OOM Kill
+## Hands-On: Reproduce an OOM Kill
 
 Let's make a task OOM itself on purpose and watch the fingerprint appear. We'll add a memory-hog endpoint to the Part 1 FastAPI app.
 
@@ -201,7 +201,7 @@ _hog: list[bytearray] = []
 
 @app.get("/")
 def root():
-    return {"message": "Hello from ECS Fargate 👋"}
+    return {"message": "Hello from ECS Fargate"}
 
 @app.get("/health")
 def health():
@@ -343,7 +343,7 @@ for row in find_oom_kills("your-cluster", "your-service"):
 
 ---
 
-## 🧪 Hands-On: Reproduce CPU Saturation
+## Hands-On: Reproduce CPU Saturation
 
 CPU exhaustion won't kill the task, so here the goal is to *watch throttling and health-check impact*, not a crash.
 
@@ -397,7 +397,7 @@ You'll see response times climb as the CPU stays pinned — the mechanism by whi
 
 ---
 
-## 📡 Detecting Exhaustion Before It Kills You
+## Detecting Exhaustion Before It Kills You
 
 ### Enable Container Insights (real per-task metrics)
 
@@ -438,7 +438,7 @@ aws cloudwatch put-metric-alarm \
 
 ---
 
-## 🎯 What's Next
+## What's Next
 
 You now know exactly what exhaustion *does* — the kill vs throttle asymmetry, the 137 fingerprint, and how CPU starvation hides behind health checks.
 
@@ -446,6 +446,6 @@ You now know exactly what exhaustion *does* — the kill vs throttle asymmetry, 
 
 ---
 
-> 💬 **Contributions welcome!** Open a PR on `learn-devops-playbook`.
+> **Contributions welcome!** Open a PR on `learn-devops-playbook`.
 >
-> ⬅️ **[Part 3 — Deep Dives](ecs-part-3-deep-dives.md)** · **[Part 5 — Recovery & Self-Healing](ecs-part-5-recovery.md)** ➡️
+> **[Part 3 — Deep Dives](ecs-part-3-deep-dives.md)** · **[Part 5 — Recovery & Self-Healing](ecs-part-5-recovery.md)**
