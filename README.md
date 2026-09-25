@@ -32,7 +32,7 @@ Not sure where to jump in? Pick the path that fits where you are right now.
 2. [Networking 101 for DevOps & cloud engineers](./networking/01-networking-101-devops-cloud.md) — packets before pods
 3. [DNS deep dive](./networking/02-dns-deep-dive.md) — it really is always DNS
 4. [Docker internals, part 1](./docker/docker-advanced-part-1.md) — understand what Docker actually is before you Dockerize anything
-5. [ECS fundamentals for DevOps engineers](./ecs/what-devops-engineers-should-understand-about-ecs.md) — ECS from first principles
+5. [ECS — part 1: fundamentals](./ecs/ecs-part-1-fundamentals.md) — task definitions, tasks, and a Fargate app from a Dockerfile
 6. [ECS task health is not application health](./ecs/ecs-task-health-is-not-the-same-as-app-health.md) — read this before you wire up your first pipeline
 7. [GitHub DevOps fundamentals & best practices](./ci-cd/01_GITHUB_DEVOPS_FUNDAMENTALS.md) — getting CI/CD right from day one
 8. [OpenTelemetry 101](./sre/otel_101.md) — observability before something breaks
@@ -150,19 +150,35 @@ Not sure where to jump in? Pick the path that fits where you are right now.
 | [Docker Compose → ECS playbook](./docker/docker-compose-local-to-ecs-the-complete-devops-playbook.md) | The local-to-production path: why Compose exists and how to take it all the way to ECS. |
 
 ### 📦 ECS
+
+Read the four-part series first. The notes after it assume that model.
+
+**The series**
+
 | Note | What's in it |
 |---|---|
-| [ECS fundamentals for DevOps engineers](./ecs/what-devops-engineers-should-understand-about-ecs.md) | Cluster, service, task, task definition — with the kubectl equivalents for anyone crossing over from Kubernetes. |
-| [ECS task health is not application health](./ecs/ecs-task-health-is-not-the-same-as-app-health.md) | The four layers of health and why teams stop reading at the wrong one. |
-| [ECS task distribution & resource management](./ecs/ecs-task-distribution-guide.md) | How containers are scheduled, distributed, and packed across an ECS cluster. |
-| [ECS — part 1: fundamentals](./ecs/ecs-part-1-fundamentals.md) | Task definitions, launch types, IAM roles, networking modes — the building blocks. |
-| [ECS — part 2: operations](./ecs/ecs-part-2-operations.md) | Service deployments, rolling updates, service discovery, and secrets management. |
-| [ECS — part 3: deep dives](./ecs/ecs-part-3-deep-dives.md) | Spot capacity, Fargate Spot, EFS mounts, and the operational concerns that come with complexity. |
-| [ECS — part 4: resource exhaustion](./ecs/ecs-part-4-resource-exhaustion.md) | What happens when you run out of CPU, memory, or ENIs — and how to see it coming. |
-| [ECS reliability — part 1: building the cluster](./ecs/ecs-reliability-part1-building-the-cluster.md) | The configuration decisions at cluster-build time that determine how reliable it is at 3 a.m. |
-| [ECS reliability — part 2: keeping it alive](./ecs/ecs-reliability-part2-keeping-it-alive.md) | Health checks, auto-scaling, circuit breakers, and the runbook patterns that catch problems early. |
-| [ECS cost optimization & failure domains](./ecs/ecs-deep-dive-cost-and-failures.md) | When to use Fargate vs EC2, and how ECS actually behaves when things fail. |
-| [ECS zero-downtime deployments](./ecs/ecs-zero-downtime-deployments.md) | Blue/green and rolling deployments on ECS — what the console hides and what you need to know. |
+| [Part 1: fundamentals](./ecs/ecs-part-1-fundamentals.md) | Task definitions, tasks, and a Fargate app from a Dockerfile to a running service. |
+| [Part 2: operations](./ecs/ecs-part-2-operations.md) | Services, logs, scaling, ECS Exec, deployments, and the failure modes you will actually debug. |
+| [Part 3: ALB, networking, IAM](./ecs/ecs-part-3-deep-dives.md) | How a request reaches a task, the two health checks, `awsvpc`, and the kubectl mapping. |
+| [Part 4: resource exhaustion](./ecs/ecs-part-4-resource-exhaustion.md) | OOM kills versus CPU throttling on Fargate, and how to reproduce each. |
+
+**Deployments and health**
+
+| Note | What's in it |
+|---|---|
+| [Task health is not application health](./ecs/ecs-task-health-is-not-the-same-as-app-health.md) | `RUNNING` means the process started. What to check before a pipeline calls a deploy successful. |
+| [Zero-downtime deployments](./ecs/ecs-zero-downtime-deployments.md) | Why a rolling deploy returns 503s, counted on a six-task service, and the clocks that have to agree. |
+| [Deployment circuit breakers](./ecs/ecs-deployment-circuit-breakers.md) | Scheduler-side failure detection, rollback, and what the breaker does not catch. |
+
+**Running a cluster**
+
+| Note | What's in it |
+|---|---|
+| [Reliability, part 1: building the cluster](./ecs/ecs-reliability-part1-building-the-cluster.md) | Launch type, AZs, capacity, placement, and the service settings you want before the first request. |
+| [Reliability, part 2: keeping it alive](./ecs/ecs-reliability-part2-keeping-it-alive.md) | Metrics, alerts, the four common failure modes, and the day-2 routine. |
+| [Task distribution and resource management](./ecs/ecs-task-distribution-guide.md) | How the scheduler places a task on EC2 and on Fargate. |
+| [Cost and failure domains](./ecs/ecs-deep-dive-cost-and-failures.md) | Fargate versus EC2 on cost, and what an AZ failure does to a running service. |
+| [CLI reference](./ecs/what-devops-engineers-should-understand-about-ecs.md) | The commands for clusters, services, tasks, logs, exec, and the kubectl equivalents. |
 
 ### ⚙️ Kubernetes / EKS / CKAD
 | Note | What's in it |
