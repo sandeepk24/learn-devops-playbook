@@ -219,7 +219,7 @@ Subnet IP exhaustion looks like a Karpenter failure and is a CNI and CIDR proble
 
 Use the Karpenter Helm chart version that matches the CRDs you installed. A 1.x chart against 0.37 CRDs fails in ways that look like a bad manifest. Pin the chart. Pin the AMI alias. Pin the controller's IAM to the upstream policy for that version, scoped with the cluster's discovery tag.
 
-The controller's own AWS identity is Pod Identity or IRSA. Same pattern as any other controller. It is not the node role.
+The controller's own AWS identity is Pod Identity or IRSA. Same pattern as any other controller. It is not the node role. If you did put the controller on Fargate, it has to be IRSA. The Pod Identity agent is a DaemonSet, and Fargate will not run it.
 
 After the first install:
 

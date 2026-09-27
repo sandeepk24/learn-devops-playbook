@@ -11,7 +11,7 @@ Access entries are not this. Access entries let a role call the Kubernetes API. 
 
 ## What has to be running
 
-The `eks-pod-identity-agent` add-on, as a DaemonSet, on every node that will run these pods. Fargate includes the behavior. A node without the agent falls through to the node role or to IRSA if the annotation is present.
+The `eks-pod-identity-agent` add-on, as a DaemonSet, on every Linux EC2 node that will run these pods. There is no agent on Fargate, and the agent does not run on Windows nodes. Those pods stay on IRSA. A pod with an association, scheduled onto a node where the agent is missing, does not fall back to the IRSA annotation. The webhook has already chosen Pod Identity. Fix the agent before you debug the trust policy.
 
 ```bash
 aws eks create-addon \
@@ -104,6 +104,8 @@ Same-account associations do not need any of this. Most workloads are same-accou
 
 ## When I still use IRSA
 
+The pod runs on Fargate or on a Windows node. Pod Identity has nowhere to put the agent. IRSA is the mechanism that works there.
+
 The cluster already has a working OIDC provider and a pile of roles whose trust policies you do not want to touch this quarter. Migrating for its own sake is how you create an outage to delete a thumbprint.
 
 A controller's documentation only shows the IRSA annotation and you do not have time to rewrite its install. The annotation works. Pod Identity can wait for that chart.
@@ -122,6 +124,8 @@ kubectl -n kube-system get ds eks-pod-identity-agent
 kubectl -n production exec deploy/api -- aws sts get-caller-identity
 ```
 
-The identity should be `role/api`, not the node instance profile. If it is the node, the pod is not using the service account, the association namespace is wrong, or the agent is not on that node. If the call errors with access denied on `AssumeRole`, the trust policy principal or the tag condition does not match. If the identity is the role and the AWS API then returns `AccessDenied`, the identity works and the permission policy does not. Stop looking at the association.
+The identity should be `role/api`, not the node instance profile. Associations apply to pods created after the association exists. Restart the workload before you trust a negative result. If the identity is the node, the pod is not using the service account, the association namespace is wrong, or the agent is not on that node. If the call errors with access denied on `AssumeRole`, the trust policy principal or the tag condition does not match. If the identity is the role and the AWS API then returns `AccessDenied`, the identity works and the permission policy does not. Stop looking at the association.
+
+A current AWS CLI in a debug pod can succeed while the application still has no credentials. Pod Identity is picked up by the container credential provider in the SDK. An image pinned to an old boto3 or an old AWS SDK never looks there. That is an image bump, not an IAM change.
 
 `kubectl exec` needs a shell and the AWS CLI in the image. A distroless image will not give you that. A one-off pod with the same service account and `amazon/aws-cli` is the substitute. Delete it after. Do not leave a debug pod bound to a production role.
