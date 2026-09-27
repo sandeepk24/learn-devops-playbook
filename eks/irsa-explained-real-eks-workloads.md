@@ -1004,11 +1004,11 @@ AWS released **EKS Pod Identity** as a simpler alternative to IRSA in late 2023.
 |---|---|---|
 | Setup | Manual OIDC + Trust Policy | One `aws eks create-pod-identity-association` command |
 | Trust Policy | Required — must match namespace + SA exactly | Not needed — managed by EKS |
-| Cross-account | Supported | Not supported (as of mid-2025) |
+| Cross-account | Supported directly in the trust policy | Supported via a second role in the other account |
 | Maturity | Battle-tested since 2019 | Newer — check addon support |
 | Token expiry | Configurable (default 1hr) | Managed by EKS |
 
-For new clusters, evaluate Pod Identity. For existing IRSA setups, there's no urgency to migrate.
+For new clusters, start with Pod Identity. The setup and the cross-account hop are in [EKS Pod Identity](./eks-pod-identity.md). For existing IRSA setups, there's no urgency to migrate.
 
 ---
 
