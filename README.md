@@ -42,9 +42,10 @@ Not sure where to jump in? Pick the path that fits where you are right now.
 2. [ALB + ECS deep dive](./aws/aws-alb-ecs-deep-dive.md) — how traffic actually reaches your containers
 3. [ECS vs EKS for enterprise applications](./aws/ecs-vs-eks-for-enterprise-applications.md) — the decision you'll be asked to make
 4. [Kubernetes networking deep dive](./networking/05-kubernetes-networking.md) — CNI, kube-proxy, and the packet's journey to a pod
-5. [EKS: ALB · NLB · Ingress deep dive](./eks/aws-alb-nlb-ingress-eks-deep-dive.md) — getting traffic into EKS end-to-end
-6. [Deployment strategies — canary vs blue/green vs rolling](./sre/canary-vs-blue-green-vs-rolling-deployments.md) — and how to pitch each one as a business decision
-7. [API Gateway: fundamentals → observability](./apigateway/) — the full 7-chapter series
+5. [EKS notes](./eks/README.md) — control plane, compute, pod IPs, access, and upgrades
+6. [EKS: ALB · NLB · Ingress deep dive](./eks/aws-alb-nlb-ingress-eks-deep-dive.md) — getting traffic into EKS end-to-end
+7. [Deployment strategies — canary vs blue/green vs rolling](./sre/canary-vs-blue-green-vs-rolling-deployments.md) — and how to pitch each one as a business decision
+8. [API Gateway: fundamentals → observability](./apigateway/) — the full 7-chapter series
 
 ### If you're an AI / ML engineer or working on LLMOps
 1. [GenAI vs Agentic AI — part 1](./ai-devops/genai-vs-agentic-ai-part1.md) — the framing that makes the rest make sense
@@ -180,14 +181,44 @@ Read the four-part series first. The notes after it assume that model.
 | [Cost and failure domains](./ecs/ecs-deep-dive-cost-and-failures.md) | Fargate versus EC2 on cost, and what an AZ failure does to a running service. |
 | [CLI reference](./ecs/what-devops-engineers-should-understand-about-ecs.md) | The commands for clusters, services, tasks, logs, exec, and the kubectl equivalents. |
 
-### ⚙️ Kubernetes / EKS / CKAD
+### ⚙️ EKS
+
+The folder index is [eks/README.md](./eks/README.md). Cluster notes first if you are building or inheriting one. Ingress, IRSA, and crash loops are still the notes for those failures.
+
+**The cluster**
+
 | Note | What's in it |
 |---|---|
-| [EKS: ALB · NLB · Ingress deep dive](./eks/aws-alb-nlb-ingress-eks-deep-dive.md) | End-to-end deep dive on getting traffic into EKS, and the mental-model shift from ECS load balancing. |
-| [CrashLoopBackOff — part 1: foundations](./eks/crashloopbackoff-part1-foundations.md) | What CrashLoopBackOff actually means, the backoff algorithm, and how to read what the pod is telling you. |
-| [CrashLoopBackOff — part 2: advanced debugging](./eks/crashloopbackoff-part2-advanced.md) | OOM kills, init container failures, readiness probe deadlocks, and the fixes that stick. |
-| [IRSA explained for real EKS workloads](./eks/irsa-explained-real-eks-workloads.md) | IAM Roles for Service Accounts — the right way to give your pods AWS permissions, and why node-level roles are the wrong answer. |
-| [`kubectl rollout status` is underrated](./eks/kubectl-rollout-status-is-underrated.md) | The pipeline gatekeeper command most teams forget to use. |
+| [What you still own on the control plane](./eks/eks-control-plane-what-you-own.md) | Endpoint access, version support, secret encryption, and which control plane logs are worth paying for. |
+| [Compute: node groups, Fargate, Auto Mode](./eks/eks-compute-node-groups-fargate-auto-mode.md) | Managed nodes, Fargate, Auto Mode, and where the bill actually comes from. |
+| [Karpenter](./eks/karpenter-on-eks.md) | Controller placement, pinned AMIs, disruption budgets, and NodeClaim failures. |
+| [VPC CNI and pod IPs](./eks/vpc-cni-pod-ips.md) | Prefix delegation, warm IPs, custom networking, and subnet exhaustion. |
+| [Add-ons](./eks/eks-addons.md) | vpc-cni, kube-proxy, CoreDNS, and keeping add-on config in git. |
+| [Upgrades](./eks/eks-upgrades.md) | One minor at a time. Insights first. Control plane before nodes. |
+
+**Identity**
+
+| Note | What's in it |
+|---|---|
+| [Access entries](./eks/eks-access-entries.md) | Getting off the `aws-auth` ConfigMap without locking the nodes out. |
+| [Pod Identity](./eks/eks-pod-identity.md) | IAM roles for pods without an OIDC provider. |
+| [IRSA](./eks/irsa-explained-real-eks-workloads.md) | The OIDC path, for clusters that already use it. |
+| [Security defaults](./eks/eks-security-defaults.md) | IMDSv2, Pod Security Admission, and what does not belong on the node role. |
+
+**Workloads**
+
+| Note | What's in it |
+|---|---|
+| [Pending pods, PDBs, and spread](./eks/pending-pods-pdbs-and-spread.md) | Requests, disruption budgets, topology spread, and how to read a Pending event. |
+| [Storage choices](./eks/eks-storage-choices.md) | emptyDir, EBS and the AZ pin, EFS when you actually need shared files. |
+| [ALB, NLB, and Ingress](./eks/aws-alb-nlb-ingress-eks-deep-dive.md) | Getting traffic to a pod, and the shift from ECS load balancing. |
+| [CrashLoopBackOff — part 1](./eks/crashloopbackoff-part1-foundations.md) | What the backoff is, and the first causes. |
+| [CrashLoopBackOff — part 2](./eks/crashloopbackoff-part2-advanced.md) | Init containers, identity failures, volumes, and the fixes that stick. |
+| [`kubectl rollout status`](./eks/kubectl-rollout-status-is-underrated.md) | The check between a successful apply and ready pods. |
+
+### ⚙️ Kubernetes / CKAD
+| Note | What's in it |
+|---|---|
 | [CKAD deployments — part 1](./ckad/ckad-deployments-part-1.md) | Annotated Deployment YAML, every spec field, exam-speed imperative generation. |
 | [CKAD deployments — part 2](./ckad/ckad-deployments-part-2.md) | Advanced patterns, rollout strategies, and the 10 rules I'd tell anyone sitting the exam. |
 | [Kubernetes Ingress — CKAD exam + EKS production](./ckad/kubernetes-ingress-ckad-exam-and-eks-production-mastery.md) | The Ingress mental model, enough to pass CKAD and to actually ship it on EKS. |
