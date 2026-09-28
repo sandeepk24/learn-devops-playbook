@@ -2,7 +2,7 @@
 
 Notes on running Kubernetes on Amazon EKS.
 
-If you're new to this, start with [Starting on EKS](./eks-for-junior-devops-engineers.md). Control plane versus nodes, the objects you'll touch, and how to read a stuck deploy. The rest of the folder assumes you can already ship a Deployment.
+If you're new to this, start with [Starting on EKS](./eks-for-devops-engineers-beginners-guide.md). Control plane versus nodes, the objects you'll touch, and how to read a stuck deploy. The rest of the folder assumes you can already ship a Deployment.
 
 Read the cluster notes if you are building one or inheriting one. The older notes on ingress, IRSA, and crash loops are the ones to open when that specific thing is already on fire.
 
@@ -10,7 +10,7 @@ Read the cluster notes if you are building one or inheriting one. The older note
 
 | Note | What's in it |
 |---|---|
-| [Starting on EKS](./eks-for-junior-devops-engineers.md) | The objects, the daily commands, and which statuses mean the container never started. |
+| [Starting on EKS](./eks-for-devops-engineers-beginners-guide.md) | The objects, the daily commands, and which statuses mean the container never started. |
 
 ## The cluster
 
