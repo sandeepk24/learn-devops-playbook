@@ -1,31 +1,10 @@
-# GitHub DevOps Complete Implementation
+# The application, the image, and the workflows
 
-> **Part 2 of 3: Production-Ready Code, Workflows, and Infrastructure**  
-> *Working examples you can deploy today*
+[Part 1](./01_GITHUB_DEVOPS_FUNDAMENTALS.md) is OIDC, environments, and why the pipeline is ordered the way it is. This note is the code those workflows build and ship: a small FastAPI service, an image that does not run as root, CI that can fail, and a deploy that registers a new ECS task definition. [Part 3](./github-devops-production-03.md) is the VPC, the service, and the alarms.
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python)](https://www.python.org/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Terraform](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io/)
+The health endpoint below reports the database and Redis as ok without checking them. That is a stub. Do not ship it. A health check that always returns 200 will keep a broken task in the target group. Liveness stays cheap. Readiness is where the dependency checks go.
 
----
-
-## 📖 Guide Structure
-
-1. **Part 1**: GitHub Fundamentals, Features, Best Practices, AWS Integration
-2. **Part 2 (This Document)**: Complete Implementation - Code, Workflows, Infrastructure
-3. **Part 3**: Production Deployment - Fargate, Monitoring, Troubleshooting
-
----
-
-## Table of Contents
-
-- [Application Code](#application-code)
-- [Docker Configuration](#docker-configuration)
-- [GitHub Actions Workflows](#github-actions-workflows)
-- [Terraform Infrastructure](#terraform-infrastructure)
-- [Next Steps](#next-steps)
-
----
+The security job installs `safety` and `bandit` and then ignores their exit codes with `|| true`. That is useful the week you are collecting a baseline. It is not a gate. Remove the `|| true` when a finding should block the merge.
 
 ## Application Code
 
@@ -403,84 +382,64 @@ def test_get_item_not_found(client):
 
 **Dockerfile:**
 ```dockerfile
-# =============================================================================
-# Builder stage
-# =============================================================================
-FROM python:3.11-slim as builder
+# Builder. Dependencies land in a venv we can copy.
+# pip install --user writes to /root/.local, and /root is not
+# readable by the user we drop to in the final stage.
+FROM python:3.11-slim AS builder
 
-# Build arguments for metadata
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION=1.0.0
 
-# Labels following OCI image spec
 LABEL org.opencontainers.image.created=$BUILD_DATE \
-      org.opencontainers.image.authors="DevOps Team <devops@example.com>" \
-      org.opencontainers.image.url="https://github.com/yourorg/myapp" \
       org.opencontainers.image.source="https://github.com/yourorg/myapp" \
       org.opencontainers.image.version=$VERSION \
       org.opencontainers.image.revision=$VCS_REF \
-      org.opencontainers.image.vendor="Your Company" \
-      org.opencontainers.image.title="MyApp API" \
-      org.opencontainers.image.description="Production FastAPI application"
+      org.opencontainers.image.title="MyApp API"
 
 WORKDIR /build
 
-# Install system dependencies needed for Python packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy only requirements first (layer caching optimization)
 COPY requirements.txt .
 
-# Install Python dependencies to user directory
-RUN pip install --no-cache-dir --user -r requirements.txt
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --no-cache-dir -r requirements.txt
 
-# =============================================================================
-# Final stage
-# =============================================================================
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install runtime dependencies only
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy Python packages from builder
-COPY --from=builder /root/.local /root/.local
-
-# Copy application code
+COPY --from=builder /opt/venv /opt/venv
 COPY ./app /app/app
 
-# Create non-root user for security
 RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
 
-# Switch to non-root user
 USER appuser
 
-# Make sure scripts in .local are usable
-ENV PATH=/root/.local/bin:$PATH \
+ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app
 
-# Expose application port
 EXPOSE 8000
 
-# Health check
 HEALTHCHECK --interval=30s \
             --timeout=3s \
             --start-period=40s \
             --retries=3 \
   CMD curl -f http://localhost:8000/health || exit 1
 
-# Use exec form for proper signal handling
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
@@ -846,16 +805,11 @@ jobs:
       
       - name: Verify deployment
         run: |
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "✅ Deployment Successful!"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "📦 Image: ${{ steps.build-image.outputs.image }}"
-          echo "🎯 Cluster: ${{ env.ECS_CLUSTER }}"
-          echo "🚀 Service: ${{ env.ECS_SERVICE }}"
-          echo "🌍 Region: ${{ env.AWS_REGION }}"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          
-          # Display service status
+          echo "Image: ${{ steps.build-image.outputs.image }}"
+          echo "Cluster: ${{ env.ECS_CLUSTER }}"
+          echo "Service: ${{ env.ECS_SERVICE }}"
+          echo "Region: ${{ env.AWS_REGION }}"
+
           aws ecs describe-services \
             --cluster ${{ env.ECS_CLUSTER }} \
             --services ${{ env.ECS_SERVICE }} \
@@ -870,23 +824,20 @@ jobs:
       - name: Create deployment summary
         run: |
           cat >> $GITHUB_STEP_SUMMARY <<EOF
-          ## 🚀 Deployment Summary
-          
+          ## Deployment
+
           **Environment:** ${{ github.event.inputs.environment || 'production' }}
-          
+
           | Detail | Value |
           |--------|-------|
-          | **Image** | \`${{ steps.build-image.outputs.image }}\` |
-          | **Cluster** | ${{ env.ECS_CLUSTER }} |
-          | **Service** | ${{ env.ECS_SERVICE }} |
-          | **Region** | ${{ env.AWS_REGION }} |
-          | **Deployed by** | @${{ github.actor }} |
-          | **Commit** | ${{ github.sha }} |
-          
-          ### 🔍 Verification
-          
-          Check the deployment in AWS Console:
-          [View Service](https://console.aws.amazon.com/ecs/v2/clusters/${{ env.ECS_CLUSTER }}/services/${{ env.ECS_SERVICE }})
+          | Image | \`${{ steps.build-image.outputs.image }}\` |
+          | Cluster | ${{ env.ECS_CLUSTER }} |
+          | Service | ${{ env.ECS_SERVICE }} |
+          | Region | ${{ env.AWS_REGION }} |
+          | Deployed by | @${{ github.actor }} |
+          | Commit | ${{ github.sha }} |
+
+          [Service in the console](https://console.aws.amazon.com/ecs/v2/clusters/${{ env.ECS_CLUSTER }}/services/${{ env.ECS_SERVICE }})
           EOF
 
   smoke-test:
@@ -906,9 +857,9 @@ jobs:
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" $ENDPOINT/health)
           
           if [ $RESPONSE -eq 200 ]; then
-            echo "✅ Health check passed (HTTP $RESPONSE)"
+            echo "Health check passed (HTTP $RESPONSE)"
           else
-            echo "❌ Health check failed (HTTP $RESPONSE)"
+            echo "Health check failed (HTTP $RESPONSE)"
             exit 1
           fi
       
@@ -922,7 +873,7 @@ jobs:
           echo "Testing API endpoint..."
           curl -f $ENDPOINT/api/v1/data || exit 1
           
-          echo "✅ All smoke tests passed!"
+          echo "Smoke tests passed"
 
   rollback:
     name: Automatic Rollback
@@ -943,7 +894,7 @@ jobs:
       
       - name: Rollback to previous task definition
         run: |
-          echo "🔄 Initiating rollback to previous task definition..."
+          echo "Rolling back to the previous task definition"
           
           # Get the current deployments
           DEPLOYMENTS=$(aws ecs describe-services \
@@ -964,9 +915,9 @@ jobs:
               --task-definition $PREVIOUS_TASK_DEF \
               --force-new-deployment
             
-            echo "✅ Rollback initiated successfully"
+            echo "Rollback requested: $PREVIOUS_TASK_DEF"
           else
-            echo "❌ No previous task definition found for rollback"
+            echo "No previous task definition to roll back to"
             exit 1
           fi
 ```
@@ -1079,8 +1030,6 @@ variable "health_check_path" {
 }
 ```
 
-Continue to **Part 3** for complete Terraform code, Fargate configuration, monitoring setup, and troubleshooting guide.
+The Terraform here is the backend, the variables, and the provider tags. The VPC, the service, Fargate Spot, and the alarms are in [part 3](./github-devops-production-03.md).
 
----
-
-**Part 2 of 3 Complete** | [← Back to Part 1](./01_GITHUB_DEVOPS_FUNDAMENTALS.md) | [Continue to Part 3 →](./03_GITHUB_DEVOPS_PRODUCTION.md)
+The rollback job in the deploy workflow reads `services[0].deployments[1]` and assumes that entry is the previous stable task definition. During a deploy, ECS does not promise that order. Prefer the circuit breaker on the service (`rollback = true` in part 3), and keep a manual rollback that takes an explicit task definition ARN. Guessing the previous revision from a JSON array is how you roll forward.
