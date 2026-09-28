@@ -36,6 +36,7 @@ Not sure where to jump in? Pick the path that fits where you are right now.
 6. [ECS task health is not application health](./ecs/ecs-task-health-is-not-the-same-as-app-health.md) — read this before you wire up your first pipeline
 7. [GitHub DevOps fundamentals & best practices](./ci-cd/01_GITHUB_DEVOPS_FUNDAMENTALS.md) — getting CI/CD right from day one
 8. [OpenTelemetry 101](./sre/otel_101.md) — observability before something breaks
+9. [Starting on EKS](./eks/eks-for-junior-devops-engineers.md) — the cluster, once a container and ECS make sense
 
 ### If you're a mid-level engineer moving into cloud architecture
 1. [VPC networking deep dive](./networking/04-vpc-networking.md) — the AWS network plane
@@ -183,7 +184,13 @@ Read the four-part series first. The notes after it assume that model.
 
 ### ⚙️ EKS
 
-The folder index is [eks/README.md](./eks/README.md). Cluster notes first if you are building or inheriting one. Ingress, IRSA, and crash loops are still the notes for those failures.
+The folder index is [eks/README.md](./eks/README.md). New to EKS, start with the junior note. Cluster notes if you're building or inheriting one. Ingress, IRSA, and crash loops when that specific thing is already broken.
+
+**Start here**
+
+| Note | What's in it |
+|---|---|
+| [Starting on EKS](./eks/eks-for-junior-devops-engineers.md) | Control plane versus nodes, the daily commands, and Pending, CrashLoopBackOff, and Running but not Ready. |
 
 **The cluster**
 
