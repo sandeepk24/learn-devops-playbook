@@ -1,31 +1,12 @@
-# GitHub DevOps Production Deployment Guide
+# Fargate, alarms, and what you check when it will not start
 
-> **Part 3 of 3: Fargate Deployment, Monitoring, and Production Operations**  
-> *Everything you need for production-ready deployments*
+[Part 1](./01_GITHUB_DEVOPS_FUNDAMENTALS.md) is the workflow and OIDC. [Part 2](./github-devops-implementation-02.md) is the image and the deploy job. This is the stack that job updates: two AZs, tasks in private subnets, an ALB in the public ones, a service that can roll back, and the alarms that tell you the rollback should have happened.
 
-[![AWS ECS](https://img.shields.io/badge/AWS_ECS-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/ecs/)
-[![Fargate](https://img.shields.io/badge/Fargate-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/fargate/)
+Two NAT gateways is the production default so one AZ does not take outbound with it. It is also the line item people are surprised by. If this is a dev account, one NAT is enough and you accept the AZ dependency. Do not learn that from the bill.
 
----
+The task definition in this file uses `:latest`. The deploy workflow in part 2 replaces that with the commit SHA at deploy time. Leave `:latest` as the Terraform initial image and you will eventually apply Terraform and roll every task back to whatever `:latest` happens to be. Ignore changes on the task definition image, or stop managing the task definition revision from Terraform once CI owns it.
 
-## 📖 Guide Structure
-
-1. **Part 1**: GitHub Fundamentals, Features, Best Practices, AWS Integration
-2. **Part 2**: Complete Implementation - Code, Workflows, Infrastructure
-3. **Part 3 (This Document)**: Production Deployment, Monitoring, Operations
-
----
-
-## Table of Contents
-
-- [Complete Terraform Infrastructure](#complete-terraform-infrastructure)
-- [Fargate vs Fargate Spot](#fargate-vs-fargate-spot)
-- [Monitoring and Observability](#monitoring-and-observability)
-- [Cost Optimization](#cost-optimization)
-- [Troubleshooting Guide](#troubleshooting-guide)
-- [Advanced Deployment Patterns](#advanced-deployment-patterns)
-
----
+`deployment_maximum_percent` and `deployment_minimum_healthy_percent` are arguments on the service. The `deployment_configuration` block is for the strategy (`ROLLING`, `BLUE_GREEN`, `LINEAR`, `CANARY`), not for those percentages. Putting `maximum_percent` inside that block is an error on the current AWS provider. `minimum_healthy_percent = 100` and `maximum_percent = 200` is what keeps a load-balanced service from going to zero healthy targets during a deploy. Dropping the floor to 50 is how a small service serves traffic with half its tasks while the new ones are still booting.
 
 ## Complete Terraform Infrastructure
 
@@ -498,10 +479,8 @@ resource "aws_ecs_service" "app" {
     container_port   = var.app_port
   }
 
-  deployment_configuration {
-    maximum_percent         = 200
-    minimum_healthy_percent = 100
-  }
+  deployment_maximum_percent         = 200
+  deployment_minimum_healthy_percent = 100
 
   deployment_circuit_breaker {
     enable   = true
@@ -674,21 +653,18 @@ output "cloudwatch_log_group" {
 
 ---
 
-## Fargate vs Fargate Spot
+## Fargate and Fargate Spot
 
-### Comparison Matrix
+| | Fargate | Fargate Spot |
+|---|---|---|
+| Price | On-demand vCPU and memory | Discount, often large, not a contract |
+| Interruption | No | Two-minute SIGTERM, then the task is gone |
+| SLA | The Fargate SLA | None |
+| Put it under | The request path | Workers, batch, extra capacity behind a base of on-demand |
 
-| Feature | Fargate | Fargate Spot | Best Use Case |
-|---------|---------|--------------|---------------|
-| **Cost** | $0.04048/vCPU/hour | Up to 70% discount | Spot: Non-critical workloads |
-| **Availability** | Guaranteed | Best-effort | Fargate: Production APIs |
-| **Interruption** | None | 2-minute warning | Spot: Batch jobs, CI/CD |
-| **SLA** | AWS SLA applies | No SLA | Fargate: Customer-facing |
-| **Predictability** | High | Low | Spot: Background tasks |
+### What 0.5 vCPU and 1 GB costs if it runs all month
 
-### Cost Calculation Example
-
-**Scenario:** 512 CPU (0.5 vCPU), 1024 MB (1 GB) memory, running 24/7
+Prices move. Check the region before you quote these. The shape of the comparison does not.
 
 ```
 Fargate Regular:
@@ -703,9 +679,9 @@ Fargate Spot (70% discount):
 - Savings: $12.61/month (70%)
 ```
 
-### Capacity Provider Strategy
+### Capacity providers
 
-**80/20 Mix (Recommended for most workloads):**
+`base = 1` on FARGATE means one on-demand task before any weight is applied. Weight 1 and 4 after that is one on-demand for every four Spot, once you are past that base. That is a reasonable mix for a stateless API that can lose a task. It is a bad mix for a single-task service. Spot will take that task, and the two-minute warning is your outage.
 ```hcl
 capacity_provider_strategy {
   capacity_provider = "FARGATE"
@@ -1234,27 +1210,8 @@ resource "aws_codedeploy_deployment_group" "app" {
 
 ---
 
-## Summary
+The service is not done when `terraform apply` goes green. It is done when a bad deploy rolls back on its own, the 5xx alarm pages a person, and you can read the task logs without SSHing anywhere. The workflows that push the image are in [part 2](./github-devops-implementation-02.md). The role they assume is in [part 1](./01_GITHUB_DEVOPS_FUNDAMENTALS.md).
 
-This three-part guide covered:
-
-✅ **Part 1:** GitHub fundamentals, CI/CD features, best practices, OIDC setup  
-✅ **Part 2:** Complete application code, Docker, workflows  
-✅ **Part 3:** Production Terraform, Fargate, monitoring, troubleshooting
-
-You now have everything needed to deploy production-ready applications on AWS ECS using GitHub Actions!
-
----
-
-## Additional Resources
-
-- [AWS ECS Best Practices Guide](https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-
----
-
-**Part 3 of 3 Complete** | [← Back to Part 2](./02_GITHUB_DEVOPS_IMPLEMENTATION.md) | [← Back to Part 1](./01_GITHUB_DEVOPS_FUNDAMENTALS.md)
-
-**License:** MIT | **Maintained by:** DevOps Team
+- [ECS best practices](https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/)
+- [GitHub Actions](https://docs.github.com/en/actions)
+- [AWS provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
