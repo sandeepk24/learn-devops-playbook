@@ -1,41 +1,26 @@
-# Branch Strategies: A No-Nonsense Guide for DevOps Engineers
+# Branch strategies
 
-> Whether you're a junior dev just learning Git or a senior architect deciding how a team of 50 ships code — this guide is for you. No fluff, just what matters.
+Two people are in the same repo. One is fixing production. The other has a feature that will not ship for three weeks. They are touching the same files. If the team never agreed how code moves, you get overwritten work, a broken deploy, and a Slack thread that does not help.
 
----
-
-## Why Branch Strategy Even Matters
-
-Here's a scenario most of us have lived through: two engineers are working on the same repo. One is fixing a critical bug in production. The other is building a feature that won't ship for three weeks. They're both touching the same codebase.
-
-Without a clear branching strategy, this becomes chaos — overwritten code, broken deployments, and a lot of angry Slack messages.
-
-A **branch strategy** is simply an agreement your team makes about *how* you use branches in version control. It defines:
-
-- What branches exist and what they represent
-- How code moves from development to production
-- Who can merge what, and when
-- How you handle hotfixes, releases, and parallel work
-
-Getting this right is one of the decisions that matters most for a DevOps team. Get it wrong and you'll spend more time managing Git conflicts than shipping value.
+A branch strategy is that agreement. Which branches exist, how code gets to production, who merges, and what a hotfix does. Pick one that matches how often you actually ship. Then enforce it. A wiki page nobody reads is not a strategy.
 
 ---
 
-## The Big Picture: Trunk vs. Branch-Heavy Models
+## Trunk versus long-lived branches
 
-Before getting into specific strategies, understand the fundamental tension:
+There are two shapes.
 
-**Trunk-Based Development** → everyone commits to one main branch, integrations happen constantly, conflicts surface early and stay small.
+**Trunk-based.** Everyone integrates into one branch. Conflicts show up small, because the drift is small.
 
-**Branch-Heavy Models** → work is isolated in long-lived branches, integrations are bigger events, and the further branches drift from each other, the more painful merging becomes.
+**Branch-heavy.** Work sits on long-lived branches. The merge is an event. The longer the branches live apart, the worse that event is.
 
-Neither is universally better. Your team size, release cadence, and product maturity all factor in. Let's walk through each major strategy.
+Neither is the default. Release cadence, how many versions you have to keep alive, and whether CI is actually fast decide it.
 
 ---
 
-## 1. Trunk-Based Development (TBD)
+## Trunk-based development
 
-**The core idea:** One main branch (`main` or `trunk`). Everyone pushes to it — frequently. Short-lived feature branches (lasting hours to 2 days max) are acceptable, but the trunk is always deployable.
+One branch, `main`. It stays deployable. Feature branches, if you use them, live hours to a couple of days.
 
 ```
 main ─────────────────────────────────────────────►
@@ -43,49 +28,30 @@ main ─────────────────────────
       (small, frequent commits from everyone)
 ```
 
-### How it works in practice
-
-- Engineers commit small slices of work, often multiple times a day
-- Feature flags hide incomplete features from users while code lives in the trunk
-- CI runs on every commit — fast, automated, non-negotiable
-- If the build breaks, fixing it is the team's top priority
-
-### What it looks like day-to-day
+People commit slices of work, often more than once a day. Unfinished features sit behind flags so the code can be on the trunk without being in front of users. CI runs on every commit. If the trunk is red, that is the work.
 
 ```bash
-# Morning: pull latest
 git pull origin main
-
-# Work on your small task
 git add .
 git commit -m "add input validation to payment form"
-
-# Push directly (or via short-lived branch with PR)
 git push origin main
 ```
 
-### When TBD shines
+Pushing straight to `main` is fine on a small team with CI. Most teams I work with still open a short PR so someone else sees the diff. The branch still dies the same day.
 
-- High-performing teams with strong CI/CD culture
-- Teams that release multiple times per day (think Netflix, Google, Facebook)
-- Microservices architectures where each service has a small team
-- When you want to eliminate "integration hell" at the end of sprints
+This fits teams that release more than once a day, and small services with a small owning team. It also fits when you are tired of merging a sprint's worth of work on Friday.
 
-### Key insight for seniors
+TBD makes a weak pipeline obvious. Slow or flaky tests hurt immediately. Teams that say they are "not ready" for trunk-based usually need a faster test suite, not a more elaborate branch model. The practice is what forces the suite to get fixed.
 
-TBD exposes weak CI/CD pipelines immediately. If your tests are slow or flaky, TBD will make that pain undeniable. Many teams think they're not ready for TBD when the real problem is they need better automated testing. TBD is often the forcing function that gets teams to finally fix their test suite.
+Without flags, half-built features ship. Someone has to break work into commits that leave `main` green. Juniors need help with that split. It is a skill, not a personality trait.
 
-### Watch out for
-
-- Without feature flags, incomplete features ship to users
-- Requires genuine discipline — you can't just "push and disappear"
-- Junior developers need guidance on decomposing work into small commits
+The longer write-up is [trunk-based development](./trunk-based-development.md).
 
 ---
 
-## 2. GitHub Flow
+## GitHub Flow
 
-**The core idea:** A lightweight strategy built around pull requests. You have one long-lived branch (`main`) and short-lived feature branches. Everything gets deployed through a PR merge.
+One long-lived branch. Short-lived feature branches. The pull request is the gate. Merge to `main` is the deploy.
 
 ```
 main ──────────────────────────────────────────────►
@@ -95,44 +61,24 @@ main ─────────────────────────
     (PR → review → merge) (PR → review → merge)
 ```
 
-### How it works in practice
-
-1. Branch off `main` with a descriptive name
-2. Make your changes with clear commits
-3. Open a PR — this is where discussion and review happens
-4. CI runs automatically
-5. Someone reviews and approves
-6. Merge to `main` → deploy
-
 ```bash
 git checkout -b feature/user-authentication
-# ... make changes ...
 git push origin feature/user-authentication
-# Open PR on GitHub → review → merge → deploy
 ```
 
-### When GitHub Flow shines
+CI runs on the PR. Someone approves. Merge deploys.
 
-- Teams that deploy continuously (every merge to main goes live)
-- Web apps and SaaS products without complex release cycles
-- Small to medium teams (2–20 engineers)
-- Open source projects where external contributors submit PRs
+This is the right shape for a web app that ships on every merge, for a team of roughly 2 to 20, and for open source where outsiders send PRs.
 
-### Key insight for seniors
+It assumes `main` is always deployable and that merge triggers a deploy. If you still deploy by hand, or you promote through a staging environment with a human gate, GitHub Flow is missing a step and people will invent one. If CI is weak, broken code lands on `main` with a green checkbox that did not mean much.
 
-GitHub Flow works beautifully when `main` is *always* deployable and you have automated deployment on merge. If you're manually deploying or have a staged release process, you'll quickly want more structure. The strategy silently assumes your CI/CD is solid — if it isn't, you'll merge broken code to main.
-
-### Watch out for
-
-- No explicit staging environment branch — teams often bolt one on
-- Works poorly when you need to support multiple live versions simultaneously
-- PR review can become a bottleneck if not managed well
+There is no staging branch in the model. Teams bolt one on and then they are not on GitHub Flow anymore. It also does not help when you have to keep two released versions alive. Review becomes the bottleneck if PRs sit.
 
 ---
 
-## 3. Git Flow
+## Git Flow
 
-**The core idea:** A structured strategy with multiple long-lived branches (`main`, `develop`) and several types of short-lived branches (`feature`, `release`, `hotfix`). Code flows through defined stages before reaching production.
+`main` and `develop` live forever. `feature/*`, `release/*`, and `hotfix/*` are temporary. Code walks through those stages before production.
 
 ```
 main     ─────────────────────────────────────────────►
@@ -143,37 +89,23 @@ develop  ───────────────────────�
           feature/A   feature/B
 ```
 
-### The branch types
-
-| Branch | Lives | Purpose |
-|--------|-------|---------|
-| `main` | Forever | Production code only. Every commit is a release. |
-| `develop` | Forever | Integration branch. The "next release" accumulates here. |
-| `feature/*` | Days to weeks | New functionality. Branches from `develop`. |
-| `release/*` | Days | Release prep. Branches from `develop`, merges to both `main` and `develop`. |
-| `hotfix/*` | Hours | Emergency production fixes. Branches from `main`. |
-
-### A full Git Flow lifecycle
+| Branch | Lives | What it is |
+|--------|-------|------------|
+| `main` | Forever | Production. A commit here is a release. |
+| `develop` | Forever | The next release, accumulating. |
+| `feature/*` | Days to weeks | Branched from `develop`. |
+| `release/*` | Days | Cut from `develop`. Merges to `main` and back to `develop`. |
+| `hotfix/*` | Hours | Cut from `main`. Merges to `main` and `develop`. |
 
 ```bash
-# Start a feature
 git checkout develop
 git checkout -b feature/payment-refund
-
-# ... work, commit, work, commit ...
-
-# Merge feature back to develop
 git checkout develop
 git merge --no-ff feature/payment-refund
 git branch -d feature/payment-refund
 
-# Start a release
 git checkout -b release/2.1.0
-
-# Bump version, final testing, last-minute fixes...
 git commit -m "bump version to 2.1.0"
-
-# Merge to main AND back to develop
 git checkout main
 git merge --no-ff release/2.1.0
 git tag -a v2.1.0
@@ -182,39 +114,23 @@ git checkout develop
 git merge --no-ff release/2.1.0
 git branch -d release/2.1.0
 
-# Emergency hotfix
 git checkout main
 git checkout -b hotfix/critical-payment-bug
-# ... fix it ...
 git checkout main
 git merge --no-ff hotfix/critical-payment-bug
 git checkout develop
 git merge --no-ff hotfix/critical-payment-bug
 ```
 
-### When Git Flow shines
+Use this when the product has a version people install: mobile, embedded, a library, enterprise software with a QA cycle and more than one supported release.
 
-- Software with scheduled, versioned releases (quarterly, monthly)
-- Mobile apps, embedded systems, or any product where users have specific versions
-- Teams that maintain multiple versions simultaneously (v1.x and v2.x in production)
-- Enterprise software with long QA cycles
-
-### Key insight for seniors
-
-Git Flow was designed in 2010 for products with traditional release cycles. It's not wrong — it's just context-dependent. When you see teams struggling with Git Flow, it's often because their product ships continuously but their branch strategy assumes they don't. The `develop` branch in Git Flow is essentially a buffer zone — if you're deploying every PR anyway, that buffer is just overhead.
-
-### Watch out for
-
-- Long-lived branches drift apart → brutal merge conflicts
-- Release branches often become where bugs hide until they're "urgent"
-- The `develop` branch can accumulate broken code that no one addresses
-- Slower feedback loops — bugs may not surface until the release branch stage
+Git Flow is from 2010 and it matches that world. It is a bad fit for a service you deploy on every merge. `develop` is a buffer. If you deploy every PR, the buffer is overhead, and the long-lived branches are where the conflicts come from. Bugs sit on the release branch until someone calls them urgent. `develop` goes red and stays red because nothing deploys from it.
 
 ---
 
-## 4. GitLab Flow
+## GitLab Flow
 
-**The core idea:** A middle ground between GitHub Flow's simplicity and Git Flow's structure. It introduces **environment branches** that map directly to your deployment environments.
+GitHub Flow plus branches that match environments, or release branches for versioned software.
 
 ```
 main        ──────────────────────────────────────────►
@@ -224,80 +140,47 @@ pre-production  ─────────────────────�
 production      ──────────────────────────────────────►
 ```
 
-### Two flavors
+Feature branches come off `main`. A merge to `main` can deploy to a dev environment. Merging `main` into `pre-production` deploys staging. Merging that into `production` goes live.
 
-**With environment branches:**
-Code flows downstream through environment-specific branches. A merge to `pre-production` deploys to staging. A merge to `production` deploys live.
-
-**With release branches:**
-For versioned software, you maintain `release/2-3-stable`, `release/2-4-stable`, etc. Hotfixes go into release branches and get cherry-picked into main.
-
-### How it works
+For versioned software you keep `release/2-3-stable`, `release/2-4-stable`, and so on. Hotfixes land on the release branch and get cherry-picked to `main`.
 
 ```bash
-# Feature work happens in feature branches off main
 git checkout -b feature/dark-mode
-
-# PR to main → deploys to dev/staging auto
-# When ready: merge main → pre-production
-# When verified: merge pre-production → production
+# PR to main deploys to dev
+# merge main into pre-production when QA wants it
+# merge pre-production into production when it checks out
 ```
 
-### When GitLab Flow shines
+This fits a real staging environment, a QA sign-off, or a compliance gate that has to be a merge and not just a button in the pipeline.
 
-- Teams with formal staging environments that mirror production
-- Products where QA teams test on staging before production push
-- Organizations with compliance requirements that need deployment gates
-- When you want GitHub Flow's simplicity but with deployment checkpoints
-
-### Key insight for seniors
-
-GitLab Flow makes your deployment pipeline explicit in your branching model. The main risk is environment branches becoming stale — production drifts ahead of pre-production, someone cherry-picks a fix directly to production, and now your branches are out of sync. Enforce the discipline that code always flows one direction: downstream.
+The failure mode is drift. Someone cherry-picks a fix onto `production` and never brings it back. Production and pre-production stop being the same code, and staging stops telling you anything. Code moves one direction, downstream. If a fix has to exist on an older release, it is written on `main` first and cherry-picked out.
 
 ---
 
-## 5. Forking Workflow
+## Forking
 
-**The core idea:** Instead of branching within a single repository, each contributor has their **own server-side fork**. They push to their fork and open PRs back to the main "blessed" repository.
+Each contributor has their own server-side copy. They push there and open a PR into the repo you actually ship from.
 
 ```
-Blessed Repo (origin)
+Blessed repo (origin)
         ↑         ↑         ↑
     fork/alice  fork/bob  fork/carol
 ```
 
-### How it works
-
 ```bash
-# Contributor forks the repo on GitHub/GitLab
-# Clones their own fork
 git clone https://github.com/alice/project.git
-
-# Adds the upstream (blessed) repo as a remote
 git remote add upstream https://github.com/org/project.git
-
-# Works in their fork, opens PR to upstream
 git checkout -b fix/broken-link
 git push origin fix/broken-link
-# → Open PR from alice/project to org/project
 ```
 
-### When Forking Workflow shines
-
-- Open source projects (this is the standard OSS model)
-- Large organizations where untrusted contributors need to submit code
-- Projects with strict security requirements around who can push to the main repo
-- When you want complete isolation between contributors
-
-### Key insight for seniors
-
-The Forking Workflow is less about branching and more about *trust boundaries*. Internal teams rarely need it — the overhead of managing forks and keeping them in sync with upstream adds friction without benefit. But for open source, it's nearly universal because maintainers can't grant push access to thousands of strangers.
+This is about trust, not about branches. You use it when you cannot give push access: open source, or a repo that takes changes from people outside the team. An internal team of employees does not need forks. Keeping a fork current with upstream is extra work and it buys you nothing if those people already have a PR workflow inside the repo.
 
 ---
 
-## 6. Environment-Based Branching
+## A branch per environment
 
-**The core idea:** Each branch *is* an environment. `dev`, `staging`, `production` are all long-lived branches that mirror deployment targets.
+`dev`, `staging`, and `production` are all long-lived, and deploying means merging into the next one.
 
 ```
 production  ──────────────────────────────────────────►
@@ -307,89 +190,75 @@ dev         ──────────────────────�
            feature branches merge here
 ```
 
-### The problem with this model
+I would not start here. The branches diverge. A hotfix on production does not make it back. Staging is no longer production's code, so a pass on staging does not mean the artifact you will ship. The merge is large. You find the bug on the production merge.
 
-This pattern is common but generally considered an antipattern in modern DevOps. Here's why:
-
-- Branches diverge over time. Hotfixes to production don't always get backported.
-- You end up with different code in staging than production, defeating the purpose of staging.
-- Deployments become "merge events" which are large and risky.
-- Feedback loops are slow — a bug might only be discovered when promoted to production.
-
-### When it's still used
-
-Legacy systems where deployment automation doesn't exist and promoting code means merging a branch. If you're inheriting this setup, the goal should be to migrate toward a cleaner model.
-
-**Key insight for seniors:** If you're seeing this in a codebase you've inherited, the fix isn't just changing the branching model — you need to pair it with proper CI/CD pipelines. The environment branches exist because deployment is manual. Fix the automation first.
+You still see this where "deploy" means merging because there is no pipeline. Fix the automation. The branches exist to stand in for it. Changing the diagram without a pipeline just renames the mess.
 
 ---
 
-## Comparing the Strategies Side by Side
+## Side by side
 
-| Strategy | Complexity | Release Cadence | Best Team Size | Main Trade-off |
-|----------|------------|-----------------|----------------|----------------|
-| Trunk-Based | Low | Continuous | Any (needs discipline) | Requires strong CI/CD + feature flags |
-| GitHub Flow | Low-Medium | Continuous | Small-Medium | No formal staging or versioning |
-| Git Flow | High | Scheduled/versioned | Medium-Large | Overhead for fast-moving teams |
-| GitLab Flow | Medium | Continuous + environments | Medium | Can drift if not enforced |
-| Forking | Medium | Any | Open source / large orgs | Friction for internal teams |
-
----
-
-## How to Actually Choose One
-
-Forget which one is "best." Ask these questions:
-
-**1. How often do you deploy?**
-- Multiple times a day → Trunk-Based or GitHub Flow
-- Weekly or monthly → Git Flow or GitLab Flow
-- Quarterly or versioned releases → Git Flow
-
-**2. Do you maintain multiple versions in production?**
-- Yes → Git Flow or GitLab Flow with release branches
-- No → Trunk-Based or GitHub Flow
-
-**3. How mature is your CI/CD?**
-- Mature, automated, fast tests → Trunk-Based
-- Decent CI but manual deploy steps → GitHub Flow or GitLab Flow
-- Mostly manual → Git Flow (sadly, it fits the reality better)
-
-**4. How big is the team?**
-- 1–5 engineers → GitHub Flow or Trunk-Based
-- 5–20 engineers → GitHub Flow or Git Flow
-- 20+ engineers → Trunk-Based with feature flags, or Git Flow with strict ownership
-
-**5. Is this open source or internal?**
-- Open source → Forking Workflow as the contribution model
-- Internal → almost never need forking
+| Strategy | Complexity | Release cadence | Where it fits | The cost |
+|----------|------------|-----------------|---------------|----------|
+| Trunk-based | Low | Continuous | Any size, if CI is fast and people use flags | Weak tests show up immediately |
+| GitHub Flow | Low | Continuous | Small to medium, one production version | No built-in staging or versioning |
+| Git Flow | High | Scheduled, versioned | More than one supported release | Overhead if you ship daily |
+| GitLab Flow | Medium | Continuous, with environment gates | Staging and a promotion step | Branches drift if merges go upstream |
+| Forking | Medium | Whatever the upstream uses | Untrusted contributors | Useless friction inside one company |
 
 ---
 
-## Practical Patterns That Cut Across All Strategies
+## Picking one
 
-Regardless of which strategy you choose, these practices make everything work better.
+**How often do you deploy?**
 
-### Feature Flags
+- Several times a day: trunk-based or GitHub Flow.
+- Weekly or monthly: GitLab Flow, or Git Flow if you also version it.
+- A versioned release on a calendar: Git Flow.
 
-Feature flags let you merge incomplete features into the trunk without showing them to users. This is what enables Trunk-Based Development at scale.
+**More than one version in production?**
+
+- Yes: Git Flow, or GitLab Flow with release branches.
+- No: trunk-based or GitHub Flow.
+
+**What does CI actually do?**
+
+- Fast, trusted, and it deploys: trunk-based.
+- Tests are real, deploy is still a person: GitHub Flow or GitLab Flow.
+- Mostly manual: Git Flow matches that, and it will keep matching it until the pipeline exists.
+
+**How many people?**
+
+- A handful: GitHub Flow or trunk-based.
+- Up to about twenty: GitHub Flow. Git Flow only if the releases are versioned.
+- Larger: trunk-based with flags. Git Flow if you are supporting old versions and you have owners for `develop`.
+
+**Who sends code?**
+
+- Strangers: forking into the blessed repo.
+- Employees: a branch in the same repo.
+
+---
+
+## What you still do, on any of these
+
+### Flags
+
+Flags are how unfinished work lands on the trunk without landing on users. That is the mechanism trunk-based depends on.
 
 ```python
-# Simple feature flag check
 def show_new_checkout_flow(user):
     return feature_flags.is_enabled("new_checkout", user_id=user.id)
 
-# In your template/view
 if show_new_checkout_flow(current_user):
     render_new_checkout()
 else:
     render_old_checkout()
 ```
 
-This means code can live in `main` for weeks without anyone seeing it — until you flip the flag.
+The code can sit on `main` until you turn the flag on. Delete the flag after the rollout. A flag from two years ago is a branch you forgot to merge in your head.
 
-### Branch Naming Conventions
-
-Consistent naming makes automation possible and context obvious:
+### Names
 
 ```
 feature/JIRA-123-user-auth
@@ -399,96 +268,51 @@ release/2.4.0
 chore/update-dependencies
 ```
 
-Your CI/CD can then trigger different pipelines based on the prefix. `hotfix/*` branches get expedited workflows. `release/*` branches get extended test suites.
+The prefix is something the pipeline can branch on. `hotfix/*` can skip the slow suite you run on `release/*`. If the name is `misc-updates`, you cannot do that.
 
-### Commit Message Discipline
-
-Meaningless commit messages are technical debt. On any strategy, a clear commit history saves you real time when debugging.
+### Commit messages
 
 ```bash
-# Bad
-git commit -m "fix stuff"
-git commit -m "wip"
-git commit -m "changes"
-
-# Good
 git commit -m "fix: prevent null reference in payment processor when card is expired"
 git commit -m "feat: add retry logic to webhook delivery (max 3 attempts)"
 git commit -m "chore: upgrade Django from 4.1 to 4.2"
 ```
 
-[Conventional Commits](https://www.conventionalcommits.org/) is worth adopting — it's a lightweight spec that makes changelogs automatable.
+`fix stuff` is useless the night you are bisecting. [Conventional Commits](https://www.conventionalcommits.org/) is enough of a spec that a changelog can be generated from it. Adopt it if you want that. Do not adopt it as a style argument.
 
-### Protected Branches
-
-On any strategy, protect your important branches:
+### Protected branches
 
 ```yaml
-# GitHub Branch Protection Rules (via API or UI)
-# main branch:
-- Require pull request reviews: 1 approver minimum
-- Require status checks to pass before merging
-- Require branches to be up to date before merging
-- Restrict who can push to matching branches
-- Require signed commits (optional but recommended)
+# main
+# - at least one approving review
+# - required status checks
+# - branch up to date before merge
+# - restrict who can push
+# - signed commits if you already have a reason
 ```
 
-### Short-Lived Branches
+Turn this on in the host. If it only lives in the README, it is optional.
 
-No matter the strategy, branches should be short-lived. The longer a branch lives, the more it drifts from the rest of the codebase, and the more painful the merge.
+### Short branches
 
-A rough guide:
-- Feature branches: ideally 1–3 days, rarely more than a week
-- Release branches: days, not weeks
-- Hotfix branches: hours
+- Feature work: one to three days. A week is already long.
+- Release branches: days.
+- Hotfixes: hours.
 
-If a feature branch is living for three weeks, it's a signal that the feature needs to be broken down into smaller pieces.
-
----
-
-## Common Mistakes (and How to Avoid Them)
-
-**Mistake 1: Picking a strategy by reputation, not by fit.**
-Git Flow became so well-known that teams adopted it by default — including teams that deploy 10 times a day. Match the strategy to your reality.
-
-**Mistake 2: Long-lived feature branches.**
-The bigger the branch, the bigger the merge conflict, the harder the review, the higher the risk. Break work down ruthlessly.
-
-**Mistake 3: Treating `develop` as a dumping ground.**
-In Git Flow, `develop` should always be shippable. If it's not, you don't have a branching problem — you have a testing problem.
-
-**Mistake 4: Not enforcing the strategy.**
-A branching strategy written in a wiki nobody reads is worthless. Enforce it with branch protections, automated checks, and PR templates.
-
-**Mistake 5: Never revisiting the strategy.**
-A strategy that worked at 5 engineers may not work at 25. Revisit your approach when team size, release cadence, or deployment infrastructure changes significantly.
+A feature branch that is three weeks old is a ticket that should have been several tickets.
 
 ---
 
-## The Honest Truth About Branch Strategies
+## What goes wrong
 
-There's a reason experienced engineers get slightly exasperated when this topic comes up in interviews: the strategy itself matters less than the discipline and tooling around it.
+People pick Git Flow because they have heard of it, including teams that deploy ten times a day. Match the model to the release, not to the blog post.
 
-A team with strong CI/CD, short-lived branches, good communication, and automated testing will succeed with almost any strategy. A team without those things will struggle with all of them.
+Long-lived feature branches make the conflict, the review, and the rollback all bigger. Split the work.
 
-Pick a strategy that matches your current reality. Invest in automation. Keep branches short. Review code quickly. And don't be afraid to evolve your approach as your team and product grow.
+In Git Flow, `develop` is supposed to be shippable. If it is not, the tests are the problem.
 
-The best branching strategy is the one your team actually follows.
+If branch protection, required checks, and a PR template are not on, the strategy is a suggestion.
 
----
+A model that worked at five people often does not work at twenty-five. Revisit it when the team, the cadence, or the deploy path changes.
 
-## Quick Reference Card
-
-```
-Deploying continuously?          → GitHub Flow or Trunk-Based
-Need staging checkpoints?        → GitLab Flow
-Scheduled versioned releases?    → Git Flow
-Open source contributions?       → Forking Workflow
-Multiple versions in production? → Git Flow with release branches
-Team < 5 engineers?              → GitHub Flow
-Strong CI/CD + feature flags?    → Trunk-Based Development
-```
-
----
-
-*Last updated: 2026 | Applies to Git-based workflows across GitHub, GitLab, Bitbucket, and self-hosted repositories.*
+The model matters less than whether `main` stays green, branches die quickly, and someone reviews the diff while it is still small. A team with that will survive a mediocre diagram. A team without it will not be saved by the right one.
