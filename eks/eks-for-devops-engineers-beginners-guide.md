@@ -1,8 +1,5 @@
 # Starting on EKS
 
-**Author:** Sandeep K | `sandeepk24/learn-devops-playbook`
-**Tags:** `#EKS` `#Kubernetes` `#Beginner`
-
 Someone hands you a cluster name and a namespace. This is what to do with that, and what to leave alone until you've done it a few times.
 
 The other notes in this folder are for when you own the cluster. You don't need them yet. If a container still feels fuzzy, read [Docker internals, part 1](../docker/docker-advanced-part-1.md) first.
