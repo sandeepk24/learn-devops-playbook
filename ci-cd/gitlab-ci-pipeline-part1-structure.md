@@ -1,16 +1,12 @@
-# Structuring a Clean GitLab CI Pipeline for Dev, QA, Stage, and Production (Part 1: Structure & Rules)
+# GitLab CI for dev, QA, stage, and production
 
-Here's a moment every DevOps engineer eventually lives through: you open a `.gitlab-ci.yml` you didn't write, and it's 400 lines long. There's a `deploy-to-qa`, a `deploy_qa2`, a `deploy-stage-OLD`, and a comment that says `# don't touch, breaks prod`. Nobody on the team can tell you with confidence what happens if you delete that comment. That file didn't get born this way — it was built one reasonable, well-intentioned commit at a time, by people solving the problem in front of them without a model for where the next environment would go.
+A `.gitlab-ci.yml` you did not write is often four hundred lines. `deploy-to-qa`, `deploy_qa2`, `deploy-stage-OLD`, and a comment that says the next person who edits it will break prod. Nobody can tell you what deleting a job does. It got there one reasonable commit at a time, because each environment was added as a copy.
 
-That's really what this two-part series is about: the model. Not a list of YAML snippets to copy, but the handful of decisions that, made early, keep a pipeline legible even after it's grown to cover dev, QA, stage, and production. If you're a couple of years into DevOps and you've only ever *inherited* pipelines like the one above, this is the piece that explains why they end up that way — and what the alternative actually looks like in practice.
+This is the model that keeps the file readable after you have dev, QA, stage, and production. [Part 2](./gitlab-ci-pipeline-part2-security-rollback.md) is protected environments, scoped variables, and rollback. The YAML below is the structure. It is not a pipeline you paste over a cluster you have not looked at.
 
-Part 1 covers the structural side: how environments relate to stages (they're not the same thing, and treating them as one is where most of the mess starts), why you build an artifact exactly once, and how GitLab's `extends` keyword turns four near-identical deploy jobs into one template and four small diffs. [Part 2](./gitlab-ci-pipeline-part2-security-rollback.md) picks up where structure stops being enough — protected environments, environment-scoped secrets, and rollback.
+## Environments are not stages
 
-## The core problem: environments aren't stages
-
-Here's the mistake almost everyone makes once, usually without noticing: treating `dev`, `qa`, `stage`, and `production` as **stages** in the pipeline sense. They're not, and the distinction matters more than it sounds like it should. A stage in GitLab CI (`build`, `test`, `deploy`) describes a *phase of work* — what's happening. An environment describes *where that work lands*. Collapse the two and you get a `deploy-to-qa` stage sitting next to a `deploy-to-stage` stage sitting next to a `deploy-to-prod` stage — three jobs that are 90% identical, each one drifting slightly further from the others every time someone patches just one of them under deadline pressure. Six months later, that's your 400-line file.
-
-The cleaner mental model:
+`dev`, `qa`, `stage`, and `production` are not stages. A stage is a phase: `build`, `test`, `deploy`. An environment is where a deploy lands. If you make each environment a stage, you get three deploy jobs that started identical and drifted the first time someone patched one of them on a deadline.
 
 ```
 stages:
@@ -19,17 +15,17 @@ stages:
   - deploy
 
 environments:
-  dev  → auto-deploy on every merge to develop
-  qa   → auto-deploy on every merge to develop (same artifact, different target)
-  stage → manual promotion of a tagged/release-candidate artifact
-  prod  → manual promotion, protected, requires approval
+  dev   → auto, every merge to develop
+  qa    → auto, same artifact, different namespace
+  stage → manual, release-candidate tag
+  prod  → manual, protected, release tag
 ```
 
-One `deploy` stage, one `deploy` job template, parameterized by environment. Everything else is `rules:` controlling *when* each environment's instance of that job runs.
+One deploy stage. One deploy template. `rules:` decide which copy runs.
 
-## Build once, deploy everywhere
+## Build once
 
-Quick gut-check before we get to YAML: does your pipeline rebuild the application separately for dev, for QA, for stage, and for prod? If yes, that's worth fixing before anything else in this article, because it undermines the entire point of having those environments. You want exactly **one** build artifact — a container image, a compiled binary, a packaged bundle — that gets promoted through environments unchanged. Rebuild per environment and you're no longer testing the thing that ships to prod. You're testing a sibling of it, compiled at a slightly different moment, possibly against slightly different dependency resolution. "It worked in staging" stops meaning anything once staging and prod were never actually the same artifact.
+If the pipeline rebuilds the image for dev, again for QA, again for stage, and again for prod, you are not promoting a build. You are testing a sibling of the thing you will ship, compiled later, maybe with different dependency resolution. "It worked in staging" only counts when staging ran the same digest prod will run.
 
 ```yaml
 build:
@@ -43,11 +39,13 @@ build:
     - if: '$CI_COMMIT_TAG'
 ```
 
-The tag `$CI_COMMIT_SHORT_SHA` becomes the single identifier that travels from dev through prod. When someone asks "is this the same build that passed QA," the answer should be a diff of one string, not an archaeology project.
+`$CI_COMMIT_SHORT_SHA` is the id that moves from dev to prod. Whether QA passed is a comparison of that string, not a guess about which pipeline built which environment.
 
-## A template-first job structure
+Tag `latest` as well if a human needs it. Do not deploy `latest`. Deploy the SHA.
 
-If you take one thing from this article and skip the rest, make it this: GitLab's `extends` keyword is the single biggest lever for keeping a multi-environment pipeline readable. Define the *shape* of a deploy job exactly once, then extend it per environment with only the handful of things that actually differ. Everything else inherits automatically — which means it can't quietly drift out of sync the way copy-pasted jobs always do.
+## One template, four jobs
+
+`extends` is how the four jobs stay the same deploy. The hidden job defines the shape. Each environment overrides the namespace, the URL, and the rule.
 
 ```yaml
 .deploy_template:
@@ -102,23 +100,21 @@ deploy-prod:
       when: manual
 ```
 
-Notice what's different across the four jobs: the namespace, the environment URL, and the rule governing when they're eligible to run. Everything else — the actual deploy mechanics — lives in one place. When your deploy logic changes (say, you move from `kubectl set image` to a Helm upgrade), you change it once.
+When the deploy changes, you change `.deploy_template`. Moving from `kubectl set image` to Helm is one edit. Four copied jobs means you will update three of them.
 
-## Rules, not only/except
+`bitnami/kubectl:latest` is fine in a sketch. Pin it once this is a pipeline you run. `latest` will change the kubectl version on you.
 
-If your pipeline still uses `only:`/`except:`, that's worth migrating away from independent of the environment question. `rules:` gives you ordered, composable conditions and — more importantly — lets you attach `when: manual`, `when: on_success`, and `allow_failure` per condition instead of bolting them onto the job as a whole.
+## rules, not only/except
 
-The pattern worth internalizing: **auto-deploy pre-production, gate production behind an explicit human action.** Dev and QA should update on every merge without anyone touching a button — that's the point of having them. Stage and prod should require someone to look at what's about to happen and press go.
+`only` and `except` still run. They cannot say "manual, but only on this tag." `rules` can. Put `when: manual` on the matching rule. A `when` sitting on the job, next to a `rules` block, does not apply to the rule that matched. The rule with no `when` of its own defaults to `on_success`, and the job runs by itself. `when: manual` inside `rules` also defaults `allow_failure` to false, so the pipeline waits. Job-level `when: manual` defaults `allow_failure` to true, and the pipeline goes green while prod never shipped.
 
-| Environment | Trigger | Approval | Typical audience |
-|---|---|---|---|
-| dev | merge to `develop` | none | engineers, fast feedback |
-| qa | merge to `develop` | none | QA team, automated test suites |
-| stage | release-candidate tag | manual | QA sign-off, stakeholder demos |
-| production | release tag | manual, protected | on-call, release manager |
+Dev and QA deploy on merge to `develop`. Nobody clicks anything. That is why those environments exist. Stage and prod wait for a person, and the tag pattern is what makes "a person" mean "a release," not "any commit on the branch."
 
-Look closely at that "protected" in the last column, though, because it's doing more work than it looks like. `when: manual` only stops someone from deploying to prod *by accident* — it says nothing about who's allowed to click the button in the first place. If your pipeline stops here, "manual approval" is really just a suggestion enforced by good manners. Making it an actual control boundary — one where the answer to "could a new hire on the team accidentally push to prod" is a hard no — is what Part 2 is for.
+| Environment | Trigger | Who has to act |
+|---|---|---|
+| dev | merge to `develop` | nobody |
+| qa | merge to `develop` | nobody |
+| stage | tag matching `v1.2.3-rc` | someone clicks |
+| production | tag matching `v1.2.3` | someone who is allowed to, see part 2 |
 
----
-
-*Continue to [Part 2: Security & Rollback](./gitlab-ci-pipeline-part2-security-rollback.md). Part of the [Learn DevOps Playbook](https://github.com/sandeepk24/learn-devops-playbook) series.*
+`when: manual` stops an accident. It does not stop a new hire with Developer access from clicking the button. Protected environments are that control. That is [part 2](./gitlab-ci-pipeline-part2-security-rollback.md).
