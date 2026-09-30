@@ -290,6 +290,9 @@ The folder index is [eks/README.md](./eks/README.md). New to EKS, start with the
 | [Platform engineering vs traditional DevOps](./ci-cd/platform-engineering-vs-traditional-devops.md) | What changes when you move from "everyone owns their own pipeline" to an internal developer platform. |
 | [Branch strategies](./ci-cd/branch-strategies.md) | A no-nonsense look at the branching models and when each one actually fits. |
 | [Trunk-based development](./ci-cd/trunk-based-development.md) | Why long-lived branches hurt, and how trunk-based development avoids the Monday merge marathon. |
+| [Merge queues](./ci-cd/merge-queues.md) | The check that has to pass is the temporary merge, on GitHub and on GitLab, not the pull request head from this morning. |
+| [Terraform in CI](./ci-cd/terraform-in-ci.md) | Plan on the pull request, apply from main, and lock the state so two applies cannot write it. |
+| [Promote the image digest](./ci-cd/promote-the-image-digest.md) | Build once on main. Staging and production run that digest. The tag is for finding the commit. |
 
 ### 📈 SRE / Observability
 | Note | What's in it |
