@@ -293,6 +293,9 @@ The folder index is [eks/README.md](./eks/README.md). New to EKS, start with the
 | [Merge queues](./ci-cd/merge-queues.md) | The check that has to pass is the temporary merge, on GitHub and on GitLab, not the pull request head from this morning. |
 | [Terraform in CI](./ci-cd/terraform-in-ci.md) | Plan on the pull request, apply from main, and lock the state so two applies cannot write it. |
 | [Promote the image digest](./ci-cd/promote-the-image-digest.md) | Build once on main. Staging and production run that digest. The tag is for finding the commit. |
+| [Flaky tests](./ci-cd/flaky-tests.md) | A required check that passes only on a rerun of the same SHA is a flake. Quarantine it with an owner and a date. |
+| [The workflow file is production](./ci-cd/workflow-is-production.md) | Code owners on the workflow, a read-only token unless the job says otherwise, and actions pinned to a commit SHA. |
+| [Ephemeral runners](./ci-cd/ephemeral-runners.md) | One job per runner. A persistent self-hosted machine keeps the last job's filesystem for the next one. |
 
 ### 📈 SRE / Observability
 | Note | What's in it |
