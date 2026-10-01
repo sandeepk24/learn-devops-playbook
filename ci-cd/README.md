@@ -30,6 +30,14 @@ If the company is on GitLab, I would start here instead:
 | [Environments are not stages](./gitlab-ci-pipeline-part1-structure.md) | Four copied deploy jobs, and I could not tell you what deleting one of them would do. |
 | [Who can deploy](./gitlab-ci-pipeline-part2-security-rollback.md) | `when: manual` felt like a control. It was a button anyone in the project could press. |
 
+If the company is on Bitbucket, I would start here instead. I got there because the tickets were already in Jira. The pipeline questions were the same ones.
+
+| Note | What I was missing when I wrote something like it |
+|---|---|
+| [Bitbucket Pipelines](./bitbucket-pipelines.md) | I treated the next step as the same machine. It was a new container, and the files I had just written were gone. |
+| [Bitbucket deployment environments](./bitbucket-deployments.md) | `trigger: manual` felt like a control. The environment was the permission, and only on the plan that had one. |
+| [Bitbucket Pipelines and AWS](./bitbucket-oidc-aws.md) | I had an access key in a secured variable. The trust policy I wrote later matched every repository in the workspace. |
+
 ### How the code moves
 
 I picked a branch model because I had seen the diagram. The model mattered less than whether `main` stayed deployable on the days we were tired.

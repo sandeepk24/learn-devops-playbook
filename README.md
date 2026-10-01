@@ -288,6 +288,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [GitLab CI/CD 101](./ci-cd/gitlab-cicd-101.md) | End-to-end GitLab CI/CD from first principles — what CI/CD is and why it matters. |
 | [GitLab CI pipeline — part 1: structure](./ci-cd/gitlab-ci-pipeline-part1-structure.md) | Pipeline YAML anatomy, stages, jobs, runners, and the execution model. |
 | [GitLab CI pipeline — part 2: security & rollback](./ci-cd/gitlab-ci-pipeline-part2-security-rollback.md) | Secrets management, protected branches, and the rollback patterns that actually work. |
+| [Bitbucket Pipelines](./ci-cd/bitbucket-pipelines.md) | A step is a new container. Artifacts are the handoff. The deploy stays off `default`. |
+| [Bitbucket deployment environments](./ci-cd/bitbucket-deployments.md) | `deployment:` is the dashboard row and the lock. Variables and branch checks can live on `environment:` without that lock. |
+| [Bitbucket Pipelines and AWS](./ci-cd/bitbucket-oidc-aws.md) | Assume a role from the deployment step. The trust policy matches the repository UUID and the production environment UUID in `sub`. |
 | [Golden paths for application deployment](./ci-cd/golden-paths-for-application-deployment.md) | Opinionated deployment templates — the "paved road" approach that reduces decision fatigue at scale. |
 | [Platform engineering vs traditional DevOps](./ci-cd/platform-engineering-vs-traditional-devops.md) | What changes when you move from "everyone owns their own pipeline" to an internal developer platform. |
 | [Branch strategies](./ci-cd/branch-strategies.md) | A no-nonsense look at the branching models and when each one actually fits. |
