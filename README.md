@@ -278,6 +278,8 @@ The folder index is [eks/README.md](./eks/README.md). New to EKS, start with the
 | [Part 5: Production DevOps readiness](./learning-amazon-bedrock-agentcore/05-production-devops-readiness.md) | Logging, health checks, rollback, scaling, and the runbook items that keep an agent alive in production. |
 
 ### 🔁 CI/CD
+The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.md). The table is the full set.
+
 | Note | What's in it |
 |---|---|
 | [GitHub DevOps fundamentals & best practices](./ci-cd/01_GITHUB_DEVOPS_FUNDAMENTALS.md) | The foundations — repo hygiene, Actions, and the practices that keep a pipeline sane. |
