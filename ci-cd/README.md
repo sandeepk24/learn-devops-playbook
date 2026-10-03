@@ -55,6 +55,16 @@ Staging used to pass and production would fail on a build we had produced an hou
 |---|---|
 | [Promote the image digest](./promote-the-image-digest.md) | The tag was a name I could say out loud. The digest was the thing the task had pulled. I started deploying the second one after a rollback pointed at a tag that had moved. |
 
+### The cluster follows git
+
+I kept `kubectl apply` in the pipeline after a controller was already reconciling the same Deployment. I was watching the job log. The cluster was watching git.
+
+| Note | What I learned after I had already chosen |
+|---|---|
+| [Argo CD](./argo-cd.md) | The pipeline and the controller both applied. The one I was debugging was the job. Git was the one the cluster obeyed. |
+| [Argo CD projects](./argo-cd-projects.md) | The first app synced on the `default` project. That project could create a ClusterRole, and I called it a team app. |
+| [Argo CD sync](./argo-cd-sync.md) | Synced meant the manifest matched. The pods were crash-looping on the digest I had just committed. |
+
 ### Green meaning what it says
 
 I treated a green rerun as close enough for a long time. The merge queue, once we had one, merged those reruns without asking me how I felt about it.

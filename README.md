@@ -298,6 +298,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Merge queues](./ci-cd/merge-queues.md) | The check that has to pass is the temporary merge, on GitHub and on GitLab, not the pull request head from this morning. |
 | [Terraform in CI](./ci-cd/terraform-in-ci.md) | Plan on the pull request, apply from main, and lock the state so two applies cannot write it. |
 | [Promote the image digest](./ci-cd/promote-the-image-digest.md) | Build once on main. Staging and production run that digest. The tag is for finding the commit. |
+| [Argo CD](./ci-cd/argo-cd.md) | The CI job commits the manifest. Argo CD makes the cluster match it. `prune` and `selfHeal` stay off until the Application turns them on. |
+| [Argo CD projects](./ci-cd/argo-cd-projects.md) | The `default` project allows any repo and any kind. A team project names the repo, the namespace, and the ServiceAccount the sync runs as. |
+| [Argo CD sync](./ci-cd/argo-cd-sync.md) | Waves and PreSync hooks order the apply. Synced and Healthy are different, and the image in git is a digest. |
 | [Flaky tests](./ci-cd/flaky-tests.md) | A required check that passes only on a rerun of the same SHA is a flake. Quarantine it with an owner and a date. |
 | [The workflow file is production](./ci-cd/workflow-is-production.md) | Code owners on the workflow, a read-only token unless the job says otherwise, and actions pinned to a commit SHA. |
 | [Ephemeral runners](./ci-cd/ephemeral-runners.md) | One job per runner. A persistent self-hosted machine keeps the last job's filesystem for the next one. |
