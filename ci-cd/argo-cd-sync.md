@@ -1,8 +1,10 @@
 # Argo CD sync
 
-Synced means the cluster matches git, after `ignoreDifferences`. Healthy means the resource's health check passed. I have shipped a CrashLoop that was Synced and Degraded, and I have stared at a green Synced badge while the pods were the previous digest because I was looking at the parent app-of-apps. I read the Application that owns the Deployment.
+Synced is not Healthy.
 
-A sync applies in phases, and inside a phase it applies in waves. Lower wave numbers go first. The default wave is 0. Namespaces and other built-in kinds are ordered inside a wave, and that order is not a wait. A CRD and its CR in wave 0 still race. The CR's dry run fails because the CRD is not established. I put the CRD at `-1` and leave the CR at `0`. The next wave waits until the previous one is healthy.
+Synced means the cluster matches git, after `ignoreDifferences`. Healthy means the resource's health check passed. I have shipped a CrashLoop that was Synced and Degraded at the same time, and I once stared at a green badge while the pods ran the previous digest, because I was reading the parent app-of-apps instead of the Application that owned the Deployment.
+
+A sync applies in phases, and inside a phase it applies in waves. Lower numbers go first, and the default is 0. Inside a wave, Argo orders built-in kinds sensibly, but ordering is not waiting. A CRD and its custom resource in the same wave still race, and the custom resource fails its dry run because the CRD is not established yet. So the CRD goes at `-1` and the custom resource stays at `0`. Argo holds each wave until the previous one is healthy.
 
 ```yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -13,11 +15,13 @@ metadata:
     argocd.argoproj.io/sync-wave: "-1"
 ```
 
-Two seconds between waves is the default delay. It is enough for the CRD to register on a quiet cluster and not enough when the API is slow. I raise `ARGOCD_SYNC_WAVE_DELAY` when the CR still lands before the CRD is servable. I do not paper over it with `SkipDryRunOnMissingResource` unless the CRD is genuinely owned by another controller and will appear on its own.
+The pause between waves is two seconds by default. Enough on a quiet cluster. Not enough when the API server is slow, and then the custom resource still lands before the CRD is servable. I raise `ARGOCD_SYNC_WAVE_DELAY` in that case. I leave `SkipDryRunOnMissingResource` alone unless another controller really does create the CRD on its own schedule.
 
 ## Hooks
 
-A Job in git, with no hook annotation, is a normal resource. The Job spec is immutable. The next sync cannot change the command, and the completed Job sits there. A PreSync hook runs before the manifests, and a failed PreSync fails the sync before the Deployment rolls. That is the migration I want when the new code cannot boot on the old schema.
+A Job in git without a hook annotation is an ordinary resource. Job specs are immutable, so the next sync cannot change the command, and the finished Job just sits there.
+
+A PreSync hook runs before the manifests are applied. If it fails, the sync stops before the Deployment rolls. That is the migration I want when the new code cannot boot on the old schema.
 
 ```yaml
 apiVersion: batch/v1
@@ -38,13 +42,17 @@ spec:
           command: ["./migrate"]
 ```
 
-If I omit `hook-delete-policy`, Argo uses `BeforeHookCreation`. I set it anyway so the next reader sees why the previous Job disappears. `HookSucceeded` deletes it after a good sync and leaves a failed one for me to read. PostSync runs after the sync is applied and the resources are Healthy. I have put a smoke test there and watched it never start, because the new pods were not Ready and PostSync was waiting on purpose.
+Omit the delete policy and Argo assumes `BeforeHookCreation` anyway. I write it down so the next reader knows why last time's Job vanishes. `HookSucceeded` clears the Job after a good sync and leaves a failed one behind for me to read.
 
-Hooks do not run on a selective sync of one resource. I have "synced just the Deployment" from the UI and skipped the migration. The full sync is the one that runs the hook.
+PostSync runs after everything is applied and Healthy. I once put a smoke test there and watched it never start. The new pods were not Ready, and PostSync was waiting for them on purpose.
+
+Hooks do not run on a selective sync. I have synced "just the Deployment" from the UI and skipped the migration without realizing it. Run the full sync.
 
 ## Fields another controller owns
 
-`ignoreDifferences` changes the OutOfSync calculation. The apply still sends git's value unless `RespectIgnoreDifferences=true`. I ignored `/spec/replicas` on a Deployment the HPA manages, left the sync option off, and the next sync set replicas back to the number in git. The HPA corrected it. Argo synced again. The Deployment oscillated until I set both.
+`ignoreDifferences` changes the OutOfSync calculation and nothing else. The apply still sends git's value unless `RespectIgnoreDifferences=true` is set.
+
+I learned that on an HPA. I ignored `/spec/replicas`, left the sync option off, and the next sync dropped replicas back to the number in git. The HPA corrected it. Argo synced again. They kept this up until I set both.
 
 ```yaml
 spec:
@@ -59,12 +67,16 @@ spec:
       - RespectIgnoreDifferences=true
 ```
 
-The `name:` matters. Ignoring replicas on every Deployment in the Application hides a hand scale on the one the HPA does not own. On the first sync, with no live object yet, the git value is what gets created. RespectIgnoreDifferences applies on the update.
+Keep the `name:`. Ignore replicas on every Deployment in the Application and you hide a hand-scale on the one the HPA does not manage. And on a first sync, with no live object to respect, git's value is what gets created. The option only matters on updates.
 
-`ServerSideApply=true` is how I sync a manifest that does not fit in the `last-applied-configuration` annotation. The apply uses `--force-conflicts`. Argo takes the fields. I use it when the object is too large for client-side apply. I leave it off a resource where another controller is supposed to keep a field, because force-conflicts is Argo winning that argument on every sync.
+`ServerSideApply=true` is for manifests too large for the `last-applied-configuration` annotation. It applies with `--force-conflicts`, so Argo takes the fields. Fine for an object I own. A bad idea on a resource where another controller is meant to keep a field, because Argo wins that argument on every sync.
 
-`FailOnSharedResource=true` fails the sync when this Application tries to adopt an object another Application already owns. I turned it on after two apps rendered the same ConfigMap and the later sync was the one I had not reviewed.
+`FailOnSharedResource=true` fails the sync when this Application tries to adopt an object another Application already owns. I turned it on after two apps rendered the same ConfigMap and the unreviewed one synced last.
 
 ## The image
 
-The container image in git is the digest. A tag in the Deployment is a pointer, and selfHeal will put that pointer back every time someone tries to pin a digest from the command line. CI commits the digest into the gitops repo. Argo syncs the commit. An image updater that writes `latest` into the manifest is the tag problem with a controller attached. I have removed it. The bytes are [the digest note](./promote-the-image-digest.md). The allow list around this Application is [the project](./argo-cd-projects.md).
+The image in git is a digest.
+
+A tag in the Deployment is a pointer, and selfHeal will put that pointer back every time someone pins a digest from a terminal. CI commits the digest into the gitops repo and Argo syncs the commit. An image updater that writes `latest` into the manifest is the tag problem again with a controller attached, and I have removed it more than once.
+
+The reasoning for the bytes is in [the digest note](./promote-the-image-digest.md). The allow list around this Application is [the project](./argo-cd-projects.md).
