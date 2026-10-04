@@ -1,6 +1,10 @@
 # Argo CD projects
 
-An Application with no `spec.project` lands in `default`. The default project, the day it is created, allows any source repo, any cluster, any namespace, and any cluster-scoped kind. I have shipped a team's first app on `default` because the sync worked. That Application could create a ClusterRole. The project is the allow list. The Application is just a pointer.
+Leave `spec.project` empty and the Application lands in `default`. That project, as created, allows any source repo, any cluster, any namespace, and any cluster-scoped kind.
+
+I shipped a team's first app on it because the sync worked. That Application could have created a ClusterRole. Nobody noticed, including me.
+
+The project is the allow list. The Application is just a pointer.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -27,21 +31,23 @@ spec:
       defaultServiceAccount: payments-deployer
 ```
 
-`sourceRepos` is the git Argo may read for this project. A second repo URL in an Application is rejected. I have watched a pull request change `repoURL` to a fork. The project stopped it. The Application YAML was valid.
+`sourceRepos` is the git this project may read. Anything else is rejected. I watched a pull request swap `repoURL` for a fork once, and the project stopped it even though the Application YAML was perfectly valid.
 
-`destinations` is where namespaced resources may go. `namespace: payments` keeps Deployments out of `kube-system`. I keep the server URL identical to the one on the cluster secret. A trailing character difference is a destination the project refuses, and the error looks like a permissions problem.
+`destinations` covers where namespaced resources may land. `namespace: payments` keeps Deployments out of `kube-system`. Copy the server URL from the cluster secret exactly, because one stray character makes it a different destination, and the error reads like a permissions problem.
 
-`clusterResourceWhitelist` is empty of anything I did not type. A Namespace is cluster-scoped, so the destination entry does not cover it. The `name: payments` on that whitelist is what keeps the project from creating `kube-system` or any other namespace. A CRD, a ClusterRole, or a MutatingWebhookConfiguration stays off this list and lives in a platform project I review. Namespaced kinds are allowed until I blacklist one. I have blacklisted `ResourceQuota` on a team project after a sync replaced the quota the platform chart had set.
+`clusterResourceWhitelist` holds only what I typed into it. A Namespace is cluster-scoped, so the destination entry does not cover it, and the `name: payments` here is what stops the project creating `kube-system` or anything else. CRDs, ClusterRoles, and webhook configurations stay off the list. They live in a platform project that I review. Namespaced kinds are allowed until denied, and I have denied `ResourceQuota` on a team project after a sync overwrote the quota the platform chart set.
 
-`destinationServiceAccounts` is the identity the sync uses in that namespace. The Application controller is not cluster-admin for every app once this is set. `payments-deployer` can update Deployments in `payments`. It cannot bind cluster roles. I create that ServiceAccount in the platform repo, before the first team app syncs. An Application that fails with a forbidden error is usually this account, and the fix is the RoleBinding, not a wider project.
+`destinationServiceAccounts` is the identity the sync runs as. It takes effect only after sync impersonation is switched on with `application.sync.impersonation.enabled: "true"` in `argocd-cm`. Skip that and the field sits there doing nothing, which is an easy thing to believe is a control. Once it is on, `payments-deployer` can update Deployments in `payments` and cannot bind cluster roles. I create that ServiceAccount in the platform repo before the first team app syncs. A forbidden error on sync is usually this account missing a RoleBinding. The fix is the RoleBinding. A wider project is the wrong answer.
 
-`sourceNamespaces` lists where Applications for this project may live. It does nothing until `argocd-cm` allows those namespaces in `application.namespaces`. After that, the payments team creates Applications in the `payments` namespace, and those Applications can only join a project that lists `payments`. I stopped finding team Applications dropped into the `argocd` namespace next to the platform ones.
+`sourceNamespaces` says where Applications for this project may live. Nothing happens until `application.namespaces` is set in `argocd-cmd-params-cm` and the server and application controller are restarted. After that, the payments team keeps its Applications in its own namespace. I stopped finding team apps dropped into `argocd` next to the platform ones.
 
 ## One Application per directory
 
-I started with an app-of-apps: one parent Application whose path was a directory of child Application manifests. The parent went Synced when the child Application objects existed. The children could be Degraded and the parent was still green. I read the parent.
+I started with app-of-apps. One parent Application, whose path was a folder of child Application manifests. The parent went Synced once the child objects existed. The children could be Degraded and the parent stayed green.
 
-An ApplicationSet generates the Applications from the repo. The project on the template is a fixed name. I do not template `spec.project`. A generator that lets the directory choose the project will let a pull request choose the permissive one. The docs call that out, and I have seen the pull request.
+I was reading the parent.
+
+An ApplicationSet generates the Applications from the repo instead. The project in the template is a fixed name. I never template `spec.project`, because a generator that lets a directory pick its own project lets a pull request pick the permissive one. The docs warn about exactly that, and I have seen the pull request.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -61,6 +67,8 @@ spec:
   template:
     metadata:
       name: "{{.path.basenameNormalized}}"
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
     spec:
       project: payments
       source:
@@ -78,6 +86,10 @@ spec:
           - CreateNamespace=true
 ```
 
-`goTemplate: true` is what makes `{{.path.basenameNormalized}}` expand. Without it I have committed the braces as the Application name. `basenameNormalized` replaces characters Kubernetes will not accept in a name. A new directory under `apps/payments/` becomes an Application on the next reconcile. Deleting the directory prunes that Application only if prune is on. I keep prune on here, and I keep the directory generator pointed at a folder that contains nothing except apps I am willing to delete.
+`goTemplate: true` is what expands `{{.path.basenameNormalized}}`. Leave it out and the braces become the Application name, which I have committed more than once. The normalized form swaps out characters Kubernetes will not accept in a name.
 
-The ApplicationSet file is one I review. The team adds a directory under `apps/payments/`. A pull request that changes `project` or `destination.server` on the template is the one I do not let through on a rubber stamp. How that generated Application orders its resources is [the sync note](./argo-cd-sync.md). The thing inside the directory is still [an Application](./argo-cd.md).
+Add a directory under `apps/payments/` and an Application appears on the next reconcile. Remove one and the Application object is deleted. What happens to the workload depends on the finalizer. With `resources-finalizer.argocd.argoproj.io` the Deployment goes with it, and without it the Deployment keeps running with nothing managing it. I set the finalizer deliberately, and I point the generator at a folder that holds only apps I am willing to lose.
+
+I review the ApplicationSet file itself. Teams add directories. A change to `project` or `destination.server` on the template gets a real read.
+
+How the generated Application orders its resources is [the sync note](./argo-cd-sync.md). What sits inside each directory is still [an Application](./argo-cd.md).
