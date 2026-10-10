@@ -1,22 +1,24 @@
 # Scalability: Vertical vs. Horizontal
 
-Every design conversation eventually runs into the same wall: the thing works fine right now, but what happens when it doesn't anymore? That's scalability, and it's usually the very first real decision you make in any system — long before sharding or consensus or any of the fancier topics later in this series. Get it wrong here, and you spend the next two years fighting the consequences.
+Every design conversation hits the same wall eventually. Works fine now. What happens when it doesn't?
 
-There are two ways to answer "we need more capacity," and most engineers know the textbook definitions. Add a bigger box, or add more boxes. What doesn't get talked about enough is when each one actually makes sense, and how expensive it is to guess wrong.
+That's scalability. Usually the first real decision in any system, long before sharding or consensus or the fancier topics ahead. Get it wrong, and you spend two years fighting the consequences.
+
+Two ways to answer "we need more capacity." Bigger box. More boxes. Most engineers know the textbook definitions. What doesn't get discussed enough: when each actually makes sense, and how expensive it is to guess wrong.
 
 ## Fundamentals
 
 ### The bigger box
 
-Vertical scaling means giving the same machine more resources — more CPU, more RAM, a faster disk. Nothing about your architecture changes. Your database is still one database, your app is still one process, and as far as the code is concerned, nothing happened except everything got faster.
+Vertical scaling. Same machine, more resources — CPU, RAM, faster disk. Architecture stays unchanged. Database is still one database, app is still one process. Code doesn't know anything happened except everything got faster.
 
-This is tempting for a reason: it's almost free in terms of engineering effort. You resize an instance, maybe schedule a short restart, and you're done. No new failure modes, no new code paths, no distributed systems problems to think about. For a lot of early-stage systems, this is genuinely the right call, and I'd argue it's underused — people reach for horizontal scaling because it sounds more sophisticated, when a bigger instance would've solved the problem for six months at a fraction of the complexity.
+Tempting for a reason: almost free in engineering effort. Resize an instance, schedule a restart, done. No new failure modes, no new code paths, no distributed systems headaches. For early-stage systems, this is often the right call. I'd argue it's underused. People reach for horizontal because it sounds sophisticated, when a bigger instance would've bought six months at a fraction of the complexity.
 
-But it has a ceiling, and the ceiling is physical. There's a biggest instance AWS sells. There's a limit to how much you can put in one machine before the cost curve stops being linear and starts being absurd. And there's a much quieter problem: a single machine is a single point of failure no matter how big it is. Scale vertically forever and you've built a system that's fast right up until the moment it isn't there at all.
+But there's a ceiling. Physical. AWS sells a biggest instance. The cost curve goes from linear to absurd past a certain point. And the quieter problem: one machine is one point of failure, no matter how big. Scale vertically forever and you've built something fast right up until it isn't there at all.
 
 ### More boxes
 
-Horizontal scaling means adding more machines and spreading the load across them instead of making any one of them bigger. This is where load balancers, service discovery, and a good chunk of everything else in this series comes from — because the moment you have more than one instance of something, you've inherited a whole category of problems that simply don't exist when there's only one.
+Horizontal scaling. More machines, load spread across them. This is where load balancers, service discovery, and a significant chunk of this series originates — because the moment you have two instances of something, you've inherited an entire category of problems that don't exist when there's only one.
 
 ```
 Vertical scaling                    Horizontal scaling
@@ -30,35 +32,39 @@ Vertical scaling                    Horizontal scaling
                                           Load Balancer / Router
 ```
 
-The upside is real: no hard ceiling, and no single point of failure, since losing one instance out of ten is a rounding error instead of an outage. The cost is that your application now has to be built to run this way. State that used to live comfortably in one process — sessions, in-memory caches, anything assuming "there's only one of me" — has to move somewhere shared, or get replicated, or just get redesigned out of existence. That's not a small ask. It's the reason "just make it stateless" shows up so often in this kind of writing; it's not a platitude, it's the actual precondition for horizontal scaling to work at all.
+The upside is real. No hard ceiling. No single point of failure — losing one instance out of ten is a rounding error, not an outage. The cost: your application has to be built for it. State that lived comfortably in one process — sessions, in-memory caches, anything assuming "there's only one of me" — needs to move somewhere shared, get replicated, or get redesigned out of existence.
+
+Not a small ask. That's why "just make it stateless" appears constantly in this literature. Not a platitude. Actual precondition for horizontal scaling to work.
 
 ## Operations
 
 ### Where people actually get this wrong
 
-The mistake I see most isn't picking the wrong one — it's picking horizontal too early. A team stands up a Kubernetes cluster with autoscaling and five replicas for a service doing a few hundred requests a minute, when a single reasonably-sized instance would've handled that load without breaking a sweat, and without anyone needing to think about session affinity or distributed rate limiting or any of the rest of it.
+The common mistake isn't picking the wrong one. It's picking horizontal too early. A team stands up Kubernetes with autoscaling and five replicas for a service doing a few hundred requests a minute, when a single reasonably-sized instance would've handled it without breaking a sweat — and without anyone thinking about session affinity or distributed rate limiting.
 
-There's a reasonable order of operations here, and it's almost always:
+Reasonable order of operations:
 
-1. Scale vertically first, because it buys you time cheaply and doesn't add complexity.
-2. Scale vertically again if there's room, because the second upgrade is usually still cheaper than a redesign.
-3. Only go horizontal once you've actually hit a ceiling — a real one, not a hypothetical future one — or once availability requirements mean you can't tolerate a single instance being a single point of failure regardless of size.
+1. Scale vertically first. Buys time cheaply, adds no complexity.
+2. Scale vertically again if there's room. Second upgrade usually cheaper than redesign.
+3. Go horizontal only after hitting an actual ceiling — real, not hypothetical — or when availability requirements mean you can't tolerate a single point of failure regardless of size.
 
-That third point matters as much as the ceiling does. Sometimes you go horizontal not because one big box can't handle the load, but because you can't accept the downtime when that one box needs a restart, or dies. Availability and raw capacity are different reasons to make the same architectural move, and it's worth being honest with yourself about which one is actually driving the decision, because they lead to different designs. Capacity-driven horizontal scaling can tolerate a lot of latency in bringing new instances online. Availability-driven horizontal scaling usually can't.
+That third point matters as much as the ceiling. Sometimes you go horizontal not because one big box can't handle the load, but because you can't accept downtime when that box restarts or dies. Availability and raw capacity are different reasons for the same architectural move. Worth knowing which one is driving your decision, because they lead to different designs. Capacity-driven horizontal scaling can tolerate slow instance spin-up. Availability-driven usually can't.
 
 ### The stateless requirement isn't optional
 
-If you take one operational lesson from this article, it's this: horizontal scaling doesn't work — not "works poorly," but doesn't work — unless your application can genuinely be stateless, or unless the state is handled somewhere all instances can see it equally. This shows up constantly in incident reviews. Someone scales an app horizontally, forgets that user sessions are stored in local memory, and now half of their users are randomly getting logged out depending on which instance the load balancer happens to route them to that request. The fix isn't a scaling fix, it's an architecture fix — move sessions to Redis, or to a database, or sign a token the client can carry instead.
+One lesson from this article: horizontal scaling doesn't work — not "works poorly," doesn't work — unless your application is genuinely stateless, or state lives somewhere all instances see equally.
 
-The same applies to anything you might be tempted to keep local: file uploads waiting for processing, in-memory caches you built to save a database round trip, background job queues that only one process knows about. Every one of these needs a shared home before horizontal scaling is actually safe to turn on, not after.
+Shows up constantly in incident reviews. Someone scales horizontally, forgets sessions are in local memory, and now half the users randomly log out depending on which instance gets their request. Fix isn't a scaling fix. Architecture fix. Move sessions to Redis, to a database, or sign a token the client carries.
+
+Same for anything you're tempted to keep local. File uploads waiting for processing. In-memory caches saving database round trips. Background job queues only one process knows about. Every one needs a shared home before horizontal scaling is safe. Not after.
 
 ## Deep Dive: what this looks like on AWS
 
-In practice, on AWS, vertical scaling usually means resizing an EC2 instance type, bumping an RDS instance class, or increasing the CPU/memory limits on an ECS task definition. It's a config change and a restart, and for RDS specifically it's worth knowing you can do this with minimal downtime using Multi-AZ failover — the standby gets resized, promoted, and traffic cuts over in a handful of seconds rather than the minutes a plain restart would cost you.
+Vertical scaling on AWS: resize an EC2 instance type, bump an RDS instance class, increase CPU/memory limits on an ECS task. Config change and restart. For RDS specifically, Multi-AZ failover lets you do this with minimal downtime — standby gets resized, promoted, traffic cuts over in seconds rather than minutes.
 
-Horizontal scaling on AWS usually means an Auto Scaling Group behind an Application Load Balancer for EC2, or a service on ECS/EKS with its replica count driven by target tracking — CPU, memory, or a custom CloudWatch metric like queue depth. The part people skip is testing the scale-in behavior, not just scale-out. Everyone tests "can we handle a traffic spike." Fewer people test "what happens when load drops and we terminate half our instances — do in-flight requests get dropped, does connection draining actually work, does anything break during the shrink." That's usually where the real incidents hide.
+Horizontal scaling: Auto Scaling Group behind an ALB for EC2, or ECS/EKS service with replica count driven by target tracking — CPU, memory, custom CloudWatch metric like queue depth. Part that gets skipped: testing scale-in, not just scale-out. Everyone tests "can we handle a spike." Few test "what happens when load drops and we terminate half our instances." Do in-flight requests drop? Does connection draining work? Does anything break during the shrink? That's where incidents hide.
 
-A good middle path worth knowing about, because it doesn't get mentioned enough: you don't have to pick one and commit forever. Plenty of production systems scale vertically within a horizontal fleet — run three or four instances instead of thirty, and size each one generously. You get some of horizontal's fault tolerance without needing every last piece of infrastructure to support hundreds of ephemeral nodes coming and going.
+Middle path worth knowing. Don't have to pick one forever. Plenty of production systems scale vertically within a horizontal fleet — three or four generously-sized instances instead of thirty small ones. Get horizontal's fault tolerance without infrastructure to support hundreds of ephemeral nodes.
 
 | | Vertical Scaling | Horizontal Scaling |
 |---|---|---|
@@ -71,7 +77,7 @@ A good middle path worth knowing about, because it doesn't get mentioned enough:
 
 ## What's next
 
-Day 3 picks up latency vs. throughput — two numbers that sound like the same thing, get optimized as if they were the same thing, and are actually often in direct tension with each other.
+Day 3: latency vs. throughput. Two numbers that sound identical, get optimized as if they're identical, and are often in direct tension.
 
 ---
 
