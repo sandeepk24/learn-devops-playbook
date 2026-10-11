@@ -349,11 +349,16 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [SQLite for DevOps — part 2](./linux/sqlite-for-devops-part-2.md) | Advanced patterns: JSON columns, FTS, WAL mode, and embedding SQLite into automation scripts. |
 
 ### 📐 System Design
+> 75-day series on distributed systems concepts for DevOps and cloud engineers. See the [series README](./system-design/README.md) for the full index.
+
 | Note | What's in it |
 |---|---|
 | [What is system design for DevOps engineers](./system-design/what-is-system-design-for-devops-engineers.md) | Why system design matters for DevOps, the vocabulary, and how to approach the questions that come up in architecture reviews. |
-| [Latency vs throughput](./system-design/latency-vs-throughput.md) | The distinction that governs every performance decision — and why optimizing for the wrong one makes things worse. |
 | [Scalability: vertical vs horizontal](./system-design/scalability-vertical-vs-horizontal.md) | When to scale up vs scale out, and the architectural implications of each choice. |
+| [Latency vs throughput](./system-design/latency-vs-throughput.md) | The distinction that governs every performance decision — and why optimizing for the wrong one makes things worse. |
+| [CAP theorem](./system-design/cap-theorem.md) | Why "pick two" is misleading, what CP vs AP means under a real partition, and how DynamoDB and Aurora expose the trade-off. |
+| [Load balancing](./system-design/load-balancing.md) | Routing algorithms, Layer 4 vs 7, connection draining, thundering herd, and ALB vs NLB on AWS. |
+| [Caching](./system-design/caching.md) | Cache placement, invalidation strategies, stampedes, cold starts, and ElastiCache/DAX/CloudFront. |
 
 ---
 
