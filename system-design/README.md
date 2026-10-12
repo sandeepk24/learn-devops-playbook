@@ -16,6 +16,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 4 | [CAP theorem](./cap-theorem.md) | Why "pick two" is a misleading frame, what CP vs AP actually means under a partition, and how AWS services expose the trade-off directly. |
 | 5 | [Load balancing](./load-balancing.md) | Routing algorithms, Layer 4 vs 7, connection draining, thundering herd, and ALB vs NLB on AWS. |
 | 6 | [Caching](./caching.md) | Where caches sit, how invalidation works, cache stampedes, cold starts, and ElastiCache/DAX/CloudFront. |
+| 7 | [Database replication](./database-replication.md) | Synchronous vs async replication, replication lag, read replicas vs standby, failover sequences, and RDS/Aurora on AWS. |
+| 8 | [Message queues and async messaging](./message-queues.md) | Queues vs pub/sub, delivery guarantees, dead letter queues, idempotency, and SQS/SNS/EventBridge on AWS. |
+| 9 | [Rate limiting](./rate-limiting.md) | Token bucket, leaky bucket, sliding window, where to enforce limits, distributed rate limiting with Redis, and WAF/API Gateway on AWS. |
 
 ---
 

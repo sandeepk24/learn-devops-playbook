@@ -359,6 +359,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [CAP theorem](./system-design/cap-theorem.md) | Why "pick two" is misleading, what CP vs AP means under a real partition, and how DynamoDB and Aurora expose the trade-off. |
 | [Load balancing](./system-design/load-balancing.md) | Routing algorithms, Layer 4 vs 7, connection draining, thundering herd, and ALB vs NLB on AWS. |
 | [Caching](./system-design/caching.md) | Cache placement, invalidation strategies, stampedes, cold starts, and ElastiCache/DAX/CloudFront. |
+| [Database replication](./system-design/database-replication.md) | Synchronous vs async replication, replication lag, read replicas vs standby, failover, and RDS/Aurora on AWS. |
+| [Message queues and async messaging](./system-design/message-queues.md) | Queues vs pub/sub, delivery guarantees, dead letter queues, idempotency, and SQS/SNS/EventBridge. |
+| [Rate limiting](./system-design/rate-limiting.md) | Token bucket, leaky bucket, sliding window, distributed limiting with Redis, and WAF/API Gateway on AWS. |
 
 ---
 
