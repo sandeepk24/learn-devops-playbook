@@ -19,6 +19,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 7 | [Database replication](./database-replication.md) | Synchronous vs async replication, replication lag, read replicas vs standby, failover sequences, and RDS/Aurora on AWS. |
 | 8 | [Message queues and async messaging](./message-queues.md) | Queues vs pub/sub, delivery guarantees, dead letter queues, idempotency, and SQS/SNS/EventBridge on AWS. |
 | 9 | [Rate limiting](./rate-limiting.md) | Token bucket, leaky bucket, sliding window, where to enforce limits, distributed rate limiting with Redis, and WAF/API Gateway on AWS. |
+| 10 | [Consistent hashing](./consistent-hashing.md) | Why modular hashing breaks on resize, the ring model, virtual nodes, and how ElastiCache and DynamoDB use it internally. |
+| 11 | [Database sharding](./database-sharding.md) | Range vs hash vs directory sharding, choosing a shard key, cross-shard queries, resharding, and DynamoDB/Aurora Limitless on AWS. |
+| 12 | [Circuit breakers](./circuit-breakers.md) | Closed/open/half-open state machine, failure thresholds, fallback responses, cascading failures, and implementation on AWS. |
 
 ---
 

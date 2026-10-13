@@ -362,6 +362,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Database replication](./system-design/database-replication.md) | Synchronous vs async replication, replication lag, read replicas vs standby, failover, and RDS/Aurora on AWS. |
 | [Message queues and async messaging](./system-design/message-queues.md) | Queues vs pub/sub, delivery guarantees, dead letter queues, idempotency, and SQS/SNS/EventBridge. |
 | [Rate limiting](./system-design/rate-limiting.md) | Token bucket, leaky bucket, sliding window, distributed limiting with Redis, and WAF/API Gateway on AWS. |
+| [Consistent hashing](./system-design/consistent-hashing.md) | Why modular hashing breaks on resize, the ring model, virtual nodes, and ElastiCache/DynamoDB internals. |
+| [Database sharding](./system-design/database-sharding.md) | Range vs hash vs directory sharding, shard key selection, cross-shard queries, and Aurora Limitless/DynamoDB. |
+| [Circuit breakers](./system-design/circuit-breakers.md) | Closed/open/half-open state machine, fallback responses, cascading failures, and implementation on AWS. |
 
 ---
 
