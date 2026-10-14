@@ -22,6 +22,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 10 | [Consistent hashing](./consistent-hashing.md) | Why modular hashing breaks on resize, the ring model, virtual nodes, and how ElastiCache and DynamoDB use it internally. |
 | 11 | [Database sharding](./database-sharding.md) | Range vs hash vs directory sharding, choosing a shard key, cross-shard queries, resharding, and DynamoDB/Aurora Limitless on AWS. |
 | 12 | [Circuit breakers](./circuit-breakers.md) | Closed/open/half-open state machine, failure thresholds, fallback responses, cascading failures, and implementation on AWS. |
+| 13 | [Database indexes](./database-indexes.md) | B-tree vs hash vs composite, clustered vs non-clustered, covering indexes, index bloat, and RDS/DynamoDB GSI on AWS. |
+| 14 | [DNS and service discovery](./dns-and-service-discovery.md) | Client vs server-side discovery, TTL and cache poisoning, split-horizon DNS, Cloud Map, ECS discovery, and CoreDNS in EKS. |
+| 15 | [API design and versioning](./api-design-and-versioning.md) | Breaking vs non-breaking changes, versioning strategies, evolutionary design, idempotency keys, and API Gateway version management. |
 
 ---
 

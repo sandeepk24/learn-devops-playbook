@@ -365,6 +365,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Consistent hashing](./system-design/consistent-hashing.md) | Why modular hashing breaks on resize, the ring model, virtual nodes, and ElastiCache/DynamoDB internals. |
 | [Database sharding](./system-design/database-sharding.md) | Range vs hash vs directory sharding, shard key selection, cross-shard queries, and Aurora Limitless/DynamoDB. |
 | [Circuit breakers](./system-design/circuit-breakers.md) | Closed/open/half-open state machine, fallback responses, cascading failures, and implementation on AWS. |
+| [Database indexes](./system-design/database-indexes.md) | B-tree vs hash vs composite, clustered vs non-clustered, covering indexes, index bloat, and RDS/DynamoDB GSIs. |
+| [DNS and service discovery](./system-design/dns-and-service-discovery.md) | TTL and cache poisoning, split-horizon DNS, Cloud Map, ECS service discovery, and CoreDNS in EKS. |
+| [API design and versioning](./system-design/api-design-and-versioning.md) | Breaking changes, versioning strategies, idempotency keys, and API Gateway version management on AWS. |
 
 ---
 
