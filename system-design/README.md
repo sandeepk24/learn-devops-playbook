@@ -25,6 +25,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 13 | [Database indexes](./database-indexes.md) | B-tree vs hash vs composite, clustered vs non-clustered, covering indexes, index bloat, and RDS/DynamoDB GSI on AWS. |
 | 14 | [DNS and service discovery](./dns-and-service-discovery.md) | Client vs server-side discovery, TTL and cache poisoning, split-horizon DNS, Cloud Map, ECS discovery, and CoreDNS in EKS. |
 | 15 | [API design and versioning](./api-design-and-versioning.md) | Breaking vs non-breaking changes, versioning strategies, evolutionary design, idempotency keys, and API Gateway version management. |
+| 16 | [Content delivery networks](./content-delivery-networks.md) | Edge caching, Cache-Control headers, origin shield, cache invalidation, CloudFront behaviors, and Lambda@Edge. |
+| 17 | [Event-driven architecture](./event-driven-architecture.md) | Events vs commands, choreography vs orchestration, ordering problems, eventual consistency, and EventBridge/SNS/Kinesis/Step Functions. |
+| 18 | [Observability](./observability.md) | Metrics, logs, and traces as a system, the four golden signals, SLIs/SLOs/error budgets, and CloudWatch/X-Ray/ADOT on AWS. |
 
 ---
 

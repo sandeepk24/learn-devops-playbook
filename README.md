@@ -368,6 +368,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Database indexes](./system-design/database-indexes.md) | B-tree vs hash vs composite, clustered vs non-clustered, covering indexes, index bloat, and RDS/DynamoDB GSIs. |
 | [DNS and service discovery](./system-design/dns-and-service-discovery.md) | TTL and cache poisoning, split-horizon DNS, Cloud Map, ECS service discovery, and CoreDNS in EKS. |
 | [API design and versioning](./system-design/api-design-and-versioning.md) | Breaking changes, versioning strategies, idempotency keys, and API Gateway version management on AWS. |
+| [Content delivery networks](./system-design/content-delivery-networks.md) | Edge caching, Cache-Control headers, origin shield, cache invalidation, and CloudFront behaviors. |
+| [Event-driven architecture](./system-design/event-driven-architecture.md) | Events vs commands, choreography vs orchestration, ordering problems, and EventBridge/SNS/Kinesis/Step Functions. |
+| [Observability](./system-design/observability.md) | Metrics, logs, and traces as a system, four golden signals, SLIs/SLOs, and CloudWatch/X-Ray/ADOT on AWS. |
 
 ---
 
