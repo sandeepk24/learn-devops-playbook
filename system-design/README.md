@@ -28,6 +28,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 16 | [Content delivery networks](./content-delivery-networks.md) | Edge caching, Cache-Control headers, origin shield, cache invalidation, CloudFront behaviors, and Lambda@Edge. |
 | 17 | [Event-driven architecture](./event-driven-architecture.md) | Events vs commands, choreography vs orchestration, ordering problems, eventual consistency, and EventBridge/SNS/Kinesis/Step Functions. |
 | 18 | [Observability](./observability.md) | Metrics, logs, and traces as a system, the four golden signals, SLIs/SLOs/error budgets, and CloudWatch/X-Ray/ADOT on AWS. |
+| 19 | [Consensus and leader election](./consensus-and-leader-election.md) | Raft, quorum math, election storms, what quorum loss means operationally, and etcd in EKS. |
+| 20 | [Microservices vs monolith](./microservices-vs-monolith.md) | Operational costs on each side, where each breaks, strangler fig migration pattern, and the AWS cost reality of microservices. |
+| 21 | [Distributed transactions](./distributed-transactions.md) | 2PC and why it's fragile, sagas with choreography and orchestration, outbox pattern, and Step Functions/DynamoDB Transactions on AWS. |
 
 ---
 

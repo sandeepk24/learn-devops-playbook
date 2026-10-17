@@ -371,6 +371,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Content delivery networks](./system-design/content-delivery-networks.md) | Edge caching, Cache-Control headers, origin shield, cache invalidation, and CloudFront behaviors. |
 | [Event-driven architecture](./system-design/event-driven-architecture.md) | Events vs commands, choreography vs orchestration, ordering problems, and EventBridge/SNS/Kinesis/Step Functions. |
 | [Observability](./system-design/observability.md) | Metrics, logs, and traces as a system, four golden signals, SLIs/SLOs, and CloudWatch/X-Ray/ADOT on AWS. |
+| [Consensus and leader election](./system-design/consensus-and-leader-election.md) | Raft, quorum math, election storms, quorum loss recovery, and etcd in EKS. |
+| [Microservices vs monolith](./system-design/microservices-vs-monolith.md) | Operational costs on each side, where each breaks, strangler fig pattern, and AWS cost reality. |
+| [Distributed transactions](./system-design/distributed-transactions.md) | 2PC fragility, sagas, outbox pattern, and Step Functions/DynamoDB Transactions on AWS. |
 
 ---
 
