@@ -377,6 +377,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Storage systems](./system-design/storage-systems.md) | Block vs object vs file storage, IOPS vs throughput, AZ pinning, and EBS/S3/EFS/FSx on AWS. |
 | [Network security](./system-design/network-security.md) | Security groups, NACLs, zero trust, VPC endpoints, WAF, GuardDuty, and Network Firewall on AWS. |
 | [Capacity planning](./system-design/capacity-planning.md) | Little's Law, binding constraints, traffic modeling, autoscaling headroom, and Compute Optimizer on AWS. |
+| [Multi-region architecture](./system-design/multi-region-architecture.md) | Active-passive vs active-active, RTO/RPO, split-brain, and Aurora Global/DynamoDB Global Tables/Global Accelerator. |
+| [Deployment strategies](./system-design/deployment-strategies.md) | Rolling, blue/green, canary, feature flags, database migrations, and CodeDeploy/Argo Rollouts on AWS. |
+| [Data modeling](./system-design/data-modeling.md) | Relational vs document vs wide-column vs graph, DynamoDB access pattern design, schema migrations at scale. |
 
 ---
 

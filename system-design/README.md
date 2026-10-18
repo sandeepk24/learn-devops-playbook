@@ -34,6 +34,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 22 | [Storage systems](./storage-systems.md) | Block vs object vs file storage, IOPS vs throughput vs latency, AZ pinning, and EBS/S3/EFS/FSx on AWS. |
 | 23 | [Network security](./network-security.md) | Security groups vs NACLs, zero trust model, encryption in transit and at rest, VPC endpoints, WAF, GuardDuty, and Network Firewall. |
 | 24 | [Capacity planning](./capacity-planning.md) | Little's Law, binding constraints, traffic modeling, headroom and autoscaling lag, and Compute Optimizer/load testing on AWS. |
+| 25 | [Multi-region architecture](./multi-region-architecture.md) | Active-passive vs active-active, RTO and RPO, split-brain, traffic routing, and Aurora Global/DynamoDB Global Tables/Global Accelerator. |
+| 26 | [Deployment strategies](./deployment-strategies.md) | Rolling, blue/green, canary, feature flags, database migration patterns, rollback cost, and CodeDeploy/Argo Rollouts on AWS. |
+| 27 | [Data modeling](./data-modeling.md) | Relational vs document vs wide-column vs graph vs time-series, DynamoDB access pattern design, schema migrations at scale. |
 
 ---
 
