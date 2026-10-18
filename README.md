@@ -374,6 +374,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Consensus and leader election](./system-design/consensus-and-leader-election.md) | Raft, quorum math, election storms, quorum loss recovery, and etcd in EKS. |
 | [Microservices vs monolith](./system-design/microservices-vs-monolith.md) | Operational costs on each side, where each breaks, strangler fig pattern, and AWS cost reality. |
 | [Distributed transactions](./system-design/distributed-transactions.md) | 2PC fragility, sagas, outbox pattern, and Step Functions/DynamoDB Transactions on AWS. |
+| [Storage systems](./system-design/storage-systems.md) | Block vs object vs file storage, IOPS vs throughput, AZ pinning, and EBS/S3/EFS/FSx on AWS. |
+| [Network security](./system-design/network-security.md) | Security groups, NACLs, zero trust, VPC endpoints, WAF, GuardDuty, and Network Firewall on AWS. |
+| [Capacity planning](./system-design/capacity-planning.md) | Little's Law, binding constraints, traffic modeling, autoscaling headroom, and Compute Optimizer on AWS. |
 
 ---
 

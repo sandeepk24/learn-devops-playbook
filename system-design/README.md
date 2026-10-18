@@ -31,6 +31,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 19 | [Consensus and leader election](./consensus-and-leader-election.md) | Raft, quorum math, election storms, what quorum loss means operationally, and etcd in EKS. |
 | 20 | [Microservices vs monolith](./microservices-vs-monolith.md) | Operational costs on each side, where each breaks, strangler fig migration pattern, and the AWS cost reality of microservices. |
 | 21 | [Distributed transactions](./distributed-transactions.md) | 2PC and why it's fragile, sagas with choreography and orchestration, outbox pattern, and Step Functions/DynamoDB Transactions on AWS. |
+| 22 | [Storage systems](./storage-systems.md) | Block vs object vs file storage, IOPS vs throughput vs latency, AZ pinning, and EBS/S3/EFS/FSx on AWS. |
+| 23 | [Network security](./network-security.md) | Security groups vs NACLs, zero trust model, encryption in transit and at rest, VPC endpoints, WAF, GuardDuty, and Network Firewall. |
+| 24 | [Capacity planning](./capacity-planning.md) | Little's Law, binding constraints, traffic modeling, headroom and autoscaling lag, and Compute Optimizer/load testing on AWS. |
 
 ---
 
