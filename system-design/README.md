@@ -40,6 +40,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 28 | [Search systems](./search-systems.md) | Inverted indexes, relevance scoring, analyzers, CDC sync, index lifecycle, and OpenSearch/knn vector search on AWS. |
 | 29 | [Streaming and batch processing](./streaming-and-batch-processing.md) | Streaming vs batch, windowing, late data, Lambda vs Kappa architecture, and Kinesis/EMR/MSK/AWS Batch on AWS. |
 | 30 | [Idempotency and exactly-once semantics](./idempotency-and-exactly-once.md) | Idempotency key pattern, atomic check-and-store, at-least-once vs exactly-once, and SQS/DynamoDB/Flink on AWS. |
+| 31 | [Security and authentication](./security-and-authentication.md) | API keys, JWTs, OAuth 2.0, mTLS, token storage, least privilege, and Cognito/IAM/Secrets Manager on AWS. |
+| 32 | [Cost optimization](./cost-optimization.md) | Compute purchase models, data transfer costs, storage lifecycle, Lambda tuning, and Cost Explorer/Trusted Advisor on AWS. |
+| 33 | [Reliability and fault tolerance](./reliability-and-fault-tolerance.md) | SPOFs, cascading failures, timeouts, retry with backoff, bulkheads, chaos engineering, and FIS/Resilience Hub on AWS. |
 
 ---
 

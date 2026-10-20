@@ -383,6 +383,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Search systems](./system-design/search-systems.md) | Inverted indexes, relevance scoring, CDC sync, index lifecycle, and OpenSearch/vector search on AWS. |
 | [Streaming and batch processing](./system-design/streaming-and-batch-processing.md) | Windowing, late data, Lambda vs Kappa architecture, and Kinesis/EMR/MSK/AWS Batch on AWS. |
 | [Idempotency and exactly-once semantics](./system-design/idempotency-and-exactly-once.md) | Idempotency key pattern, atomic check-and-store, at-least-once vs exactly-once, and SQS/DynamoDB/Flink. |
+| [Security and authentication](./system-design/security-and-authentication.md) | API keys, JWTs, OAuth 2.0, mTLS, token storage, and Cognito/IAM/Secrets Manager on AWS. |
+| [Cost optimization](./system-design/cost-optimization.md) | Purchase models, data transfer costs, storage lifecycle, Lambda tuning, and Cost Explorer on AWS. |
+| [Reliability and fault tolerance](./system-design/reliability-and-fault-tolerance.md) | SPOFs, cascading failures, timeouts, retry backoff, bulkheads, chaos engineering, and FIS on AWS. |
 
 ---
 
