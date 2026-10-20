@@ -37,6 +37,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 25 | [Multi-region architecture](./multi-region-architecture.md) | Active-passive vs active-active, RTO and RPO, split-brain, traffic routing, and Aurora Global/DynamoDB Global Tables/Global Accelerator. |
 | 26 | [Deployment strategies](./deployment-strategies.md) | Rolling, blue/green, canary, feature flags, database migration patterns, rollback cost, and CodeDeploy/Argo Rollouts on AWS. |
 | 27 | [Data modeling](./data-modeling.md) | Relational vs document vs wide-column vs graph vs time-series, DynamoDB access pattern design, schema migrations at scale. |
+| 28 | [Search systems](./search-systems.md) | Inverted indexes, relevance scoring, analyzers, CDC sync, index lifecycle, and OpenSearch/knn vector search on AWS. |
+| 29 | [Streaming and batch processing](./streaming-and-batch-processing.md) | Streaming vs batch, windowing, late data, Lambda vs Kappa architecture, and Kinesis/EMR/MSK/AWS Batch on AWS. |
+| 30 | [Idempotency and exactly-once semantics](./idempotency-and-exactly-once.md) | Idempotency key pattern, atomic check-and-store, at-least-once vs exactly-once, and SQS/DynamoDB/Flink on AWS. |
 
 ---
 

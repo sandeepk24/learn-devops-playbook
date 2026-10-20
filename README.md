@@ -380,6 +380,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Multi-region architecture](./system-design/multi-region-architecture.md) | Active-passive vs active-active, RTO/RPO, split-brain, and Aurora Global/DynamoDB Global Tables/Global Accelerator. |
 | [Deployment strategies](./system-design/deployment-strategies.md) | Rolling, blue/green, canary, feature flags, database migrations, and CodeDeploy/Argo Rollouts on AWS. |
 | [Data modeling](./system-design/data-modeling.md) | Relational vs document vs wide-column vs graph, DynamoDB access pattern design, schema migrations at scale. |
+| [Search systems](./system-design/search-systems.md) | Inverted indexes, relevance scoring, CDC sync, index lifecycle, and OpenSearch/vector search on AWS. |
+| [Streaming and batch processing](./system-design/streaming-and-batch-processing.md) | Windowing, late data, Lambda vs Kappa architecture, and Kinesis/EMR/MSK/AWS Batch on AWS. |
+| [Idempotency and exactly-once semantics](./system-design/idempotency-and-exactly-once.md) | Idempotency key pattern, atomic check-and-store, at-least-once vs exactly-once, and SQS/DynamoDB/Flink. |
 
 ---
 
