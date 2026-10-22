@@ -43,6 +43,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 31 | [Security and authentication](./security-and-authentication.md) | API keys, JWTs, OAuth 2.0, mTLS, token storage, least privilege, and Cognito/IAM/Secrets Manager on AWS. |
 | 32 | [Cost optimization](./cost-optimization.md) | Compute purchase models, data transfer costs, storage lifecycle, Lambda tuning, and Cost Explorer/Trusted Advisor on AWS. |
 | 33 | [Reliability and fault tolerance](./reliability-and-fault-tolerance.md) | SPOFs, cascading failures, timeouts, retry with backoff, bulkheads, chaos engineering, and FIS/Resilience Hub on AWS. |
+| 34 | [The write path](./the-write-path.md) | Durability guarantees per layer, dual-write problem, write amplification, backpressure, and RDS/Aurora/DynamoDB write paths. |
+| 35 | [The read path](./the-read-path.md) | Caching hierarchy, cache hit rate math, read-your-writes consistency, N+1 queries, hot keys, and CloudFront/ElastiCache/Aurora reads. |
+| 36 | [Connection pooling and resource management](./connection-pooling.md) | Pool sizing, PgBouncer transaction mode, connection leaks, pool exhaustion, and RDS Proxy/Lambda connection management. |
 
 ---
 

@@ -386,6 +386,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [Security and authentication](./system-design/security-and-authentication.md) | API keys, JWTs, OAuth 2.0, mTLS, token storage, and Cognito/IAM/Secrets Manager on AWS. |
 | [Cost optimization](./system-design/cost-optimization.md) | Purchase models, data transfer costs, storage lifecycle, Lambda tuning, and Cost Explorer on AWS. |
 | [Reliability and fault tolerance](./system-design/reliability-and-fault-tolerance.md) | SPOFs, cascading failures, timeouts, retry backoff, bulkheads, chaos engineering, and FIS on AWS. |
+| [The write path](./system-design/the-write-path.md) | Durability guarantees per layer, dual-write problem, write amplification, backpressure, and RDS/Aurora/DynamoDB write paths. |
+| [The read path](./system-design/the-read-path.md) | Caching hierarchy, cache hit rate math, read-your-writes consistency, N+1 queries, and CloudFront/ElastiCache/Aurora reads. |
+| [Connection pooling and resource management](./system-design/connection-pooling.md) | Pool sizing, PgBouncer transaction mode, connection leaks, pool exhaustion, and RDS Proxy on AWS. |
 
 ---
 
