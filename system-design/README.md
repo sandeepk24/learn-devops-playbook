@@ -46,6 +46,9 @@ This isn't interview prep dressed up as architecture content. It's the thinking 
 | 34 | [The write path](./the-write-path.md) | Durability guarantees per layer, dual-write problem, write amplification, backpressure, and RDS/Aurora/DynamoDB write paths. |
 | 35 | [The read path](./the-read-path.md) | Caching hierarchy, cache hit rate math, read-your-writes consistency, N+1 queries, hot keys, and CloudFront/ElastiCache/Aurora reads. |
 | 36 | [Connection pooling and resource management](./connection-pooling.md) | Pool sizing, PgBouncer transaction mode, connection leaks, pool exhaustion, and RDS Proxy/Lambda connection management. |
+| 37 | [Traffic management and load shedding](./traffic-management-and-load-shedding.md) | Queueing theory, shedding strategies, backpressure vs rejection, admission control, and ALB/Lambda/API Gateway on AWS. |
+| 38 | [Service mesh](./service-mesh.md) | Sidecar architecture, data vs control plane, mTLS, traffic splitting, when mesh overhead is justified, and App Mesh/Istio/Service Connect. |
+| 39 | [Infrastructure as code and GitOps](./infrastructure-as-code-and-gitops.md) | Declarative IaC, Terraform state, drift detection, secrets in pipelines, Argo CD, and Terraform/CDK/CloudFormation on AWS. |
 
 ---
 

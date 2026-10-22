@@ -389,6 +389,9 @@ The order I would actually read these is in the [CI/CD roadmap](./ci-cd/README.m
 | [The write path](./system-design/the-write-path.md) | Durability guarantees per layer, dual-write problem, write amplification, backpressure, and RDS/Aurora/DynamoDB write paths. |
 | [The read path](./system-design/the-read-path.md) | Caching hierarchy, cache hit rate math, read-your-writes consistency, N+1 queries, and CloudFront/ElastiCache/Aurora reads. |
 | [Connection pooling and resource management](./system-design/connection-pooling.md) | Pool sizing, PgBouncer transaction mode, connection leaks, pool exhaustion, and RDS Proxy on AWS. |
+| [Traffic management and load shedding](./system-design/traffic-management-and-load-shedding.md) | Queueing theory, shedding strategies, admission control, and ALB/Lambda/API Gateway throttling on AWS. |
+| [Service mesh](./system-design/service-mesh.md) | Sidecar architecture, mTLS, traffic splitting, when mesh is justified, and App Mesh/Istio/Service Connect on AWS. |
+| [Infrastructure as code and GitOps](./system-design/infrastructure-as-code-and-gitops.md) | Declarative IaC, Terraform state, drift detection, secrets handling, Argo CD, and Terraform/CDK on AWS. |
 
 ---
 
