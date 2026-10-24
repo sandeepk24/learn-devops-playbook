@@ -1,0 +1,60 @@
+# Copy to .github/workflows/ecs-guard.yml in the repo that owns the service.
+# Replace the role ARN, region, cluster, and service names.
+
+name: ecs-guard
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"      # watchdog
+  workflow_dispatch:
+
+  # Post-deploy gate: call this workflow from the deploy workflow, or copy the
+  # last step ("Gate the deploy") into it.
+  workflow_call:
+    inputs:
+      task_definition:
+        description: "family:revision that was just deployed"
+        type: string
+        required: true
+
+permissions:
+  id-token: write               # OIDC, no stored AWS keys
+  contents: read
+
+env:
+  CLUSTER: prod
+  AWS_REGION: us-east-1
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install boto3
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/ecs-guard
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Scheduled run: check every service, restart any that is short of tasks.
+      - name: Watchdog
+        if: github.event_name != 'workflow_call'
+        run: python ecs/scripts/ecs_guard.py --cluster "$CLUSTER" --fix
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      # Deploy run: wait for the rollout, fail the pipeline if ECS rolled back.
+      - name: Gate the deploy
+        if: github.event_name == 'workflow_call'
+        run: |
+          python ecs/scripts/ecs_guard.py \
+            --cluster "$CLUSTER" \
+            --services api \
+            --expect-task-def "${{ inputs.task_definition }}" \
+            --wait 600

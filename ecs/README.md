@@ -30,3 +30,9 @@ Read the four-part series first. The later notes use that model.
 | [Task distribution and resource management](./ecs-task-distribution-guide.md) | How the scheduler places a task on EC2 and on Fargate. |
 | [Cost and failure domains](./ecs-deep-dive-cost-and-failures.md) | Fargate versus EC2 on cost, and what an AZ failure does to a running service. |
 | [CLI reference](./what-devops-engineers-should-understand-about-ecs.md) | Commands for clusters, services, tasks, logs, exec, and the kubectl equivalents. |
+
+## Scripts
+
+| Script | What it does |
+|---|---|
+| [ECS guard](./scripts/README.md) | A Python check for CI/CD. Runs on a schedule to catch and restart short services, and after a deploy to fail the pipeline if ECS rolled back. |
